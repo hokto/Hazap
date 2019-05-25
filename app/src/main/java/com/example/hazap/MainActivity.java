@@ -5,6 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,11 +39,19 @@ public class MainActivity extends AppCompatActivity {
     }
     public void Game(){
         setContentView(R.layout.game);
-        Button backhome_button=findViewById(R.id.backhome_btn);
+        MapFragment mapFragment = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap map) {
+                map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(35.681382, 139.766084), 15));
+            }
+        });
+        Button backhome_button=findViewById(R.id.goresult_btn);
         backhome_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Home();
+                Result();
             }
         });
     }
@@ -53,5 +67,13 @@ public class MainActivity extends AppCompatActivity {
     }
     public void Result(){
         setContentView(R.layout.result);
+        Button backhome_button=findViewById(R.id.backhome_btn);
+        backhome_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                Home();
+            }
+        });
     }
 }
