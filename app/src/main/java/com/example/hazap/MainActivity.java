@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void Option(){
         setContentView(R.layout.option);
-        Button backhome_button=findViewById(R.id.backhome_btn);
+        Button backhome_button=findViewById(R.id.Homemove_btn);
         backhome_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void Result(){
         setContentView(R.layout.result);
-        Button backhome_button=findViewById(R.id.backhome_btn);
+        Button backhome_button=findViewById(R.id.Homemove_btn);
         backhome_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
