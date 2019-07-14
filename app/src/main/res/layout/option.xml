@@ -25,7 +25,7 @@
         app:layout_constraintVertical_bias="0.987" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/hazardmap_btn"
         android:layout_width="280dp"
         android:layout_height="109dp"
         android:text="ハザードマップ確認"
@@ -34,7 +34,7 @@
         tools:layout_editor_absoluteY="190dp" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/jisseki_btn"
         android:layout_width="279dp"
         android:layout_height="103dp"
         android:text="過去の実績確認"
