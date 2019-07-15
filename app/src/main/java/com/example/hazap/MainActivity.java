@@ -40,6 +40,35 @@ public class MainActivity extends AppCompatActivity {
                 Home();
             }
         });
+        Button hazardmap_button=findViewById(R.id.hazardmap_btn);
+        hazardmap_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Hazardmap();
+            }
+        });
+    }
+    public void Hazardmap(){
+        setContentView(R.layout.hazardmap);
+        Button backoption_button=findViewById(R.id.backoption_btn);
+        backoption_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                Option();
+            }
+        });
+    }
+    public void Jisseki(){
+        setContentView(R.layout.jisseki);
+        Button backoption_button=findViewById(R.id.backoption_btn);
+        backoption_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                Option();
+            }
+        });
     }
     public void Result(){
         setContentView(R.layout.result);
@@ -52,5 +81,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

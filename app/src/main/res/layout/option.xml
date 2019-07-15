@@ -19,6 +19,26 @@
         android:text="ホームに戻る"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.029"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.987" />
+
+    <Button
+        android:id="@+id/hazardmap_btn"
+        android:layout_width="280dp"
+        android:layout_height="109dp"
+        android:text="ハザードマップ確認"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="66dp"
+        tools:layout_editor_absoluteY="190dp" />
+
+    <Button
+        android:id="@+id/jisseki_btn"
+        android:layout_width="279dp"
+        android:layout_height="103dp"
+        android:text="過去の実績確認"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="67dp"
+        tools:layout_editor_absoluteY="421dp" />
 </android.support.constraint.ConstraintLayout>
