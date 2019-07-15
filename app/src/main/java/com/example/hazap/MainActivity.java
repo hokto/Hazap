@@ -8,7 +8,6 @@ import android.widget.Button;
 
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,27 +33,57 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-    public void Option() {
+    public void Option(){
         setContentView(R.layout.option);
-        Button backhome_button = findViewById(R.id.backhome_btn);
-        backhome_button.setOnClickListener(new View.OnClickListener() {
+        Button backhome_button=findViewById(R.id.backhome_btn);
+        backhome_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                Home();
+            }
+        });
+
+        Button hazardmap_button=findViewById(R.id.hazardmap_btn);
+        hazardmap_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Hazardmap();
+            }
+        });
+    }
+    public void Hazardmap(){
+        setContentView(R.layout.hazardmap);
+        Button backoption_button=findViewById(R.id.backoption_btn);
+        backoption_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                Option();
+            }
+        });
+    }
+    public void Jisseki(){
+        setContentView(R.layout.jisseki);
+        Button backoption_button=findViewById(R.id.backoption_btn);
+        backoption_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                Option();
+            }
+        });
+    }
+    public void Result(){
+        setContentView(R.layout.result);
+        Button backhome_button=findViewById(R.id.backhome_btn);
+        backhome_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
                 Home();
             }
         });
     }
 
-    public void Result() {
-        setContentView(R.layout.result);
-        Button backhome_button = findViewById(R.id.backhome_btn);
-        backhome_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Home();
-            }
-        });
-    }
+
 }
