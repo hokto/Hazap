@@ -34,15 +34,13 @@ public class Result_activity extends Activity implements View.OnTouchListener  {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Result_print();
-        this.setContentView(R.layout.result);
-        this.mImageView = (this.findViewById(R.id.Map));
-        this.mImageView.setScaleType(this.mImageScaleType);
-        this.mImageView.setOnTouchListener(this);
-        this.updateOverSize();
+        setContentView(R.layout.result);
+        mImageView = (this.findViewById(R.id.Map));
+        mImageView.setScaleType(this.mImageScaleType);
+        mImageView.setOnTouchListener(this);
+        updateOverSize();
     }
     public void Result_print() {
-        Bestrefuge_print();
-        Myrefuge_print();
         Aliverate_print();
     }
     private static int calcOverValue(int display, int image) {
@@ -108,15 +106,6 @@ public class Result_activity extends Activity implements View.OnTouchListener  {
         this.mOverX = calcOverValue(display.getWidth(), image.getIntrinsicWidth());
         this.mOverY = calcOverValue(display.getHeight(), image.getIntrinsicHeight());
     }
-
-    private void Bestrefuge_print() {
-
-    }
-
-    private void Myrefuge_print() {
-
-    }
-
     private void Aliverate_print() {
         float aliverate = 70.0f;
         float ather = 100.0f - aliverate;

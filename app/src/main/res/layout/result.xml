@@ -34,7 +34,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.084" />
-    ​
     <TextView
         android:id="@+id/Advice"
         android:layout_width="197dp"
@@ -45,7 +44,7 @@
         android:layout_marginEnd="31dp"
         android:layout_marginRight="31dp"
         android:layout_marginBottom="152dp"
-        android:text="@string/advice"
+        android:text=""
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/backhome_btn"
         app:layout_constraintEnd_toStartOf="@+id/pie_chart"
