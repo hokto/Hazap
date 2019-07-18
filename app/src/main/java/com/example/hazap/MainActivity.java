@@ -11,34 +11,65 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Home();
+    }
+
+    public void Home() {
         setContentView(R.layout.home);
-        Button gamestart_button=findViewById(R.id.gamestart_btn);
-        Button option_button=findViewById(R.id.option_btn);
-        gamestart_button.setOnClickListener(new View.OnClickListener(){
+        Button gamestart_button = findViewById(R.id.gamestart_btn);
+        Button option_button = findViewById(R.id.option_btn);
+        gamestart_button.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-                                                    Intent intent=new Intent(MainActivity.this,Game_activity.class);
+                                                    Intent intent = new Intent(MainActivity.this, Game_activity.class);
                                                     startActivity(intent);
                                                 }
                                             }
         );
-        option_button.setOnClickListener(new View.OnClickListener(){
+        option_button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Option();
             }
         });
-    }
-    public void Home(){
-
     }
     public void Option(){
         setContentView(R.layout.option);
         Button backhome_button=findViewById(R.id.Homemove_btn);
         backhome_button.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Home();
+            }
+        });
+
+        Button hazardmap_button=findViewById(R.id.hazardmap_btn);
+        hazardmap_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Hazardmap();
+            }
+        });
+    }
+    public void Hazardmap(){
+        setContentView(R.layout.hazardmap);
+        Button backoption_button=findViewById(R.id.backoption_btn);
+        backoption_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                Option();
+            }
+        });
+    }
+    public void Jisseki(){
+        setContentView(R.layout.jisseki);
+        Button backoption_button=findViewById(R.id.backoption_btn);
+        backoption_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                Option();
             }
         });
     }
@@ -53,5 +84,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }
