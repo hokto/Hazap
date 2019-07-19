@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    ​
 
     <Button
         android:id="@+id/backhome_btn"
@@ -15,14 +14,14 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:text="戻る"
+        android:text="ホームに戻る"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.146"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.959" />
-    ​
+
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pie_chart"
         android:layout_width="125dp"
@@ -34,6 +33,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.084" />
+
     <TextView
         android:id="@+id/Advice"
         android:layout_width="197dp"
@@ -44,7 +44,7 @@
         android:layout_marginEnd="31dp"
         android:layout_marginRight="31dp"
         android:layout_marginBottom="152dp"
-        android:text=""
+        android:text="主催者からのメッセージ"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/backhome_btn"
         app:layout_constraintEnd_toStartOf="@+id/pie_chart"
@@ -52,41 +52,63 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
-    ​
-    <ImageView
-        android:id="@+id/Map"
-        android:layout_width="411dp"
-        android:layout_height="512dp"
+
+    <RelativeLayout
+        android:layout_width="408dp"
+        android:layout_height="545dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/argoal"
-        tools:srcCompat="@drawable/argoal" />
-    ​
-    <ImageView
-        android:id="@+id/myrefuge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.265"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/Map"
-        app:layout_constraintVertical_bias="0.26"
-        tools:srcCompat="@tools:sample/avatars[0]" />
-    ​
-    <ImageView
-        android:id="@+id/bestrefuge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/Map"
-        app:layout_constraintEnd_toEndOf="@+id/Map"
-        app:layout_constraintStart_toStartOf="@+id/Map"
-        app:layout_constraintTop_toTopOf="@+id/Map"
-        tools:srcCompat="@tools:sample/avatars[1]" />
+        app:layout_constraintVertical_bias="1.0">
+
+        <ImageView
+            android:id="@+id/Map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="TODO"
+            app:srcCompat="@drawable/back"
+            tools:srcCompat="@drawable/back" />
+
+        <ImageView
+            android:id="@+id/Bestrefuge"
+            android:layout_width="211dp"
+            android:layout_height="222dp"
+            android:layout_alignStart="@+id/Map"
+            android:layout_alignLeft="@+id/Map"
+            android:layout_alignTop="@+id/Map"
+            android:layout_alignEnd="@+id/Map"
+            android:layout_alignRight="@+id/Map"
+            android:layout_alignBottom="@+id/Map"
+            android:layout_marginStart="177dp"
+            android:layout_marginLeft="177dp"
+            android:layout_marginTop="226dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="97dp"
+            android:contentDescription="TODO"
+            app:srcCompat="@drawable/argoal"
+            tools:srcCompat="@drawable/argoal" />
+
+        <ImageView
+            android:id="@+id/MyRefuge"
+            android:layout_width="193dp"
+            android:layout_height="213dp"
+            android:layout_alignStart="@+id/Map"
+            android:layout_alignLeft="@+id/Map"
+            android:layout_alignTop="@+id/Map"
+            android:layout_alignEnd="@+id/Map"
+            android:layout_alignRight="@+id/Map"
+            android:layout_alignBottom="@+id/Map"
+            android:layout_marginStart="54dp"
+            android:layout_marginLeft="54dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginEnd="161dp"
+            android:layout_marginRight="161dp"
+            android:layout_marginBottom="297dp"
+            android:contentDescription="TODO"
+            app:srcCompat="@drawable/arkeiyu"
+            tools:srcCompat="@drawable/arkeiyu" />
+    </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>
