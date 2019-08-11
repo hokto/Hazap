@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -13,7 +14,12 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Result_activity extends Activity   {
@@ -24,10 +30,14 @@ public class Result_activity extends Activity   {
         ImageView dragView=findViewById(R.id.Map);
         ImageView dragView2=findViewById(R.id.MyRefuge);
         ImageView dragView3=findViewById(R.id.Bestrefuge);
+        TextView advice=findViewById(R.id.Advice);
+        String data="";
+        data=text_change(data);
+        advice.setText(data);
         DragViewListener listener=new DragViewListener(dragView,dragView2,dragView3);
         dragView.setOnTouchListener(listener);
         Aliverate_print();
-        Button btn=(Button)findViewById(R.id.backhome_btn);
+        Button btn=findViewById(R.id.backhome_btn);
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -35,16 +45,32 @@ public class Result_activity extends Activity   {
             }
         });
     }
+    public static String text_change(String text){
+        try{
+            ServerSocket hazap_client = new ServerSocket(10000);
+            Socket sock = hazap_client.accept();
+            byte[] data = new byte[1024];
+            InputStream in = sock.getInputStream();
+            int readSize = in.read(data);
+            data = Arrays.copyOf(data, readSize);
+            text=(new String(data,"UTF-8"));
+            in.close();
+            hazap_client.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return text;
+    }
     public class DragViewListener implements View.OnTouchListener{
         private ImageView dragView;
         private ImageView dragView2;
         private ImageView dragView3;
         private int oldx;
         private int oldy;
-        public DragViewListener(ImageView dragView,ImageView dragView2,ImageView dragView3){
+        private DragViewListener(ImageView dragView,ImageView dragView2,ImageView dragView3){
             this.dragView=dragView;
-            this.dragView=dragView2;
-            this.dragView=dragView3;
+            this.dragView2=dragView2;
+            this.dragView3=dragView3;
         }
         @Override
         public boolean onTouch(View view,MotionEvent event){
