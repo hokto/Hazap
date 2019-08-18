@@ -36,6 +36,8 @@ public class Game_activity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
                                       @Override
                                       public void onClick(View v) {
+                                          Intent result_intent=new Intent(getApplication(),Result_activity.class);
+                                          startActivity(result_intent);
                                           finish();
                                       }
                                   }
