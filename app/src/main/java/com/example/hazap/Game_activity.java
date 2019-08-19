@@ -23,7 +23,7 @@ public class Game_activity extends Activity {
         RelativeLayout relativeLayout=new RelativeLayout(this);
         mapView = new MapView(this, "dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
         MapController c = mapView.getMapController();
-        c.setCenter(new GeoPoint());
+        c.setCenter(new GeoPoint(31760254,131080396));
         c.setZoom(1);
         relativeLayout.addView(mapView,1100,1800);
         Button button=new Button(this);
