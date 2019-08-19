@@ -31,17 +31,17 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="140dp"
+        android:layout_marginRight="140dp"
         android:layout_marginBottom="8dp"
         android:text="実績確認"
         android:textColor="#FF5722"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="3"
-        app:layout_constraintStart_toEndOf="@+id/gamestart_btn"
-<<<<<<< HEAD
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.709" />
 
     <EditText
         android:id="@+id/gametitle_txt"
@@ -60,11 +60,7 @@
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="90dp" /><![CDATA[
-=======
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.683" />
+        tools:layout_editor_absoluteY="90dp"
+        tools:ignore="MissingConstraints" />
 
-    >>>>>>> 8cc34e40ad9cf04956d87d89792a35bbbc360e78
-]]>
 </android.support.constraint.ConstraintLayout>

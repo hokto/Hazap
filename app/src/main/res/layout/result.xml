@@ -4,10 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<<<<<<< HEAD
-=======
-    ​
->>>>>>> 7fb8b9d21721d565035fcf62639b1c6766afcdbc
 
     <Button
         android:id="@+id/Homemove_btn"
@@ -18,9 +14,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-<<<<<<< HEAD
-        android:text="ホーム"
-=======
         android:text="戻る"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,6 +33,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.084" />
+
     <TextView
         android:id="@+id/Advice"
         android:layout_width="197dp"
@@ -52,7 +46,7 @@
         android:layout_marginBottom="152dp"
         android:text=""
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/backhome_btn"
+        app:layout_constraintBottom_toTopOf="@+id/Homemove_btn"
         app:layout_constraintEnd_toStartOf="@+id/pie_chart"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +57,6 @@
         android:id="@+id/Map"
         android:layout_width="411dp"
         android:layout_height="512dp"
->>>>>>> 7fb8b9d21721d565035fcf62639b1c6766afcdbc
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
