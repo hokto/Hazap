@@ -12,5 +12,7 @@
         android:text="戻る"
         android:textSize="24sp"
         tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="631dp" />
+        tools:layout_editor_absoluteY="631dp"
+        tools:ignore="MissingConstraints" />
+
 </android.support.constraint.ConstraintLayout>

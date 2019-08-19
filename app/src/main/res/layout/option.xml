@@ -31,7 +31,8 @@
         android:text="ハザードマップ確認"
         android:textSize="24sp"
         tools:layout_editor_absoluteX="66dp"
-        tools:layout_editor_absoluteY="190dp" />
+        tools:layout_editor_absoluteY="190dp"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/jisseki_btn"
@@ -40,5 +41,6 @@
         android:text="過去の実績確認"
         android:textSize="24sp"
         tools:layout_editor_absoluteX="67dp"
-        tools:layout_editor_absoluteY="421dp" />
+        tools:layout_editor_absoluteY="421dp"
+        tools:ignore="MissingConstraints" />
 </android.support.constraint.ConstraintLayout>
