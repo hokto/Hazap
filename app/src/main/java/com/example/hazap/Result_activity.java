@@ -27,7 +27,7 @@ public class Result_activity extends Activity   {
         DragViewListener listener=new DragViewListener(dragView,dragView2,dragView3);
         dragView.setOnTouchListener(listener);
         Aliverate_print();
-        Button btn=(Button)findViewById(R.id.backhome_btn);
+        Button btn=(Button)findViewById(R.id.Homemove_btn);
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
