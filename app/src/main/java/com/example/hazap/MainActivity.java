@@ -1,5 +1,6 @@
 package com.example.hazap;
 
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Hazardmap();
+            }
+        });
+
+        Button jisseki_button=findViewById(R.id.jisseki_btn);
+        jisseki_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Jisseki();
             }
         });
     }

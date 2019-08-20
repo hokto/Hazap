@@ -46,7 +46,11 @@
         android:layout_marginBottom="152dp"
         android:text="主催者からのメッセージ"
         android:textSize="18sp"
+<<<<<<< HEAD
         app:layout_constraintBottom_toTopOf="parent"
+=======
+        app:layout_constraintBottom_toTopOf="@+id/Homemove_btn"
+>>>>>>> 11fc5eb41b5cd60e5b8dcf57d1bd4c10fb52fbd8
         app:layout_constraintEnd_toStartOf="@+id/pie_chart"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
