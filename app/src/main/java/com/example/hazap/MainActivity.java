@@ -1,6 +1,5 @@
 package com.example.hazap;
 
-import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,20 +8,21 @@ import android.widget.Button;
 
 
 public class MainActivity extends AppCompatActivity {
-    @Override
+    @Override/*1番目に実行*/
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Home();
+        Home();/*home関数を実行*/
     }
 
     public void Home() {
-        setContentView(R.layout.home);
-        Button gamestart_button = findViewById(R.id.gamestart_btn);
+        setContentView(R.layout.home);/*home.xmlを読み出す*/
+        Button gamestart_button = findViewById(R.id.gamestart_button);
         Button option_button = findViewById(R.id.option_btn);
-        gamestart_button.setOnClickListener(new View.OnClickListener() {
+        Button admin_button=findViewById(R.id.admin_btn);
+        gamestart_button.setOnClickListener(new View.OnClickListener() {/*gamestart_buttonをクリックしたときのイベント*/
                                                 @Override
                                                 public void onClick(View v) {
-                                                    Intent game_intent = new Intent(getApplication(), Game_activity.class);
+                                                    Intent game_intent = new Intent(getApplication(), Game_activity.class);/*gameactivutyに飛ぶ(収量はfinsh();)*/
                                                     startActivity(game_intent);
                                                 }
                                             }
@@ -33,10 +33,19 @@ public class MainActivity extends AppCompatActivity {
                 Option();
             }
         });
+
+        admin_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+               Intent adminActivity=new Intent(getApplication(),admin.class);/*adminactivityをintentで宣言*/
+               startActivity(adminActivity);/*adminactivityを実行*/
+            }
+        });
     }
     public void Option(){
         setContentView(R.layout.option);
-        Button backhome_button=findViewById(R.id.Homemove_btn);
+        Button backhome_button=findViewById(R.id.backhome_btn);
         backhome_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -49,14 +58,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Hazardmap();
-            }
-        });
-
-        Button jisseki_button=findViewById(R.id.jisseki_btn);
-        jisseki_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Jisseki();
             }
         });
     }
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void Result(){
         setContentView(R.layout.result);
-        Button backhome_button=findViewById(R.id.Homemove_btn);
+        Button backhome_button=findViewById(R.id.backhome_btn);
         backhome_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
@@ -93,6 +94,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }
