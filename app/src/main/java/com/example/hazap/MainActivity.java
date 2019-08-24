@@ -23,7 +23,11 @@ public class MainActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onClick(View v) {
                                                     Intent game_intent = new Intent(getApplication(), Game_activity.class);
+
                                                     startActivity(game_intent);
+
+                                                    System.out.println("Hello,world!!");
+
                                                 }
                                             }
         );

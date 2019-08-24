@@ -43,7 +43,7 @@ import java.util.ServiceConfigurationError;
 
 
 public class Game_activity extends Activity {
-    private  static final String TAG="Gameactivity";
+
     private MapView mapView=null;
     private LocationManager mLocationManager;
     private String BestProvider;
@@ -56,8 +56,7 @@ public class Game_activity extends Activity {
         return point;
     }
 
-    public Handler handler;
-    public WebSocketClient client;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -69,45 +68,11 @@ public class Game_activity extends Activity {
         c.setZoom(1);
 
         //ソケット通信
-        //Connect.Articulate();
-        handler=new Handler();
-        if ("sdk".equals(Build.PRODUCT)) {
-            java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
-            java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
-        }
-        try{
-            URI uri=new URI("ws://192.168.11.133:4000");
-            client=new WebSocketClient(uri) {
-                @Override
-                public void onOpen(ServerHandshake handshakedata) {
-                    Log.d(TAG,"onOpen");
-                }
-
-                @Override
-                public void onMessage(final String message) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            System.out.println(message);
-                        }
-                    });
-                }
-
-                @Override
-                public void onClose(int code, String reason, boolean remote) {
-                   Log.d(TAG,"onClose");
-                }
-
-                @Override
-                public void onError(Exception ex) {
-                    Log.d(TAG,"onError");
-                }
-            };
-            client.connect();
-        }
-        catch (URISyntaxException e){
-            e.printStackTrace();
-        }
+        Server_connect Connect=new Server_connect();
+        Connect.Articulate();
+        String str="Hello";
+        System.out.println(str);
+        Connect.client.send(str);
 
 
         //ポリゴン精製、表示
@@ -140,12 +105,7 @@ public class Game_activity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
                                       @Override
                                       public void onClick(View v) {
-                                          try {
-                                              final String str="AAA";
-                                              client.send(str.toString());
-                                          }catch(NotYetConnectedException e){
-                                              e.printStackTrace();
-                                          }
+
                                           Intent result_intent=new Intent(getApplication(),Result_activity.class);
                                           startActivity(result_intent);
                                           finish();
