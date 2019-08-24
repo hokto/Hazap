@@ -3,7 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:visibility="visible"
+    tools:actionBarNavMode="standard"
+    tools:visibility="visible">
 
     <Button
         android:id="@+id/gamestart_btn"
@@ -143,7 +146,7 @@
         app:layout_constraintTop_toBottomOf="@+id/gamestart_btn"
         app:layout_constraintVertical_bias="0.323" />
 
-    <EditText
+    <TextView
         android:id="@+id/gametitle_txt"
         style="@android:style/Widget.AutoCompleteTextView"
         android:layout_width="299dp"

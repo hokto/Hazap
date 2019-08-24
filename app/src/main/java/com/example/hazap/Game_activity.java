@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Criteria;
 import android.location.Location;
@@ -18,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import jp.co.yahoo.android.maps.CircleOverlay;
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapController;
 import jp.co.yahoo.android.maps.MapView;
@@ -25,6 +28,8 @@ import java.net.Socket;
 import java.io.IOException;
 import java.io.DataOutputStream;
 import java.util.Map;
+
+
 public class Game_activity extends Activity {
     private MapView mapView=null;
     private LocationManager mLocationManager;
@@ -37,14 +42,36 @@ public class Game_activity extends Activity {
         display.getSize(point);
         return point;
     }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         RelativeLayout relativeLayout=new RelativeLayout(this);
         mapView = new MapView(this, "dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
         MapController c = mapView.getMapController();
         c.setCenter(new GeoPoint(31760254,131080396));
         c.setZoom(1);
+
+        //ポリゴン精製、表示
+        setContentView(mapView);
+        GeoPoint mid = new GeoPoint(31760254, 131080396);
+        CircleOverlay circleOverlay = new CircleOverlay(mid, 300, 300){
+
+            @Override
+            protected boolean onTap(){
+                //円をタッチした際の処理
+                return true;
+            }
+        };
+        //色の変更
+        circleOverlay.setFillColor(Color.argb(127, 255, 40, 40));
+        circleOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
+        mapView.getOverlays().add(circleOverlay);
+        setContentView(relativeLayout);
+
+        //終了ボタン
         relativeLayout.addView(mapView,1100,1800);
         Button button=new Button(this);
         button.setText("避難終了");
@@ -62,9 +89,11 @@ public class Game_activity extends Activity {
                                       }
                                   }
         );
-        setContentView(relativeLayout);
+
         //intiLocationManager();
     }
+
+
     /*private void intiLocationManager(){
         mLocationManager=(LocationManager)getSystemService(LOCATION_SERVICE);
         Criteria criteria =new Criteria();
