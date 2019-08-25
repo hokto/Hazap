@@ -1,4 +1,9 @@
 package com.example.hazap;
+
+import android.app.Activity;
+import android.view.Menu;
+import java.util.Timer;
+import java.util.TimerTask;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -31,6 +36,9 @@ import jp.co.yahoo.android.maps.CircleOverlay;
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapController;
 import jp.co.yahoo.android.maps.MapView;
+import jp.co.yahoo.android.maps.MyLocationOverlay;
+import jp.co.yahoo.android.maps.Overlay;
+
 import java.net.Socket;
 import java.io.IOException;
 import java.io.DataOutputStream;
@@ -47,6 +55,8 @@ public class Game_activity extends Activity {
     private MapView mapView=null;
     private LocationManager mLocationManager;
     private String BestProvider;
+    private MyLocationOverlay _overlay;
+
     public double latitude;
     public double longitude;
     public static Point getDisplaySize(Activity activity) {
@@ -60,19 +70,40 @@ public class Game_activity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        //マップ表示
         super.onCreate(savedInstanceState);
         RelativeLayout relativeLayout=new RelativeLayout(this);
         mapView = new MapView(this, "dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
         MapController c = mapView.getMapController();
-        c.setCenter(new GeoPoint(31760254,131080396));
+
+        //プレイヤーの現在地を表示
+        _overlay = new MyLocationOverlay(getApplicationContext(), mapView);
+        _overlay.enableMyLocation();      
+        _overlay.runOnFirstFix(new Runnable(){
+            public void run() {
+                if (mapView.getMapController() != null) {
+                    //現在位置を取得
+                    GeoPoint p = _overlay.getMyLocation();
+                    //地図移動
+                    mapView.getMapController().animateTo(p);
+                }
+            }
+
+        });
+
+        //MapViewにMyLocationOverlayを追加。
+        mapView.getOverlays().add(_overlay);
+        //c.setCenter(new GeoPoint(31760254,131080396));
         c.setZoom(1);
+        super.onCreate(savedInstanceState);
+
+        setContentView(mapView);
+
 
         //ソケット通信
         Server_connect Connect=new Server_connect();
-        Connect.Articulate();
-        String str="Hello";
-        System.out.println(str);
-        Connect.client.send(str);
+        Connect.SocketClient();
+        Connect.client.send("Hello");
 
 
         //ポリゴン精製、表示
@@ -117,60 +148,6 @@ public class Game_activity extends Activity {
     }
 
 
-    /*private void intiLocationManager(){
-        mLocationManager=(LocationManager)getSystemService(LOCATION_SERVICE);
-        Criteria criteria =new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setPowerRequirement(Criteria.POWER_HIGH);
-        criteria.setSpeedRequired(false);
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
-        criteria.setCostAllowed(true);
-        criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
-        criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
-        BestProvider=mLocationManager.getBestProvider(criteria,true);
-    }
-    private void checkPermission(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1000);
-        }
-    }
-    @Override
-    protected void onStart(){
-        super.onStart();
-        locationStart();
-    }
-    @Override
-    protected void onStop(){
-        super.onStop();
-        locationStop();
-    }
-    private void locationStart(){
-        checkPermission();
-        mLocationManager.requestLocationUpdates(BestProvider,60000,10,this);
-    }
-    private void locationStop(){
-        mLocationManager.removeUpdates(this);
-    }
-    public void onLocationChanged(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-        try {
-            Socket socket = new Socket("hazap_server", 1);
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-            out.writeDouble(latitude);
-            out.writeDouble(longitude);
-            out.close();
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public void onStatusChanged(String provider, int status, Bundle extras) { }
-    public void onProviderDisabled(String provider) { }
-    public void onProviderEnabled(String provider) { }*/
     @Override
     protected void  onResume() {
         super.onResume();

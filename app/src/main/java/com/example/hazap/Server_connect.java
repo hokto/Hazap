@@ -1,4 +1,5 @@
 package com.example.hazap;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -7,9 +8,13 @@ import android.util.Log;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
@@ -19,49 +24,52 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.java_websocket.client.WebSocketClient;
 
 public class Server_connect extends AppCompatActivity {
+
     public Handler handler;
     public WebSocketClient client;
     private  static final String TAG="Server_connect";
-    public void Articulate()
-    {
-        handler=new Handler();
-        if ("sdk".equals(Build.PRODUCT)) {
-            java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
-            java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
-        }
-        try{
-            URI uri=new URI("ws://192.168.11.133:4000");
-            client=new WebSocketClient(uri) {
-                @Override
-                public void onOpen(ServerHandshake handshakedata) {
-                    Log.d(TAG,"onOpen");
+    public void SocketClient() {
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                Socket connect = null;
+                BufferedReader reader = null;
+                BufferedWriter writer = null;
+                String message = "result:";
+                try {
+                    //ソケット通信
+                    connect= new Socket("192.168.11.133", 4000);
+                    reader = new BufferedReader(new InputStreamReader(connect.getInputStream()));
+                    writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
+                    writer.write("Hello,world!!");
+                    writer.flush();
+                    String result;
+                    //サーバから送られてきた内容がnullでなければmessageに追加
+                    while ((result = reader.readLine()) != null) {
+                        message += result;
+                    }
+                } catch (IOException e) {
+                    message = "IOException error: " + e.getMessage();
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    message = "Exception: " + e.getMessage();
+                } finally {
+                    try {
+                        reader.close();
+                        connect.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-
-                @Override
-                public void onMessage(final String message) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            System.out.println(message);
-                        }
-                    });
-                }
-
-                @Override
-                public void onClose(int code, String reason, boolean remote) {
-                    Log.d(TAG,"onClose");
-                }
-
-                @Override
-                public void onError(Exception ex) {
-                    Log.d(TAG,"onError");
-                }
-            };
-            client.connect();
-
-        }
-        catch (URISyntaxException e){
-            e.printStackTrace();
-        }
+                System.out.println(message);
+                return message;
+            }
+            //doInBackGroundの結果を受け取る
+            @Override
+            protected void onPostExecute(String result) {
+                System.out.println(result);
+            }
+        }.execute();
     }
 }
