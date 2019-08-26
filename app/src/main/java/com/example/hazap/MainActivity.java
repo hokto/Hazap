@@ -1,20 +1,21 @@
 package com.example.hazap;
 
-import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import com.example.hazap.Server_connect;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity{
+    String coordinates;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Home();
     }
 
+    //ホーム画面
     public void Home() {
         setContentView(R.layout.home);
         Button gamestart_button = findViewById(R.id.gamestart_btn);
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     public void Option(){
         setContentView(R.layout.option);
         Button backhome_button=findViewById(R.id.Homemove_btn);
