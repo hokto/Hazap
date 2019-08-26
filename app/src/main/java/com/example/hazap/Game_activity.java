@@ -26,11 +26,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.example.hazap.Server_connect;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import jp.co.yahoo.android.maps.CircleOverlay;
 import jp.co.yahoo.android.maps.GeoPoint;
@@ -66,6 +69,21 @@ public class Game_activity extends Activity {
         return point;
     }
 
+    public class SubMyLocationOverlay extends MyLocationOverlay {
+
+        MapView _mapView = null;
+        Activity _activity = null;
+
+        public SubMyLocationOverlay(Context context, MapView mapView, Activity activity) {
+            super(context, mapView);
+
+            _mapView = mapView;
+            _activity = activity;
+        }
+
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,29 +93,8 @@ public class Game_activity extends Activity {
         RelativeLayout relativeLayout=new RelativeLayout(this);
         mapView = new MapView(this, "dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
         MapController c = mapView.getMapController();
-
-        //プレイヤーの現在地を表示
-        _overlay = new MyLocationOverlay(getApplicationContext(), mapView);
-        _overlay.enableMyLocation();      
-        _overlay.runOnFirstFix(new Runnable(){
-            public void run() {
-                if (mapView.getMapController() != null) {
-                    //現在位置を取得
-                    GeoPoint p = _overlay.getMyLocation();
-                    //地図移動
-                    mapView.getMapController().animateTo(p);
-                }
-            }
-
-        });
-
-        //MapViewにMyLocationOverlayを追加。
-        mapView.getOverlays().add(_overlay);
-        //c.setCenter(new GeoPoint(31760254,131080396));
+        c.setCenter(new GeoPoint(31760254,131080396));
         c.setZoom(1);
-        super.onCreate(savedInstanceState);
-
-        setContentView(mapView);
 
 
         //ソケット通信
@@ -124,6 +121,7 @@ public class Game_activity extends Activity {
         mapView.getOverlays().add(circleOverlay);
         setContentView(relativeLayout);
 
+
         //終了ボタン
         relativeLayout.addView(mapView,1100,1800);
         Button button=new Button(this);
@@ -144,7 +142,14 @@ public class Game_activity extends Activity {
                                   }
         );
 
-        //intiLocationManager();
+
+        //体力ゲージ
+       /* relativeLayout.addView(mapView,500,200);
+        ProgressBar bar=new ProgressBar(this);
+
+        {
+
+        }*/
     }
 
 
