@@ -14,18 +14,18 @@ public class MainActivity extends AppCompatActivity {
         Home();/*home関数を実行*/
     }
 
-    public void Home() {   /*home関数の処理*/
+    public void Home() {
         setContentView(R.layout.home);/*home.xmlを読み出す*/
         Button gamestart_button = findViewById(R.id.gamestart_button);
         Button option_button = findViewById(R.id.option_btn);
         Button admin_button=findViewById(R.id.admin_btn);
         gamestart_button.setOnClickListener(new View.OnClickListener() {/*gamestart_buttonをクリックしたときのイベント*/
-            @Override
-            public void onClick(View v) {
-                Intent game_intent = new Intent(getApplication(), Game_activity.class);/*gameactivutyに飛ぶ(収量はfinsh();)*/
-                startActivity(game_intent);
-            }
-        }
+                                                @Override
+                                                public void onClick(View v) {
+                                                    Intent game_intent = new Intent(getApplication(), Game_activity.class);/*gameactivutyに飛ぶ(収量はfinsh();)*/
+                                                    startActivity(game_intent);
+                                                }
+                                            }
         );
         option_button.setOnClickListener(new View.OnClickListener() {
             @Override
