@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.959" />
 
-    <com.github.mikephil.charting.charts.PieChart
+    <!-- <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pie_chart"
         android:layout_width="125dp"
         android:layout_height="125dp"
@@ -33,7 +33,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.084" />
-
+-->
     <TextView
         android:id="@+id/Advice"
         android:layout_width="197dp"
@@ -47,7 +47,6 @@
         android:text="主催者からのメッセージ"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/Homemove_btn"
-        app:layout_constraintEnd_toStartOf="@+id/pie_chart"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

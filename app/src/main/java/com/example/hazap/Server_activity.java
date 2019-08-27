@@ -68,20 +68,23 @@ public class Server_activity extends Activity{
               } catch (IOException e) {
                   e.printStackTrace();
               }
-              System.out.println(receiveMessage);
+              System.out.println("ReceiveMessage:"+receiveMessage);
               String[] id=receiveMessage.split(":",0);
               switch (id[0]){
                   case "number"://number:Mynumber
                       instance.myId=id[1];
-                      instance.startFlag=true;//仮
                       break;
                   case "Around"://Around:aroundPeople,N:AlljoinPeople
                       String[] str=id[1].split(",",0);
                       instance.aroundpeople=Integer.parseInt(str[0]);
                       instance.allpeople=Integer.parseInt(id[2]);
                       break;
-                  case "OK":
-                      instance.startFlag=false;
+                  case "Wait":
+                      if(id[1].equals("True")){
+                          instance.startFlag=true;
+                      }
+                      break;
+                  default:
                       break;
               }
 

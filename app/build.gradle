@@ -29,5 +29,6 @@ dependencies {
     implementation 'org.java-websocket:Java-WebSocket:1.4.0'
     implementation 'org.java-websocket:Java-WebSocket:1.4.0'
     implementation 'org.codehaus.jackson:com.springsource.org.codehaus.jackson:1.4.3'
-    implementation'com.github.PhilJay:MPAndroidChart:v3.0.3'
+
+    //implementation'com.github.PhilJay:MPAndroidChart:v3.0.3'
 }
