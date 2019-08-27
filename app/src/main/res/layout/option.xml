@@ -26,7 +26,7 @@
         app:layout_constraintHorizontal_bias="0.029"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.098" />
+        app:layout_constraintVertical_bias="0.168" />
 
     <Button
         android:id="@+id/hazardmap_btn"
