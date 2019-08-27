@@ -37,7 +37,7 @@ public class Result_activity extends Activity   {
         DragViewListener listener=new DragViewListener(dragView,dragView2,dragView3);
         dragView.setOnTouchListener(listener);
         Aliverate_print();
-        Button btn=findViewById(R.id.backhome_btn);
+        Button btn=(Button)findViewById(R.id.Homemove_btn);
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -46,19 +46,7 @@ public class Result_activity extends Activity   {
         });
     }
     public static String text_change(String text){
-        try{
-            ServerSocket hazap_client = new ServerSocket(10000);
-            Socket sock = hazap_client.accept();
-            byte[] data = new byte[1024];
-            InputStream in = sock.getInputStream();
-            int readSize = in.read(data);
-            data = Arrays.copyOf(data, readSize);
-            text=(new String(data,"UTF-8"));
-            in.close();
-            hazap_client.close();
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+
         return text;
     }
     public class DragViewListener implements View.OnTouchListener{

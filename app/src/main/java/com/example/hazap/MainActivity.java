@@ -7,13 +7,15 @@ import android.view.View;
 import android.widget.Button;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
+    String coordinates;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Home();
     }
 
+    //ホーム画面
     public void Home() {
         setContentView(R.layout.home);
         Button gamestart_button = findViewById(R.id.gamestart_btn);
@@ -22,7 +24,11 @@ public class MainActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onClick(View v) {
                                                     Intent game_intent = new Intent(getApplication(), Game_activity.class);
+
                                                     startActivity(game_intent);
+
+                                                    System.out.println("Hello,world!!");
+
                                                 }
                                             }
         );
@@ -33,9 +39,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     public void Option(){
         setContentView(R.layout.option);
-        Button backhome_button=findViewById(R.id.backhome_btn);
+        Button backhome_button=findViewById(R.id.Homemove_btn);
         backhome_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -48,6 +55,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 Hazardmap();
+            }
+        });
+
+        Button jisseki_button=findViewById(R.id.jisseki_btn);
+        jisseki_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Jisseki();
             }
         });
     }
@@ -75,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void Result(){
         setContentView(R.layout.result);
-        Button backhome_button=findViewById(R.id.backhome_btn);
+        Button backhome_button=findViewById(R.id.Homemove_btn);
         backhome_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
