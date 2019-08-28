@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
+    //オプション画面
     public void Option(){
         setContentView(R.layout.option);
         Button backhome_button=findViewById(R.id.Homemove_btn);
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
+
+    //ハザードマップ画面
     public void Hazardmap(){
         setContentView(R.layout.hazardmap);
         Button backoption_button=findViewById(R.id.backoption_btn);
@@ -77,6 +80,8 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
+
+    //実績確認画面
     public void Jisseki(){
         setContentView(R.layout.jisseki);
         Button backoption_button=findViewById(R.id.backoption_btn);
@@ -88,6 +93,8 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
+
+    //リザルト画面
     public void Result(){
         setContentView(R.layout.result);
         Button backhome_button=findViewById(R.id.Homemove_btn);

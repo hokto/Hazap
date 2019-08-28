@@ -7,14 +7,19 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +32,8 @@ import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.routing.RouteOverlay;
 
 import java.io.IOException;
+
+
 public class Game_activity extends MapActivity {
     private MapView hazapView = null;                   //マップ表示用
     private RouteOverlay routeOverlay;
@@ -39,6 +46,7 @@ public class Game_activity extends MapActivity {
     public boolean startFlag=false;                    //スタートしたかどうかのフラグ(後で変更の可能性あり)
     MyLocationOverlay location;                          //スタートしたり終了したりするために必要
     Server_activity client=new Server_activity();        //サーバと接続するためにインスタンス
+    public String text_data="test";
 
 
     @SuppressLint("NewApi")
@@ -314,10 +322,6 @@ public class Game_activity extends MapActivity {
                     "        \"Step\": \"2\",\n" +
                     "        \"ARV\": \"1.18\"\n" +
                     "    }\n" +
-                   /* "   \"47\": {\n" +
-                    "        \"Coordinates\": \"131.76025422,31.08039611\",\n" +
-                    "        \"Step\": \"180\",\n" +
-                    "        \"ARV\": \"1.18\"\n" +*/
                     "}";
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(data);
@@ -375,15 +379,27 @@ public class Game_activity extends MapActivity {
             relativeLayout.addView(hazapView,1100,1800);
             relativeLayout.addView(img,lp);
             Button button = new Button(this);//終了ボタン
-//リソースから作成したDrawableのリソースを取得
-        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);
-//ボタンにDrawableを適用する
-            button.setBackground(btn_color);
+            Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
+            button.setBackground(btn_color);//ボタンにDrawableを適用する
+            button.setTextColor(Color.parseColor("#FFFFFF"));
             button.setText("避難終了");
             button.setTextSize(30);
-            relativeLayout.addView(button, 350, 150);
+            relativeLayout.addView(button, 280, 125);
             ViewGroup.LayoutParams layoutParams = button.getLayoutParams();//ボタンの配置を調整
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
+
+            //テキスト表示
+           // relativeLayout.setOrientation(RelativeLayout.VERTICAL);
+            //setContentView(relativeLayout);
+           /* TextView textView = new TextView(this);
+            textView.setText(text_data);
+            textView.setSingleLine();
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
+        textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            relativeLayout.addView(textView,
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT));*/
 
 
         int top_margin=(DisplayHeight*1400)/1794;//ボタンの配置場所を一定にする
