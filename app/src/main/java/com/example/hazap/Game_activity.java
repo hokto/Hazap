@@ -1,9 +1,12 @@
 package com.example.hazap;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
@@ -38,6 +41,7 @@ public class Game_activity extends MapActivity {
     Server_activity client=new Server_activity();        //サーバと接続するためにインスタンス
 
 
+    @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +68,9 @@ public class Game_activity extends MapActivity {
         locationOverlay=new CurrentLocationOverlay(getApplicationContext(),hazapView,this,this);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化*/
 
-        /*int lat[] = {31759551,31759431,31758775,31758520,31759086,31759181,31758867,31757998,31757286,31757195};
-        int lon[] = {131079983,131081174,131079808,131080438,131081880,131078574,131082099,131080646,131080830,131082341};
-        int step[] = {12,12,20,12,12,12,20,12,12,12};*/try {
+        
+
+        try {
             String data="{\n" +
                     "    \"0\": {\n" +
                     "        \"Coordinates\": \"131.079983055556,31.759550833333\",\n" +
@@ -371,7 +375,12 @@ public class Game_activity extends MapActivity {
             relativeLayout.addView(hazapView,1100,1800);
             relativeLayout.addView(img,lp);
             Button button = new Button(this);//終了ボタン
+//リソースから作成したDrawableのリソースを取得
+        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);
+//ボタンにDrawableを適用する
+            button.setBackground(btn_color);
             button.setText("避難終了");
+            button.setTextSize(30);
             relativeLayout.addView(button, 350, 150);
             ViewGroup.LayoutParams layoutParams = button.getLayoutParams();//ボタンの配置を調整
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
