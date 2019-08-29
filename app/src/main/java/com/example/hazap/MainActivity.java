@@ -1,15 +1,11 @@
 package com.example.hazap;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
 
 public class MainActivity extends AppCompatActivity{
     String coordinates;
@@ -18,6 +14,8 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         Home();
     }
+
+    //ホーム画面
     public void Home() {
         setContentView(R.layout.home);
         Button gamestart_button = findViewById(R.id.gamestart_btn);
@@ -26,7 +24,9 @@ public class MainActivity extends AppCompatActivity{
                                                 @Override
                                                 public void onClick(View v) {
                                                     Intent game_intent = new Intent(getApplication(), Game_activity.class);
+
                                                     startActivity(game_intent);
+
                                                 }
                                             }
         );
