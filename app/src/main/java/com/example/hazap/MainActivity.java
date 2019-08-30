@@ -27,8 +27,6 @@ public class MainActivity extends AppCompatActivity{
 
                                                     startActivity(game_intent);
 
-                                                    System.out.println("Hello,world!!");
-
                                                 }
                                             }
         );
