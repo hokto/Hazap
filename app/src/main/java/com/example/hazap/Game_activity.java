@@ -1,5 +1,6 @@
 package com.example.hazap;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -7,6 +8,9 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -16,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout;
@@ -33,6 +38,8 @@ import jp.co.yahoo.android.maps.routing.RouteOverlay;
 import java.io.IOException;
 import java.util.Iterator;
 
+import java.math.*;
+
 public class Game_activity extends MapActivity {
     private MapView hazapView = null;                   //マップ表示用
     private RouteOverlay routeOverlay;
@@ -49,6 +56,8 @@ public class Game_activity extends MapActivity {
     Server_activity client=new Server_activity();        //サーバと接続するためにインスタンス
     public int hp=100;
 
+
+    @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,18 +87,25 @@ public class Game_activity extends MapActivity {
         hazapView.invalidate();
         setContentView(relativeLayout);//layoutに追加されたものを表示
         relativeLayout.addView(hazapView,DisplayWidth*1100/1080,DisplayHeight*1800/1794);
-        //色の変更
+
+
+        //体力ゲージ
         final ProgressBar hpbar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
         hpbar.setProgressDrawable(getResources().getDrawable(R.drawable.hpbarcustom));
         hpbar.setMax(hp);
         hpbar.setProgress(hp);
         hpbar.setSecondaryProgress(100);
         RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(DisplayWidth*300/1080,DisplayHeight*30/1794);
+
         //表示座標の設定
         barParam.leftMargin=DisplayWidth*700/1080;
         barParam.topMargin=DisplayHeight*100/1794;
         relativeLayout.addView(hpbar,barParam);
         Button button = new Button(this);//終了ボタン
+        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
+        button.setBackground(btn_color);//ボタンにDrawableを適用する
+        button.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
+        button.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         button.setText("避難終了");
         relativeLayout.addView(button, DisplayWidth*350/1080, DisplayHeight*150/1794);
         ViewGroup.LayoutParams layoutParams = button.getLayoutParams();//ボタンの配置を調整
@@ -97,6 +113,7 @@ public class Game_activity extends MapActivity {
         int top_margin=(DisplayHeight*1400)/1794;//ボタンの配置場所を一定にする
         marginLayoutParams.setMargins(marginLayoutParams.leftMargin,top_margin , marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin);
         button.setLayoutParams(marginLayoutParams);
+
         //テスト用
         Button testbtn=new Button(this);
         testbtn.setText("Damage");
@@ -129,6 +146,7 @@ public class Game_activity extends MapActivity {
                                   }
 
         );}
+
     @Override
     protected boolean isRouteDisplayed(){
         return true;

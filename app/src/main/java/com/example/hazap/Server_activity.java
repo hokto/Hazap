@@ -1,5 +1,6 @@
 package com.example.hazap;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
@@ -44,9 +45,12 @@ import jp.co.yahoo.android.maps.CircleOverlay;
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
 
-public class Server_activity extends Activity{
-    public float ARV_min = 10;   //ARV値の最小値を格納
 
+public class Server_activity extends Activity{
+    public List<Integer> radius = new ArrayList<Integer>();     //危険範囲の円の半径を入れるリスト
+    public List<Integer> distance = new ArrayList<Integer>();   //プレイヤーと危険範囲の中心との距離を入れるリスト
+
+    @SuppressLint("StaticFieldLeak")
     public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView, final RelativeLayout relativeLayout){
         new AsyncTask<Void,Void,String>(){
           @Override
@@ -60,7 +64,7 @@ public class Server_activity extends Activity{
               String ss;
               try{
                   //ソケット通信
-                  connect = new Socket("192.168.0.24", 4000);
+                  connect = new Socket("192.168.11.133", 4000);
                   //connect.setSoTimeout(1500);
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
@@ -137,13 +141,12 @@ public class Server_activity extends Activity{
                               int lon = (int) (Float.parseFloat(coordinates[0]) * 10E5);
                               int lat = (int) (Float.parseFloat(coordinates[1]) * 10E5);
                               int step = Integer.parseInt(node.get("Step").asText());
-                              float ARV = (float) (Float.parseFloat(coordinates[3])); //ARV ：　地下30mから地表までの速度増幅度
-                              if(ARV<ARV_min)
-                              {
-                                  ARV_min = ARV;
+
+                              radius.add(step*5);
+                              //distance.add();
 
                                   GeoPoint mid = new GeoPoint(lat, lon);
-                                  CircleOverlay circleOverlay = new CircleOverlay(mid, step, step) {
+                                  CircleOverlay circleOverlay = new CircleOverlay(mid, step*5, step*5) {
                                       @Override
                                       protected boolean onTap() {
                                           //円をタッチした際の処理
@@ -156,7 +159,6 @@ public class Server_activity extends Activity{
                                   circleOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
                                   mapView.getOverlays().add(circleOverlay);
                                   mapView.invalidate();
-                              }
                           }
                       } catch (IOException e) { }
                   }

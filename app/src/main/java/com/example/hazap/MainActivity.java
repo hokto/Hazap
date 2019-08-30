@@ -5,19 +5,44 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+//テスト用
+import android.os.Handler;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends AppCompatActivity{
-    String coordinates;
+
+    //一定時間ごとに更新するプログラムのテスト
+    private Timer mTimer = null;
+    Handler mHandler = new Handler();
+    public int count = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //ここから
+        mTimer = new Timer(true);
+        mTimer.schedule(new TimerTask(){
+            @Override
+            public void run() {
+                mHandler.post( new Runnable() {
+                    public void run() {
+                        //ここに処理を書く
+                        System.out.println(count);
+                        count = count+1;
+                    }
+                });
+            }
+        },0,2000); //2秒間隔で実行
+        //ここまで
         Home();
     }
 
     //ホーム画面
     public void Home() {
         setContentView(R.layout.home);
+
         Button gamestart_button = findViewById(R.id.gamestart_btn);
         Button option_button = findViewById(R.id.option_btn);
         gamestart_button.setOnClickListener(new View.OnClickListener() {

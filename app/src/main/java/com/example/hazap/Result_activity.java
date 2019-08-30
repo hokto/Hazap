@@ -13,15 +13,11 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-<<<<<<< HEAD
-
-=======
 */
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
->>>>>>> 8dc9c6eee95d31cc621fe0690c250a8d573756ea
 import java.util.ArrayList;
 import java.util.List;
 
