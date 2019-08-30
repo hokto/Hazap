@@ -1,161 +1,143 @@
 package com.example.hazap;
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
+
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.RelativeLayout;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.co.yahoo.android.maps.CircleOverlay;
 import jp.co.yahoo.android.maps.GeoPoint;
-import jp.co.yahoo.android.maps.MapController;
+import jp.co.yahoo.android.maps.MapActivity;
 import jp.co.yahoo.android.maps.MapView;
-import java.net.Socket;
+import jp.co.yahoo.android.maps.MyLocationOverlay;
+import jp.co.yahoo.android.maps.routing.RouteOverlay;
+
 import java.io.IOException;
-import java.io.DataOutputStream;
-import java.util.Map;
+import java.util.Iterator;
 
-
-public class Game_activity extends Activity {
-    private MapView mapView=null;
-    private LocationManager mLocationManager;
-    private String BestProvider;
-    public double latitude;
-    public double longitude;
-    public static Point getDisplaySize(Activity activity) {
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point point = new Point();
-        display.getSize(point);
-        return point;
-    }
-
-
+public class Game_activity extends MapActivity {
+    private MapView hazapView = null;                   //マップ表示用
+    private RouteOverlay routeOverlay;
+    private CurrentLocationOverlay locationOverlay;     //現在地追跡用
+    private int DisplayHeight=0;                        //端末の縦方向の長さ
+    private int DisplayWidth=0;                         //端末の横方向の長さ
+    public static String myId="";                               //サーバによって割り振られるID
+    public static int allpeople=0;                             //訓練に参加中の参加人数
+    public static int aroundpeople=0;                          //自分の周囲にいる人数
+    public static boolean startFlag=false;
+    public static String dangerplaces="";//スタートしたかどうかのフラグ(後で変更の可能性あり)
+    public static boolean connectEnd=false;
+    MyLocationOverlay location;                          //スタートしたり終了したりするために必要
+    Server_activity client=new Server_activity();        //サーバと接続するためにインスタンス
+    public int hp=100;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RelativeLayout relativeLayout=new RelativeLayout(this);
-        mapView = new MapView(this, "dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
-        MapController c = mapView.getMapController();
-        c.setCenter(new GeoPoint(31760254,131080396));
-        c.setZoom(1);
-
-        //ポリゴン精製、表示
-        setContentView(mapView);
-        GeoPoint mid = new GeoPoint(31760254, 131080396);
-        CircleOverlay circleOverlay = new CircleOverlay(mid, 300, 300){
-
+        final RelativeLayout relativeLayout = new RelativeLayout(Game_activity.this);//マップ表示やボタン配置用のレイアウト
+        hazapView = new MapView(this, "dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
+        location=new MyLocationOverlay(getApplicationContext(),hazapView);
+        location.enableMyLocation();//locationの現在地の有効化
+        WindowManager wm = getWindowManager();
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics displayMetrics = new DisplayMetrics();//端末の情報を取得
+        display.getMetrics(displayMetrics);
+        DisplayWidth = displayMetrics.widthPixels;//端末の高さ、幅を代入
+        DisplayHeight = displayMetrics.heightPixels;
+        setContentView(hazapView);
+        location.runOnFirstFix(new Runnable() {
             @Override
-            protected boolean onTap(){
-                //円をタッチした際の処理
-                return true;
-            }
-        };
+            public void run() {
+                System.out.println("Debug1");
+                client.Connect("Recruit:"+location.getMyLocation().getLatitude()+","+location.getMyLocation().getLongitude(),Game_activity.this,null,null);//サーバに参加することを伝え、IDをもらう
+                try{
+                    Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
+                }catch(InterruptedException e){ }
+        }});
+        locationOverlay=new CurrentLocationOverlay(getApplicationContext(),hazapView,this,Game_activity.this,relativeLayout);
+        locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
+        hazapView.getOverlays().add(locationOverlay);
+        hazapView.invalidate();
+        setContentView(relativeLayout);//layoutに追加されたものを表示
+        relativeLayout.addView(hazapView,DisplayWidth*1100/1080,DisplayHeight*1800/1794);
         //色の変更
-        circleOverlay.setFillColor(Color.argb(127, 255, 40, 40));
-        circleOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
-        mapView.getOverlays().add(circleOverlay);
-        setContentView(relativeLayout);
-
-        //終了ボタン
-        relativeLayout.addView(mapView,1100,1800);
-        Button button=new Button(this);
+        final ProgressBar hpbar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
+        hpbar.setProgressDrawable(getResources().getDrawable(R.drawable.hpbarcustom));
+        hpbar.setMax(hp);
+        hpbar.setProgress(hp);
+        hpbar.setSecondaryProgress(100);
+        RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(DisplayWidth*300/1080,DisplayHeight*30/1794);
+        //表示座標の設定
+        barParam.leftMargin=DisplayWidth*700/1080;
+        barParam.topMargin=DisplayHeight*100/1794;
+        relativeLayout.addView(hpbar,barParam);
+        Button button = new Button(this);//終了ボタン
         button.setText("避難終了");
-        relativeLayout.addView(button,350,150);
-        ViewGroup.LayoutParams layoutParams=button.getLayoutParams();
-        ViewGroup.MarginLayoutParams marginLayoutParams=(ViewGroup.MarginLayoutParams)layoutParams;
-        marginLayoutParams.setMargins(marginLayoutParams.leftMargin,1000,marginLayoutParams.rightMargin,marginLayoutParams.bottomMargin);
+        relativeLayout.addView(button, DisplayWidth*350/1080, DisplayHeight*150/1794);
+        ViewGroup.LayoutParams layoutParams = button.getLayoutParams();//ボタンの配置を調整
+        ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
+        int top_margin=(DisplayHeight*1400)/1794;//ボタンの配置場所を一定にする
+        marginLayoutParams.setMargins(marginLayoutParams.leftMargin,top_margin , marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin);
         button.setLayoutParams(marginLayoutParams);
+        //テスト用
+        Button testbtn=new Button(this);
+        testbtn.setText("Damage");
+        relativeLayout.addView(testbtn, DisplayWidth*100/1080, DisplayHeight*100/1794);
+        testbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hp-=10;
+                hpbar.setProgress(hp);
+            }
+        });
+        //ここまでテスト用
         button.setOnClickListener(new View.OnClickListener() {
                                       @Override
                                       public void onClick(View v) {
-                                          Intent result_intent=new Intent(getApplication(),Result_activity.class);
+                                          client.Connect("End:"+myId,Game_activity.this,null,null);
+                                          locationOverlay.disableMyLocation();
+                                          try{
+                                              Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
+                                          }catch(InterruptedException e){}
+                                          client.Connect("Cancel:"+myId,Game_activity.this,null,null);//避難が完了したらサーバ上からこのプレイヤーのIDを削除し、終了
+                                          try{
+                                              Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
+                                          }catch(InterruptedException e){}
+
+                                          Intent result_intent = new Intent(getApplication(), Result_activity.class);//リザルト画面への遷移
                                           startActivity(result_intent);
                                           finish();
                                       }
                                   }
-        );
 
-        //intiLocationManager();
-    }
-
-
-    /*private void intiLocationManager(){
-        mLocationManager=(LocationManager)getSystemService(LOCATION_SERVICE);
-        Criteria criteria =new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setPowerRequirement(Criteria.POWER_HIGH);
-        criteria.setSpeedRequired(false);
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
-        criteria.setCostAllowed(true);
-        criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
-        criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
-        BestProvider=mLocationManager.getBestProvider(criteria,true);
-    }
-    private void checkPermission(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1000);
-        }
-    }
+        );}
     @Override
-    protected void onStart(){
-        super.onStart();
-        locationStart();
+    protected boolean isRouteDisplayed(){
+        return true;
     }
-    @Override
-    protected void onStop(){
-        super.onStop();
-        locationStop();
-    }
-    private void locationStart(){
-        checkPermission();
-        mLocationManager.requestLocationUpdates(BestProvider,60000,10,this);
-    }
-    private void locationStop(){
-        mLocationManager.removeUpdates(this);
-    }
-    public void onLocationChanged(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-        try {
-            Socket socket = new Socket("hazap_server", 1);
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-            out.writeDouble(latitude);
-            out.writeDouble(longitude);
-            out.close();
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public void onStatusChanged(String provider, int status, Bundle extras) { }
-    public void onProviderDisabled(String provider) { }
-    public void onProviderEnabled(String provider) { }*/
     @Override
     protected void  onResume() {
         super.onResume();
-        mapView.onResume();
+        hazapView.onResume();
     }
     @Override
     protected void onPause() {
         super.onPause();
-        mapView.onPause();
+        hazapView.onPause();
     }
 }

@@ -1,0 +1,12 @@
+diff a/app/build.gradle b/app/build.gradle	(rejected hunks)
+@@ -1,9 +1,8 @@
+ apply plugin: 'com.android.application'
+-
+ android {
+     compileSdkVersion 28
+     defaultConfig {
+-        applicationId "com.example.hazap"
++        applicationId "com.example.sharetion2"
+         minSdkVersion 15
+         targetSdkVersion 28
+         versionCode 1
