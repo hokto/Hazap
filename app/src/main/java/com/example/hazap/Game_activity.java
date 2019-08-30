@@ -8,7 +8,17 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +27,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -59,6 +71,7 @@ public class Game_activity extends MapActivity {
         display.getMetrics(displayMetrics);
         DisplayWidth = displayMetrics.widthPixels;//端末の高さ、幅を代入
         DisplayHeight = displayMetrics.heightPixels;
+        hazapView.getMapController().setZoom(0);
         setContentView(hazapView);
         location.runOnFirstFix(new Runnable() {
             @Override
@@ -71,9 +84,7 @@ public class Game_activity extends MapActivity {
         }});
         locationOverlay=new CurrentLocationOverlay(getApplicationContext(),hazapView,this,Game_activity.this,relativeLayout);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
-        hazapView.getOverlays().add(locationOverlay);
-        hazapView.invalidate();
-        setContentView(relativeLayout);//layoutに追加されたものを表示
+        setContentView(relativeLayout);
         relativeLayout.addView(hazapView,DisplayWidth*1100/1080,DisplayHeight*1800/1794);
         //色の変更
         final ProgressBar hpbar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);

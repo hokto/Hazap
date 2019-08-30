@@ -20,17 +20,14 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.os.AsyncTask;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.GenericArrayType;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -46,7 +43,6 @@ import java.util.List;
 import jp.co.yahoo.android.maps.CircleOverlay;
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
-
 public class Server_activity extends Activity{
     public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView, final RelativeLayout relativeLayout){
         new AsyncTask<Void,Void,String>(){
@@ -61,7 +57,7 @@ public class Server_activity extends Activity{
               String ss;
               try{
                   //ソケット通信
-                  connect = new Socket("192.168.0.24", 4000);
+                  connect = new Socket("192.168.11.133", 4000);
                   //connect.setSoTimeout(1500);
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
