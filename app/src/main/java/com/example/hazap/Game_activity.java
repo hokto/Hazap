@@ -47,8 +47,6 @@ public class Game_activity extends MapActivity {
     private MapView hazapView = null;                   //マップ表示用
     private RouteOverlay routeOverlay;
     private CurrentLocationOverlay locationOverlay;     //現在地追跡用
-    private int DisplayHeight=0;                        //端末の縦方向の長さ
-    private int DisplayWidth=0;                         //端末の横方向の長さ
     public static String myId="";                               //サーバによって割り振られるID
     public static int allpeople=0;                             //訓練に参加中の参加人数
     public static int aroundpeople=0;                          //自分の周囲にいる人数
@@ -61,16 +59,11 @@ public class Game_activity extends MapActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainActivity playDisplay=new MainActivity();
         final RelativeLayout relativeLayout = new RelativeLayout(Game_activity.this);//マップ表示やボタン配置用のレイアウト
         hazapView = new MapView(this, "dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
         location=new MyLocationOverlay(getApplicationContext(),hazapView);
         location.enableMyLocation();//locationの現在地の有効化
-        WindowManager wm = getWindowManager();
-        Display display = wm.getDefaultDisplay();
-        DisplayMetrics displayMetrics = new DisplayMetrics();//端末の情報を取得
-        display.getMetrics(displayMetrics);
-        DisplayWidth = displayMetrics.widthPixels;//端末の高さ、幅を代入
-        DisplayHeight = displayMetrics.heightPixels;
         hazapView.getMapController().setZoom(0);
         setContentView(hazapView);
         location.runOnFirstFix(new Runnable() {
@@ -85,30 +78,30 @@ public class Game_activity extends MapActivity {
         locationOverlay=new CurrentLocationOverlay(getApplicationContext(),hazapView,this,Game_activity.this,relativeLayout);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(relativeLayout);
-        relativeLayout.addView(hazapView,DisplayWidth*1100/1080,DisplayHeight*1800/1794);
+        relativeLayout.addView(hazapView,playDisplay.DisplayWidth*1100/1080,playDisplay.DisplayHeight*1800/1794);
         //色の変更
         final ProgressBar hpbar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
         hpbar.setProgressDrawable(getResources().getDrawable(R.drawable.hpbarcustom));
         hpbar.setMax(hp);
         hpbar.setProgress(hp);
         hpbar.setSecondaryProgress(100);
-        RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(DisplayWidth*300/1080,DisplayHeight*30/1794);
+        RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(playDisplay.DisplayWidth*300/1080,playDisplay.DisplayHeight*30/1794);
         //表示座標の設定
-        barParam.leftMargin=DisplayWidth*700/1080;
-        barParam.topMargin=DisplayHeight*100/1794;
+        barParam.leftMargin=playDisplay.DisplayWidth*700/1080;
+        barParam.topMargin=playDisplay.DisplayHeight*100/1794;
         relativeLayout.addView(hpbar,barParam);
         Button button = new Button(this);//終了ボタン
         button.setText("避難終了");
-        relativeLayout.addView(button, DisplayWidth*350/1080, DisplayHeight*150/1794);
+        relativeLayout.addView(button, playDisplay.DisplayWidth*350/1080, playDisplay.DisplayHeight*150/1794);
         ViewGroup.LayoutParams layoutParams = button.getLayoutParams();//ボタンの配置を調整
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
-        int top_margin=(DisplayHeight*1400)/1794;//ボタンの配置場所を一定にする
+        int top_margin=(playDisplay.DisplayHeight*1400)/1794;//ボタンの配置場所を一定にする
         marginLayoutParams.setMargins(marginLayoutParams.leftMargin,top_margin , marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin);
         button.setLayoutParams(marginLayoutParams);
         //テスト用
         Button testbtn=new Button(this);
         testbtn.setText("Damage");
-        relativeLayout.addView(testbtn, DisplayWidth*100/1080, DisplayHeight*100/1794);
+        relativeLayout.addView(testbtn, playDisplay.DisplayWidth*100/1080, playDisplay.DisplayHeight*100/1794);
         testbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
