@@ -21,6 +21,7 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import android.os.AsyncTask;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -47,12 +48,12 @@ import jp.co.yahoo.android.maps.MapView;
 
 
 public class Server_activity extends Activity{
-    public List<Integer> radius = new ArrayList<Integer>();     //危険範囲の円の半径を入れるリスト
-    public List<Integer> distance = new ArrayList<Integer>();   //プレイヤーと危険範囲の中心との距離を入れるリスト
-
     @SuppressLint("StaticFieldLeak")
-    public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView, final RelativeLayout relativeLayout){
+    public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView, final Organizer organizer){
         new AsyncTask<Void,Void,String>(){
+            public List<Integer> radius = new ArrayList<Integer>();     //危険範囲の円の半径を入れるリスト
+            public List<Integer> distance = new ArrayList<Integer>();   //プレイヤーと危険範囲の中心との距離を入れるリスト
+
           @Override
           protected String doInBackground(Void ... voids){
               String receiveMessage = "";
@@ -64,7 +65,7 @@ public class Server_activity extends Activity{
               String ss;
               try{
                   //ソケット通信
-                  connect = new Socket("192.168.11.133", 4000);
+                  connect = new Socket("192.168.0.18", 4000);
                   //connect.setSoTimeout(1500);
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
@@ -88,11 +89,13 @@ public class Server_activity extends Activity{
               switch (id[0]){
                   case "number"://number:Mynumber
                       instance.myId=id[1];
+                      instance.connectEnd=true;
                       break;
                   case "Around"://Around:aroundPeople,N:AlljoinPeople
                       String[] str=id[1].split(",",0);
                       instance.aroundpeople=Integer.parseInt(str[0]);
                       instance.allpeople=Integer.parseInt(str[1].split(":",0)[1]);
+                      instance.connectEnd=true;
                       break;
                   case "Start"://Start:ByteSize
                           instance.startFlag=true;
@@ -110,7 +113,14 @@ public class Server_activity extends Activity{
                                   System.out.println("CausedException!");
                               }
                           }
+                          instance.connectEnd=true;
                           break;
+                  case "Allpeople":
+                      organizer.allPlayers=Integer.parseInt(id[1]);
+                      break;
+                  case "OK:":
+                      System.out.println("OK!Start");
+                      break;
                   default:
                       break;
               }
@@ -121,7 +131,6 @@ public class Server_activity extends Activity{
               } catch (IOException e) {
                   e.printStackTrace();
               }
-              instance.connectEnd=true;
               return receiveMessage;
           }
           @Override

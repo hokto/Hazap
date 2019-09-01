@@ -55,7 +55,7 @@ public class CurrentLocationOverlay extends MyLocationOverlay{
             {
                 if(Client_Info.connectEnd){
                     Client_Info.connectEnd=false;
-                    client.Connect("Wait:",Client_Info,_mapView,relativeLayout);
+                    client.Connect("Wait:",Client_Info,_mapView,null);
                     try{
                         Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                     }catch(InterruptedException e){}
