@@ -41,7 +41,9 @@ import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.routing.RouteOverlay;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Game_activity extends MapActivity {
     private MapView hazapView = null;                   //マップ表示用
@@ -53,9 +55,11 @@ public class Game_activity extends MapActivity {
     public static boolean startFlag=false;
     public static String dangerplaces="";//スタートしたかどうかのフラグ(後で変更の可能性あり)
     public static boolean connectEnd=false;
+    public static ArrayList<ArrayList> earthquakeInfo=new ArrayList<ArrayList>();
     MyLocationOverlay location;                          //スタートしたり終了したりするために必要
     Server_activity client=new Server_activity();        //サーバと接続するためにインスタンス
-    public int hp=100;
+    public static int hp=100;
+    public static ProgressBar hpbar;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,14 +83,12 @@ public class Game_activity extends MapActivity {
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(relativeLayout);
         relativeLayout.addView(hazapView,playDisplay.DisplayWidth*1100/1080,playDisplay.DisplayHeight*1800/1794);
-        //色の変更
-        final ProgressBar hpbar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
+        hpbar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);//体力ゲージの実装
         hpbar.setProgressDrawable(getResources().getDrawable(R.drawable.hpbarcustom));
-        hpbar.setMax(hp);
-        hpbar.setProgress(hp);
-        hpbar.setSecondaryProgress(100);
-        RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(playDisplay.DisplayWidth*300/1080,playDisplay.DisplayHeight*30/1794);
-        //表示座標の設定
+        hpbar.setMax(hp);//体力の最大値(100)
+        hpbar.setProgress(hp);//最初の体力(100)
+        hpbar.setSecondaryProgress(100);//体力減少用の設定
+        RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(playDisplay.DisplayWidth*300/1080,playDisplay.DisplayHeight*30/1794);//体力ゲージを表示する場所を一定にする
         barParam.leftMargin=playDisplay.DisplayWidth*700/1080;
         barParam.topMargin=playDisplay.DisplayHeight*100/1794;
         relativeLayout.addView(hpbar,barParam);
@@ -98,23 +100,11 @@ public class Game_activity extends MapActivity {
         int top_margin=(playDisplay.DisplayHeight*1400)/1794;//ボタンの配置場所を一定にする
         marginLayoutParams.setMargins(marginLayoutParams.leftMargin,top_margin , marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin);
         button.setLayoutParams(marginLayoutParams);
-        //テスト用
-        Button testbtn=new Button(this);
-        testbtn.setText("Damage");
-        relativeLayout.addView(testbtn, playDisplay.DisplayWidth*100/1080, playDisplay.DisplayHeight*100/1794);
-        testbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hp-=10;
-                hpbar.setProgress(hp);
-            }
-        });
-        //ここまでテスト用
-        button.setOnClickListener(new View.OnClickListener() {
+        button.setOnClickListener(new View.OnClickListener() { //避難終了ボタンが押された場合
                                       @Override
                                       public void onClick(View v) {
-                                          client.Connect("End:"+myId,Game_activity.this,null,null);
-                                          locationOverlay.disableMyLocation();
+                                          client.Connect("End:"+myId,Game_activity.this,null,null);//避難が終わったことを伝える
+                                          locationOverlay.disableMyLocation();//位置情報の取得を終了
                                           try{
                                               Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                                           }catch(InterruptedException e){}
