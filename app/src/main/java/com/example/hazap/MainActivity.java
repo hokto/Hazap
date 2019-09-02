@@ -8,19 +8,13 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-//テスト用
-import android.os.Handler;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import java.time.Instant;
 
 
 public class MainActivity extends AppCompatActivity{
-
-    String coordinates;
     public static int DisplayHeight=0; //端末の縦方向の長さ
     public static int DisplayWidth=0;  //端末の横方向の長さ
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

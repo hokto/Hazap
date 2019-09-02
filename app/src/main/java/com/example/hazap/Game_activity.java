@@ -1,47 +1,21 @@
 package com.example.hazap;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.util.AttributeSet;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
-import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jp.co.yahoo.android.maps.CircleOverlay;
-import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapActivity;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.routing.RouteOverlay;
-
-import java.io.IOException;
-import java.util.Iterator;
 
 
 public class Game_activity extends MapActivity {
@@ -59,6 +33,7 @@ public class Game_activity extends MapActivity {
     public int hp=100;
 
 
+    @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +82,7 @@ public class Game_activity extends MapActivity {
         int top_margin=(playDisplay.DisplayHeight*1400)/1794;//ボタンの配置場所を一定にする
         marginLayoutParams.setMargins(marginLayoutParams.leftMargin,top_margin , marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin);
         button.setLayoutParams(marginLayoutParams);
+
 
         //テスト用
         Button testbtn=new Button(this);
