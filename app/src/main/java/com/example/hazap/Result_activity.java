@@ -7,19 +7,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+/*
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-
+<<<<<<< HEAD
+*/
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Result_activity extends Activity   {
@@ -36,7 +36,7 @@ public class Result_activity extends Activity   {
         advice.setText(data);
         DragViewListener listener=new DragViewListener(dragView,dragView2,dragView3);
         dragView.setOnTouchListener(listener);
-        Aliverate_print();
+        //Aliverate_print();
         Button btn=(Button)findViewById(R.id.Homemove_btn);
         btn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -90,7 +90,7 @@ public class Result_activity extends Activity   {
 
     }
 
-    private void Aliverate_print() {
+    /*private void Aliverate_print() {
         float aliverate = 70.0f;
         float ather = 100.0f - aliverate;
         float[] Rate = {aliverate, ather};
@@ -108,5 +108,5 @@ public class Result_activity extends Activity   {
         PieChart piechart = findViewById(R.id.pie_chart);
         piechart.setData(data);
         piechart.invalidate();
-    }
+    }*/
 }

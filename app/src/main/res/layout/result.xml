@@ -7,14 +7,16 @@
 
     <Button
         android:id="@+id/Homemove_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="57dp"
+        android:layout_width="140dp"
+        android:layout_height="75dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/button_state"
         android:text="ホームに戻る"
+        android:textColor="#B9FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.146"
@@ -22,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.959" />
 
-    <com.github.mikephil.charting.charts.PieChart
+    <!-- <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pie_chart"
         android:layout_width="125dp"
         android:layout_height="125dp"
@@ -33,7 +35,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.084" />
-
+-->
     <TextView
         android:id="@+id/Advice"
         android:layout_width="197dp"
@@ -47,7 +49,6 @@
         android:text="主催者からのメッセージ"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/Homemove_btn"
-        app:layout_constraintEnd_toStartOf="@+id/pie_chart"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -58,6 +59,7 @@
         android:layout_height="545dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0">
@@ -66,6 +68,8 @@
             android:id="@+id/Map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="543dp"
             android:contentDescription="TODO"
             app:srcCompat="@drawable/back"
             tools:srcCompat="@drawable/back" />
