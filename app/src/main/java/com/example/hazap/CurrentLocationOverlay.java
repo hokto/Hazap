@@ -2,21 +2,7 @@ package com.example.hazap;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.location.Location;
-import android.os.AsyncTask;
 import android.widget.RelativeLayout;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
@@ -55,7 +41,7 @@ public class CurrentLocationOverlay extends MyLocationOverlay{
             {
                 if(Client_Info.connectEnd){
                     Client_Info.connectEnd=false;
-                    client.Connect("Wait:",Client_Info,_mapView,relativeLayout);
+                    client.Connect("Wait:",Client_Info,_mapView,null);
                     try{
                         Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                     }catch(InterruptedException e){}

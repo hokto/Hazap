@@ -35,7 +35,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
 >>>>>>> 8dc9c6eee95d31cc621fe0690c250a8d573756ea
+=======
+        <activity android:name=".Organizer" android:label="Hazap"></activity>
+>>>>>>> de30b2869b3957b3c4abc32124391e49cf51d333
     </application>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

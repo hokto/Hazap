@@ -1,45 +1,20 @@
 package com.example.hazap;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.IntentService;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Handler;
-import android.telephony.data.ApnSetting;
-import android.util.Base64;
-import android.util.Log;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.GenericArrayType;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -47,9 +22,14 @@ import jp.co.yahoo.android.maps.CircleOverlay;
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
 
+
 public class Server_activity extends Activity{
-    public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView, final RelativeLayout relativeLayout){
+    @SuppressLint("StaticFieldLeak")
+    public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView, final Organizer organizer){
         new AsyncTask<Void,Void,String>(){
+            public List<Integer> radius = new ArrayList<Integer>();     //危険範囲の円の半径を入れるリスト
+            public List<Integer> distance = new ArrayList<Integer>();   //プレイヤーと危険範囲の中心との距離を入れるリスト
+
           @Override
           protected String doInBackground(Void ... voids){
               String receiveMessage = "";
@@ -61,7 +41,7 @@ public class Server_activity extends Activity{
               String ss;
               try{
                   //ソケット通信
-                  connect = new Socket("192.168.0.24", 4000);
+                  connect = new Socket("192.168.0.18", 4000);
                   //connect.setSoTimeout(1500);
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
@@ -85,11 +65,13 @@ public class Server_activity extends Activity{
               switch (id[0]){
                   case "number"://number:Mynumber
                       instance.myId=id[1];
+                      instance.connectEnd=true;
                       break;
                   case "Around"://Around:aroundPeople,N:AlljoinPeople
                       String[] str=id[1].split(",",0);
                       instance.aroundpeople=Integer.parseInt(str[0]);
                       instance.allpeople=Integer.parseInt(str[1].split(":",0)[1]);
+                      instance.connectEnd=true;
                       break;
                   case "Start"://Start:ByteSize
                           instance.startFlag=true;
@@ -107,7 +89,14 @@ public class Server_activity extends Activity{
                                   System.out.println("CausedException!");
                               }
                           }
+                          instance.connectEnd=true;
                           break;
+                  case "Allpeople":
+                      organizer.allPlayers=Integer.parseInt(id[1]);
+                      break;
+                  case "OK:":
+                      System.out.println("OK!Start");
+                      break;
                   default:
                       break;
               }
@@ -118,7 +107,6 @@ public class Server_activity extends Activity{
               } catch (IOException e) {
                   e.printStackTrace();
               }
-              instance.connectEnd=true;
               return receiveMessage;
           }
           @Override
@@ -129,6 +117,7 @@ public class Server_activity extends Activity{
                           ObjectMapper mapper = new ObjectMapper();
                           JsonNode jsonNode = mapper.readTree(instance.dangerplaces);
                           Iterator<String> fieldName=jsonNode.fieldNames();
+
                           //ポリゴン精製、表示
                           while(fieldName.hasNext()) {
                               String stringJson=fieldName.next();
@@ -137,20 +126,24 @@ public class Server_activity extends Activity{
                               int lon = (int) (Float.parseFloat(coordinates[0]) * 10E5);
                               int lat = (int) (Float.parseFloat(coordinates[1]) * 10E5);
                               int step = Integer.parseInt(node.get("Step").asText());
-                              GeoPoint mid = new GeoPoint(lat, lon);
-                              CircleOverlay circleOverlay = new CircleOverlay(mid, step, step) {
-                                  @Override
-                                  protected boolean onTap() {
-                                      //円をタッチした際の処理
 
-                                      return true;
-                                  }
-                              };
-                              //色の変更
-                              circleOverlay.setFillColor(Color.argb(127, 255, 40, 40));
-                              circleOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
-                              mapView.getOverlays().add(circleOverlay);
-                              mapView.invalidate();
+                              radius.add(step*5);
+                              //distance.add();
+
+                                  GeoPoint mid = new GeoPoint(lat, lon);
+                                  CircleOverlay circleOverlay = new CircleOverlay(mid, step*5, step*5) {
+                                      @Override
+                                      protected boolean onTap() {
+                                          //円をタッチした際の処理
+
+                                          return true;
+                                      }
+                                  };
+                                  //色の変更
+                                  circleOverlay.setFillColor(Color.argb(127, 255, 40, 40));
+                                  circleOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
+                                  mapView.getOverlays().add(circleOverlay);
+                                  mapView.invalidate();
                           }
                       } catch (IOException e) { }
                   }
