@@ -25,10 +25,7 @@
         app:layout_constraintHorizontal_bias="0.031"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-<<<<<<< HEAD
-=======
         app:layout_constraintVertical_bias="0.032"
->>>>>>> de30b2869b3957b3c4abc32124391e49cf51d333
         tools:ignore="MissingConstraints" />
 
     <Button

@@ -20,12 +20,6 @@
         android:text="戻る"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
-<<<<<<< HEAD
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="631dp"
-        tools:ignore="MissingConstraints" />
-
-=======
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.063"
@@ -33,5 +27,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.013"
         tools:ignore="MissingConstraints" />
->>>>>>> 11fc5eb41b5cd60e5b8dcf57d1bd4c10fb52fbd8
+
 </android.support.constraint.ConstraintLayout>

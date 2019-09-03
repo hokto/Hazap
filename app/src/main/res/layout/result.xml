@@ -14,13 +14,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-<<<<<<< HEAD
-        android:text="ホーム"
-=======
         android:background="@drawable/button_state"
         android:text="ホームに戻る"
         android:textColor="#B9FFFFFF"
->>>>>>> de30b2869b3957b3c4abc32124391e49cf51d333
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.097"
