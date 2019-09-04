@@ -19,7 +19,7 @@
         android:background="@drawable/button_state"
         android:text="戻る"
         android:textColor="#FFFFFF"
-        android:textSize="24sp"
+        android:textSize="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.063"
