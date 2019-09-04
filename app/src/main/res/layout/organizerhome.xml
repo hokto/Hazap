@@ -19,7 +19,7 @@
 
         <Spinner
             android:id="@+id/disasterspinner"
-            android:layout_width="269dp"
+            android:layout_width="314dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
@@ -27,12 +27,12 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="75dp"
-            android:layout_marginLeft="75dp"
-            android:layout_marginTop="87dp"
-            android:layout_marginEnd="67dp"
-            android:layout_marginRight="67dp"
-            android:layout_marginBottom="574dp"
+            android:layout_marginStart="55dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="170dp"
+            android:layout_marginEnd="42dp"
+            android:layout_marginRight="45dp"
+            android:layout_marginBottom="478dp"
             android:scrollbarSize="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,6 +40,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.114" />
+
+        <TextView
+            android:id="@+id/screentitle"
+            android:layout_width="133dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="38dp"
+            android:layout_marginLeft="38dp"
+            android:layout_marginTop="69dp"
+            android:layout_marginEnd="240dp"
+            android:layout_marginRight="240dp"
+            android:layout_marginBottom="613dp"
+            android:text=":災害選択"
+            android:textColor="#000000"
+            android:textSize="30sp" />
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

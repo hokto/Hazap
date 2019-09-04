@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -33,7 +34,7 @@ public class Organizer extends Activity {
         final RelativeLayout relativeLayout=findViewById(R.id.relativeLayout);
         final Spinner nextSpinner=new Spinner(this);
         final MainActivity playDisplay=new MainActivity();
-        ArrayAdapter<String> disasterAdapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,disasterItems);
+        ArrayAdapter<String> disasterAdapter=new ArrayAdapter<>(this,R.layout.spinner_item,disasterItems);
         disasterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         disasterSpinner.setAdapter(disasterAdapter);
         disasterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
@@ -58,7 +59,7 @@ public class Organizer extends Activity {
                 }
         });
         Button startbtn=new Button(this);
-        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
+        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.btn_custom, null);//リソースから作成したDrawableのリソースを取得
         startbtn.setBackground(btn_color);//ボタンにDrawableを適用する
         startbtn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
         startbtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
@@ -72,7 +73,8 @@ public class Organizer extends Activity {
         playerNumText=new TextView(this);
         RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(500,80);
         textParam.leftMargin=300;
-        textParam.topMargin=1200;
+        textParam.topMargin=1700;
+        textParam.rightMargin=300;
         playerNumText.setTextSize(20);
         relativeLayout.addView(playerNumText,textParam);
         final Server_activity organizerSocket=new Server_activity();
@@ -102,12 +104,12 @@ public class Organizer extends Activity {
     }
     private void setSpinnerItems(Spinner spinner,String[] items,RelativeLayout relativeLayout,MainActivity playDisplay){
         relativeLayout.removeView(spinner);
-        ArrayAdapter nextAdapter=new ArrayAdapter(this,android.R.layout.simple_spinner_item,items);
+        ArrayAdapter nextAdapter=new ArrayAdapter(this,R.layout.spinner_item,items);
         nextAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(nextAdapter);
-        RelativeLayout.LayoutParams nextParams=new RelativeLayout.LayoutParams(700* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
-        nextParams.leftMargin=200* MainActivity.DisplayWidth /1080;
-        nextParams.topMargin=600* MainActivity.DisplayHeight /1794;
+        RelativeLayout.LayoutParams nextParams=new RelativeLayout.LayoutParams(820* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
+        nextParams.leftMargin=150* MainActivity.DisplayWidth /1080;
+        nextParams.topMargin=900* MainActivity.DisplayHeight /1794;
         relativeLayout.addView(spinner,nextParams);
     }
 }
