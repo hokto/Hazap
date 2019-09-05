@@ -2,6 +2,7 @@ package com.example.hazap;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -30,6 +31,15 @@ public class Organizer extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organizerhome);
+        Button back_button = findViewById(R.id.back_btn);
+        back_button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent home_intent = new Intent(getApplication(),MainActivity.class);
+
+                startActivity(home_intent);
+            }
+        });
         final Spinner disasterSpinner=findViewById(R.id.disasterspinner);
         final RelativeLayout relativeLayout=findViewById(R.id.relativeLayout);
         final Spinner nextSpinner=new Spinner(this);
