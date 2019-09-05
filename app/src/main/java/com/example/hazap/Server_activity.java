@@ -3,9 +3,14 @@ package com.example.hazap;
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.Image;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.telephony.data.ApnSetting;
 import android.util.Base64;
@@ -24,9 +29,13 @@ import android.os.AsyncTask;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.SocketException;
@@ -39,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import jp.co.yahoo.android.maps.CircleOverlay;
 import jp.co.yahoo.android.maps.GeoPoint;
@@ -110,6 +120,32 @@ public class Server_activity extends Activity{
                       System.out.println("OK!Start");
                       break;
                   case "Waiting...": //Waiting...
+                      instance.connectEnd=true;
+                      break;
+                  case "Result"://End:Aliverate:ImageSize
+                      instance.startFlag=false;
+                      String[] resultInfo=id[1].split(":",0);
+                      instance.aliveRate=Integer.parseInt(resultInfo[0]);
+                      int imgSize=Integer.parseInt(resultInfo[1]);
+                      int receiveimgSize=0;
+                      ByteBuffer buffer=ByteBuffer.allocate(imgSize);
+                      while(true){//jsonファイルが送られるのでこれを取得
+                          byte[] receiveBytes=new byte[131072];
+                          try{
+                              int currentSize=reader.read(receiveBytes);
+                              byte[] addByte=Arrays.copyOf(receiveBytes,currentSize);
+                              buffer.put(addByte);
+                              receiveimgSize+=currentSize;
+                              System.out.print("Size;"+currentSize);
+                              if(receiveimgSize>=imgSize) break;
+                          }catch(Exception e){
+                              System.out.println("CausedException!");
+                          }
+                      }
+                      System.out.print("Bytes:");
+                      if(buffer.array()!=null){
+                          instance.routeMap= BitmapFactory.decodeByteArray(buffer.array(),0,imgSize);
+                      }
                       instance.connectEnd=true;
                       break;
               }

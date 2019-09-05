@@ -94,12 +94,12 @@ public class Organizer extends Activity {
                     }
                 });
             }
-        },0,1000);
+        },0,2000);
         startbtn.setOnClickListener(new View.OnClickListener() {//開始ボタンが押された場合
             @Override
             public void onClick(View v) {
                 //避難開始
-                timer.cancel();//1秒ごとの処理を止める
+                timer.cancel();//2秒ごとの処理を止める
                 MapView mapView=new MapView(Organizer.this,"dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
                 final MyLocationOverlay location=new MyLocationOverlay(getApplicationContext(),mapView);//主催者の現在地（スタート地点）を取得
                 location.enableMyLocation();
@@ -107,7 +107,8 @@ public class Organizer extends Activity {
                     @Override
                     public void run() {
                         try{
-                            organizerSocket.Connect("Start:"+location.getMyLocation().getLatitude()+","+location.getMyLocation().getLongitude()+":"+(String)disasterSpinner.getSelectedItem()+":"+(String) nextSpinner.getSelectedItem(),null,null,null);//サーバにシミュレーション開始を伝える
+                            //organizerSocket.Connect("Start:"+location.getMyLocation().getLatitude()+","+location.getMyLocation().getLongitude()+":"+(String)disasterSpinner.getSelectedItem()+":"+(String) nextSpinner.getSelectedItem(),null,null,null);//サーバにシミュレーション開始を伝える
+                            organizerSocket.Connect("Start:31.760254,131.080396:"+(String)disasterSpinner.getSelectedItem()+":"+(String) nextSpinner.getSelectedItem(),null,null,null);//サーバにシミュレーション開始を伝える
                             Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                         }catch(InterruptedException e){ }
                     }

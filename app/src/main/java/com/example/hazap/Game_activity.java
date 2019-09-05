@@ -1,12 +1,16 @@
 package com.example.hazap;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -40,10 +44,14 @@ import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.routing.RouteOverlay;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 public class Game_activity extends MapActivity {
     private MapView hazapView = null;                   //マップ表示用
@@ -60,6 +68,8 @@ public class Game_activity extends MapActivity {
     Server_activity client=new Server_activity();        //サーバと接続するためにインスタンス
     public static int hp=100;
     public static ProgressBar hpbar;
+    public static Bitmap routeMap;
+    public static int aliveRate;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,14 +116,16 @@ public class Game_activity extends MapActivity {
                                           client.Connect("End:"+myId,Game_activity.this,null,null);//避難が終わったことを伝える
                                           locationOverlay.disableMyLocation();//位置情報の取得を終了
                                           try{
-                                              Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
+                                              Thread.sleep(20000); //20000ミリ秒Sleepする（通信側の処理を反映させるため）
                                           }catch(InterruptedException e){}
                                           client.Connect("Cancel:"+myId,Game_activity.this,null,null);//避難が完了したらサーバ上からこのプレイヤーのIDを削除し、終了
                                           try{
                                               Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                                           }catch(InterruptedException e){}
-
-                                          Intent result_intent = new Intent(getApplication(), Result_activity.class);//リザルト画面への遷移
+                                          Result_activity result=new Result_activity();
+                                          result.aliveRate=aliveRate;
+                                          result.routeMap=routeMap;
+                                          Intent result_intent = new Intent(getApplication(), result.getClass());//リザルト画面への遷移
                                           startActivity(result_intent);
                                           finish();
                                       }
