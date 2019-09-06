@@ -16,6 +16,7 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://maven.google.com' } // 変更点
+        maven { url "https://jitpack.io" }
     }
 }
 task clean(type: Delete) {

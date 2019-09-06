@@ -3,6 +3,7 @@ package com.example.hazap;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -57,7 +58,7 @@ public class CurrentLocationOverlay extends MyLocationOverlay{
                 }catch(InterruptedException e){}
                 boolean damageFlag=false;//ダメージを受けたかどうかの判定
                 long starttime=System.currentTimeMillis();//ダメージ判定をするときの時間を取得
-                if(Math.ceil(Client_Info.allpeople/Client_Info.aroundpeople)>=(Client_Info.allpeople/2))//サーバから送られる周囲の人数が全体の半分以上であれば混んでいると判定
+                if(Client_Info.aroundpeople>Math.ceil(Client_Info.allpeople/2))//サーバから送られる周囲の人数が全体の半分以上であれば混んでいると判定
                 {
                     damageFlag=true;
                 }
@@ -87,7 +88,9 @@ public class CurrentLocationOverlay extends MyLocationOverlay{
                     client.Connect("Wait:",Client_Info,_mapView,null);//サーバにシミュレーションが始まったかどうかを確認
                     try{
                         Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
-                    }catch(InterruptedException e){}
+                    }catch(InterruptedException e){
+
+                    }
                 }
             }
         }
