@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.PatternMatcher;
 import android.telephony.data.ApnSetting;
 import android.util.Base64;
 import android.util.Log;
@@ -49,11 +50,13 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import jp.co.yahoo.android.maps.CircleOverlay;
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
 public class Server_activity extends Activity{
+    private String dangerplaces;
     public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView,final Organizer organizer){ //サーバとのソケット通信を行う関数
         new AsyncTask<Void,Void,String>(){//非同期処理を行う
           @Override
@@ -96,7 +99,13 @@ public class Server_activity extends Activity{
                       instance.connectEnd=true;
                       break;
                   case "Start"://Start:ByteSize:disaster:disasterScale
-                          instance.startFlag=true;
+                          if(instance!=null){
+                              instance.startFlag=true;
+                          }
+                          else{
+                              organizer.startFlag=true;
+                          }
+                          dangerplaces="";
                           String[] disasterinfo=id[1].split(":",0);
                           int byteSize=Integer.parseInt(disasterinfo[0]);
                           int receiveSize=0;
@@ -104,14 +113,14 @@ public class Server_activity extends Activity{
                               byte[] receiveBytes=new byte[131072];
                               try{
                                   int currentSize=reader.read(receiveBytes);
-                                  instance.dangerplaces+= new String(receiveBytes,0,currentSize,"UTF-8");
+                                  dangerplaces+= new String(receiveBytes,0,currentSize,"UTF-8");
                                   receiveSize+=currentSize;
                                   if(receiveSize>=byteSize) break;
                               }catch(Exception e){
                                   System.out.println("CausedException!");
                               }
                           }
-                          instance.connectEnd=true;
+                          if(instance!=null) instance.connectEnd=true;
                           break;
                   case "Allpeople"://Allpeople:N
                       organizer.allPlayers=Integer.parseInt(id[1]);//全体の人数を取得(主催者用)
@@ -136,17 +145,23 @@ public class Server_activity extends Activity{
                               byte[] addByte=Arrays.copyOf(receiveBytes,currentSize);
                               buffer.put(addByte);
                               receiveimgSize+=currentSize;
-                              System.out.print("Size;"+currentSize);
                               if(receiveimgSize>=imgSize) break;
                           }catch(Exception e){
                               System.out.println("CausedException!");
                           }
                       }
-                      System.out.print("Bytes:");
                       if(buffer.array()!=null){
                           instance.routeMap= BitmapFactory.decodeByteArray(buffer.array(),0,imgSize);
                       }
                       instance.connectEnd=true;
+                      break;
+                  case "Coordinates":
+                      String[] coordinates=id[1].split(":",0);
+                      organizer.playerCoordinates=new ArrayList<GeoPoint>();
+                      for(int i=0;i<coordinates.length;i++){
+                          String[] playerCoord=coordinates[i].split(",",0);
+                          organizer.playerCoordinates.add(new GeoPoint((int)(Float.parseFloat(playerCoord[0])*10E5),(int)(Float.parseFloat(playerCoord[1])*10E5)));
+                      }
                       break;
               }
               try {
@@ -160,37 +175,41 @@ public class Server_activity extends Activity{
           }
           @Override
             protected void onPostExecute(String result){
-                  if(instance.startFlag && mapView!=null) {
+                  if((instance.startFlag||organizer.startFlag)&& mapView!=null) {
                       try {
                           ObjectMapper mapper = new ObjectMapper(); //受け取った文字列をjson文字列にパースする
-                          JsonNode jsonNode = mapper.readTree(instance.dangerplaces);
+                          JsonNode jsonNode = mapper.readTree(dangerplaces);
                           Iterator<String> fieldName=jsonNode.fieldNames();
+                          Pattern pattern=Pattern.compile("(0406[0-9]{2})|(0305007)|(0425[0-9]{2})|(0412021)");
+                          int cnt=0;
                           while(fieldName.hasNext()) {//まだデータがあれば取得する
                               String stringJson=fieldName.next();
                               JsonNode node=jsonNode.get(stringJson);
                               String[] coordinates = node.get("Coordinates").asText().split(",", 0);
-                              int lon = (int) (Float.parseFloat(coordinates[0]) * 10E5);//緯度、経度、階数を格納
-                              int lat = (int) (Float.parseFloat(coordinates[1]) * 10E5);
-                              int step = Integer.parseInt(node.get("Step").asText())*5;
-                              GeoPoint mid = new GeoPoint(lat, lon);
-                              CircleOverlay circleOverlay = new CircleOverlay(mid, step, step) {
-                                  @Override
-                                  protected boolean onTap() {
-                                      //円をタッチした際の処理
-                                      return true;
-                                  }
-                              };
-                              //色の変更
-                              circleOverlay.setFillColor(Color.argb(127, 255, 40, 40));
-                              circleOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
-                              mapView.getOverlays().add(circleOverlay);
-                              mapView.invalidate();
-                              //リストに各円の緯度、経度、半径をpush
-                              ArrayList info=new ArrayList();
-                              info.add(Float.parseFloat(coordinates[1]));
-                              info.add(Float.parseFloat(coordinates[0]));
-                              info.add(step);
-                              instance.earthquakeInfo.add(info);
+                              if(!pattern.matcher(node.get("Code").asText()).find()) {
+                                  int lon = (int) (Float.parseFloat(coordinates[0]) * 10E5);//緯度、経度、階数を格納
+                                  int lat = (int) (Float.parseFloat(coordinates[1]) * 10E5);
+                                  int step = (int)(Integer.parseInt(node.get("Step").asText()) * 5*Float.parseFloat(node.get("ARV").asText()));
+                                  GeoPoint mid = new GeoPoint(lat, lon);
+                                  CircleOverlay circleOverlay = new CircleOverlay(mid, step, step) {
+                                      @Override
+                                      protected boolean onTap() {
+                                          //円をタッチした際の処理
+                                          return true;
+                                      }
+                                  };
+                                  //色の変更
+                                  circleOverlay.setFillColor(Color.argb(127, 255, 40, 40));
+                                  circleOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
+                                  mapView.getOverlays().add(circleOverlay);
+                                  mapView.invalidate();
+                                  //リストに各円の緯度、経度、半径をpush
+                                  ArrayList info = new ArrayList();
+                                  info.add(Float.parseFloat(coordinates[1]));
+                                  info.add(Float.parseFloat(coordinates[0]));
+                                  info.add(step);
+                                  if(instance!=null) instance.earthquakeInfo.add(info);
+                              }
                           }
                       } catch (IOException e) { }
                   }
