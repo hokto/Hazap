@@ -68,7 +68,7 @@ public class Server_activity extends Activity{
               byte[] w = new byte[1024];
               int size = 0;
               try{
-                  connect = new Socket("192.168.11.133", 4000); //サーバに接続する
+                  connect = new Socket("192.168.0.49", 4000); //サーバに接続する
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
                   writer.write(sendMessage);//サーバに文字列を送る
@@ -131,12 +131,13 @@ public class Server_activity extends Activity{
                   case "Waiting...": //Waiting...
                       instance.connectEnd=true;
                       break;
-                  case "Result"://End:Aliverate:ImageSize
+                  case "Result"://Result:Aliverate:ImageSize:OrganizerMessage
                       instance.startFlag=false;
                       String[] resultInfo=id[1].split(":",0);
                       instance.aliveRate=Integer.parseInt(resultInfo[0]);
                       int imgSize=Integer.parseInt(resultInfo[1]);
                       int receiveimgSize=0;
+                      instance.organizerMessage=resultInfo[2];
                       ByteBuffer buffer=ByteBuffer.allocate(imgSize);
                       while(true){//jsonファイルが送られるのでこれを取得
                           byte[] receiveBytes=new byte[131072];
@@ -152,8 +153,8 @@ public class Server_activity extends Activity{
                       }
                       if(buffer.array()!=null){
                           instance.routeMap= BitmapFactory.decodeByteArray(buffer.array(),0,imgSize);
+                          instance.connectEnd=true;
                       }
-                      instance.connectEnd=true;
                       break;
                   case "Coordinates":
                       String[] coordinates=id[1].split(":",0);

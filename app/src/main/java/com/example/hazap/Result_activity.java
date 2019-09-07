@@ -44,6 +44,7 @@ import javax.xml.transform.Templates;
 public class Result_activity extends Activity   {
     public static int aliveRate;//生存率
     public static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
+    public static String message;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -57,7 +58,15 @@ public class Result_activity extends Activity   {
         advice.setTextSize(10*displayHypotenuse/baseHypotenuse);
         RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,50*display.DisplayHeight/1216);
         textParam.topMargin=50*display.DisplayHeight/1216;
-        textParam.leftMargin=100*display.DisplayWidth/800;
+        textParam.leftMargin=80*display.DisplayWidth/800;
+        relativeLayout.addView(advice,textParam);
+        TextView organizerMessage=new TextView(this);
+        organizerMessage.setText(message);
+        organizerMessage.setTextSize(12*displayHypotenuse/baseHypotenuse);
+        RelativeLayout.LayoutParams messageParam=new RelativeLayout.LayoutParams(350*display.DisplayWidth/800,350*display.DisplayHeight/1216);
+        messageParam.topMargin=100*display.DisplayHeight/1216;
+        messageParam.leftMargin=35*display.DisplayWidth/800;
+        relativeLayout.addView(organizerMessage,messageParam);
         PieChart aliveRateCircle=new PieChart(this);//生存率を表示する設定
         aliveRateCircle.setHoleColor(Color.parseColor("#00000000"));//真ん中の色を透明色に
         aliveRateCircle.setUsePercentValues(true);
@@ -72,7 +81,6 @@ public class Result_activity extends Activity   {
         dataSet.setDrawValues(false);
         PieData data=new PieData(dataSet);
         aliveRateCircle.setData(data);//円グラフにデータを代入
-        relativeLayout.addView(advice,textParam);//円グラフ描画
         RelativeLayout.LayoutParams rateParam=new RelativeLayout.LayoutParams(500*display.DisplayWidth/800,500*display.DisplayHeight/1216);
         rateParam.leftMargin=400*display.DisplayWidth/800;
         relativeLayout.addView(aliveRateCircle,rateParam);
