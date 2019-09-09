@@ -1,10 +1,8 @@
 package com.example.hazap;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -18,24 +16,40 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Result_activity extends Activity   {
-    public static int aliveRate;//生存率
-    public static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
+public class Performance extends Activity {
+    private static int aliveRate;//生存率
+    private static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.result);
+        setContentView(R.layout.jisseki);
+        BufferedReader resultReader=null;
+        String textstring="";
+        try{
+            resultReader=new BufferedReader(new InputStreamReader(openFileInput("EvacuationResult.txt")));
+            String str;
+            while((str=resultReader.readLine())!=null){
+                textstring+=str;
+            }
+            resultReader.close();
+        }catch(Exception e){}
+        String[] resultInfo=textstring.split(":",0);
+        aliveRate=Integer.parseInt(resultInfo[0]);
+        String[] bytedata=resultInfo[1].split(",",0);
+        byte[] routeMapByte=new byte[bytedata.length];
+        for(int i=0;i<bytedata.length;i++){
+            routeMapByte[i]=Integer.valueOf(bytedata[i]).byteValue();
+        }
         MainActivity display=new MainActivity();
         int baseHypotenuse=(int)Math.sqrt(Math.pow(1216,2)+Math.pow(800,2));
         int displayHypotenuse=(int)Math.sqrt(Math.pow(display.DisplayWidth,2)+Math.pow(display.DisplayHeight,2));
-        final RelativeLayout relativeLayout=findViewById(R.id.resultLayout);
+        routeMap=BitmapFactory.decodeByteArray(routeMapByte,0,routeMapByte.length);
+        RelativeLayout relativeLayout=findViewById(R.id.performanceLayout);
         TextView advice=new TextView(this);//主催者からのメッセージに関する設定
         advice.setText("主催者からのメッセージ");
         advice.setTextSize(10*displayHypotenuse/baseHypotenuse);
@@ -68,7 +82,7 @@ public class Result_activity extends Activity   {
         ratetxtParam.topMargin=213*display.DisplayHeight/1216;
         relativeLayout.addView(aliveRatetxt,ratetxtParam);
         Button btn=new Button(this);//ホームに戻るボタンの設定
-        btn.setText("ホームに戻る");
+        btn.setText("戻る");
         btn.setTextSize(20*displayHypotenuse/baseHypotenuse);
         RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(250*display.DisplayWidth/800,100*display.DisplayHeight/1216);
         btnParam.topMargin=1050*display.DisplayHeight/1216;
@@ -83,37 +97,8 @@ public class Result_activity extends Activity   {
         btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る
             @Override
             public void onClick(View v){
-                final ProgressDialog imgsaveDialog=new ProgressDialog(Result_activity.this);
-                imgsaveDialog.setTitle("結果を保存中");
-                imgsaveDialog.setMessage("リザルト結果を端末に保存しています。");
-                imgsaveDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                imgsaveDialog.setCanceledOnTouchOutside(false);
-                imgsaveDialog.show();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            BufferedWriter resultWriter=null;
-                            resultWriter = new BufferedWriter(new OutputStreamWriter(openFileOutput("EvacuationResult.txt", Context.MODE_PRIVATE)));
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            routeMap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                            String bytedata = "";
-                            for (int i = 0; i < baos.toByteArray().length; i++) {
-                                bytedata += (Integer.valueOf(baos.toByteArray()[i]).byteValue() + ",");
-                            }
-                            resultWriter.write(Integer.valueOf(aliveRate) + ":" + bytedata);//Aliverate:OrganizerMessage:RouteMapBytes
-                            resultWriter.close();
-                        }catch(IOException e){
-                        }
-                        imgsaveDialog.dismiss();
-                        finish();
-                    }
-                }).start();
+                finish();
             }
         });
-    }
-    @Override
-    protected Dialog onCreateDialog(int id){
-        return null;
     }
 }

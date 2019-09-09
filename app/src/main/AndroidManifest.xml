@@ -31,7 +31,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Organizer" android:label="Hazap"></activity>
+        <activity android:name=".Organizer" android:label="Hazap" android:windowSoftInputMode="adjustPan">
+        </activity>
+        <activity android:name=".Performance" android:label="Hazap"></activity>
     </application>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

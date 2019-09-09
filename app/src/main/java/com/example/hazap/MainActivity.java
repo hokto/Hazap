@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity{
                 Home();
             }
         });
-
         Button hazardmap_button=findViewById(R.id.hazardmap_btn);
         hazardmap_button.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -93,7 +92,8 @@ public class MainActivity extends AppCompatActivity{
         jisseki_button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Jisseki();
+                Intent performanceIntent=new Intent(getApplication(),Performance.class);
+                startActivity(performanceIntent);
             }
         });
     }

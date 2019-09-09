@@ -1,5 +1,18 @@
 package com.example.hazap;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.util.AttributeSet;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
@@ -17,6 +30,16 @@ import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.routing.RouteOverlay;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Game_activity extends MapActivity {
     private MapView hazapView = null;                   //マップ表示用
@@ -25,15 +48,15 @@ public class Game_activity extends MapActivity {
     public static String myId="";                               //サーバによって割り振られるID
     public static int allpeople=0;                             //訓練に参加中の参加人数
     public static int aroundpeople=0;                          //自分の周囲にいる人数
-    public static boolean startFlag=false;
-    public static String dangerplaces="";//スタートしたかどうかのフラグ(後で変更の可能性あり)
+    public static boolean startFlag=false;//スタートしたかどうかのフラグ
     public static boolean connectEnd=false;
+    public static ArrayList<ArrayList> earthquakeInfo=new ArrayList<ArrayList>();
     MyLocationOverlay location;                          //スタートしたり終了したりするために必要
     Server_activity client=new Server_activity();        //サーバと接続するためにインスタンス
-    public int hp=100;
-
-
-    @SuppressLint("NewApi")
+    public static int hp=100;
+    public static ProgressBar hpbar;
+    public static Bitmap routeMap;
+    public static int aliveRate;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,16 +80,13 @@ public class Game_activity extends MapActivity {
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(relativeLayout);
         relativeLayout.addView(hazapView,playDisplay.DisplayWidth*1100/1080,playDisplay.DisplayHeight*1800/1794);
-        //色の変更
-        final ProgressBar hpbar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);
+        hpbar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);//体力ゲージの実装
         hpbar.setProgressDrawable(getResources().getDrawable(R.drawable.hpbarcustom));
-        hpbar.setMax(hp);
-        hpbar.setProgress(hp);
-        hpbar.setSecondaryProgress(100);
-        RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(playDisplay.DisplayWidth*300/1080,playDisplay.DisplayHeight*30/1794);
+        hpbar.setMax(hp);//体力の最大値(100)
+        hpbar.setProgress(hp);//最初の体力(100)
+        hpbar.setSecondaryProgress(100);//体力減少用の設定
+        RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(playDisplay.DisplayWidth*300/1080,playDisplay.DisplayHeight*30/1794);//体力ゲージを表示する場所を一定にする
 
-
-        //表示座標の設定
         barParam.leftMargin=playDisplay.DisplayWidth*700/1080;
         barParam.topMargin=playDisplay.DisplayHeight*100/1794;
         relativeLayout.addView(hpbar,barParam);
@@ -82,40 +102,70 @@ public class Game_activity extends MapActivity {
         int top_margin=(playDisplay.DisplayHeight*1400)/1794;//ボタンの配置場所を一定にする
         marginLayoutParams.setMargins(marginLayoutParams.leftMargin,top_margin , marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin);
         button.setLayoutParams(marginLayoutParams);
+        button.setOnClickListener(new View.OnClickListener() { //避難終了ボタンが押された場合
 
-
-        //テスト用
-        Button testbtn=new Button(this);
-        testbtn.setText("Damage");
-        relativeLayout.addView(testbtn, playDisplay.DisplayWidth*100/1080, playDisplay.DisplayHeight*100/1794);
-        testbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hp-=10;
-                hpbar.setProgress(hp);
+                client.Connect("End:" + myId, Game_activity.this, null, null);//避難が終わったことを伝える
+                locationOverlay.disableMyLocation();//位置情報の取得を終了
+                try {
+                    Thread.sleep(100); //20000ミリ秒Sleepする（通信側の処理を反映させるため）
+                } catch (InterruptedException e) {
+                }
+                client.Connect("Cancel:" + myId, Game_activity.this, null, null);//避難が完了したらサーバ上からこのプレイヤーのIDを削除し、終了
+                final Timer timer = new Timer();
+                final Handler handler = new Handler();
+                final ProgressDialog resultDialog=new ProgressDialog(Game_activity.this);
+                resultDialog.setTitle("計算中");
+                resultDialog.setMessage("避難結果を計算中です。しばらくお待ちください。");
+                resultDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                resultDialog.setCanceledOnTouchOutside(false);
+                resultDialog.show();
+                timer.schedule(new TimerTask() {//1秒ごとに同じ処理をする
+                    @Override
+                    public void run() {
+                        handler.post(new Runnable() {//非同期処理を行う
+                            @Override
+                            public void run() {
+                                if (routeMap != null) {
+                                    resultDialog.dismiss();
+                                    timer.cancel();
+                                    Result_activity result = new Result_activity();
+                                    result.aliveRate = aliveRate;
+                                    result.routeMap = routeMap;
+                                    Intent result_intent = new Intent(getApplication(), result.getClass());//リザルト画面への遷移
+                                    startActivity(result_intent);
+                                    finish();
+                                }
+                            }
+                        });
+                    }
+                }, 0, 100);
             }
         });
-        //ここまでテスト用
-        button.setOnClickListener(new View.OnClickListener() {
-                                      @Override
-                                      public void onClick(View v) {
-                                          client.Connect("End:"+myId,Game_activity.this,null,null);
-                                          locationOverlay.disableMyLocation();
-                                          try{
-                                              Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
-                                          }catch(InterruptedException e){}
-                                          client.Connect("Cancel:"+myId,Game_activity.this,null,null);//避難が完了したらサーバ上からこのプレイヤーのIDを削除し、終了
-                                          try{
-                                              Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
-                                          }catch(InterruptedException e){}
-
-                                          Intent result_intent = new Intent(getApplication(), Result_activity.class);//リザルト画面への遷移
-                                          startActivity(result_intent);
-                                          finish();
-                                      }
-                                  }
-
-        );}
+        final ProgressDialog startDialog=new ProgressDialog(this);
+        startDialog.setTitle("待機中");
+        startDialog.setMessage("全員の参加が完了するまでしばらくお待ちください");
+        startDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        startDialog.setCanceledOnTouchOutside(false);
+        startDialog.show();
+        final Timer timer=new Timer();
+        final Handler handler=new Handler();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(startFlag){
+                            timer.cancel();
+                            startDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        },0,100);
+    }
 
     @Override
     protected boolean isRouteDisplayed(){
