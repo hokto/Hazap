@@ -142,8 +142,8 @@ public class Organizer extends Activity {
         organizerDialog.setMessage("サーバからの返答待ちです。");
         organizerDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         organizerDialog.setCanceledOnTouchOutside(false);
-        //organizerDialog.show();
-        organizerSocket.Connect("Wait:",null,organizerMap,Organizer.this);
+        organizerDialog.show();
+        organizerSocket.Connect("Wait:",null,organizerMap,this);
         try{
             Thread.sleep(100);
         }catch(InterruptedException e){}
@@ -170,15 +170,18 @@ public class Organizer extends Activity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        organizerSocket.Connect("Coordinates",null,null,Organizer.this);
-                        try{
-                            Thread.sleep(500); //100ミリ秒Sleepする（通信側の処理を反映させるため）
-                        }catch(InterruptedException e){ }
-                        organizerMap.removeOverlayAll();
-                        for(int i=0;i<2;i++){
-                            PinOverlay pin=new PinOverlay(i);
-                            organizerMap.getOverlays().add(pin);
-                            pin.addPoint(playerCoordinates.get(i),Integer.toString(i));
+                        if(startFlag) {
+                            organizerSocket.Connect("Coordinates", null, null, Organizer.this);
+                            try {
+                                Thread.sleep(500); //100ミリ秒Sleepする（通信側の処理を反映させるため）
+                            } catch (InterruptedException e) {
+                            }
+                            organizerMap.removeOverlayAll();
+                            for (int i = 0; i < allPlayers; i++) {
+                                PinOverlay pin = new PinOverlay(i);
+                                organizerMap.getOverlays().add(pin);
+                                pin.addPoint(playerCoordinates.get(i), Integer.toString(i));
+                            }
                         }
                     }
                 });

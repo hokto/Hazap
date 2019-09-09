@@ -68,7 +68,7 @@ public class Server_activity extends Activity{
               byte[] w = new byte[1024];
               int size = 0;
               try{
-                  connect = new Socket("192.168.0.49", 4000); //サーバに接続する
+                  connect = new Socket("192.168.11.133", 4000); //サーバに接続する
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
                   writer.write(sendMessage);//サーバに文字列を送る
@@ -99,12 +99,6 @@ public class Server_activity extends Activity{
                       instance.connectEnd=true;
                       break;
                   case "Start"://Start:ByteSize:disaster:disasterScale
-                          if(instance!=null){
-                              instance.startFlag=true;
-                          }
-                          else{
-                              organizer.startFlag=true;
-                          }
                           dangerplaces="";
                           String[] disasterinfo=id[1].split(":",0);
                           int byteSize=Integer.parseInt(disasterinfo[0]);
@@ -121,6 +115,13 @@ public class Server_activity extends Activity{
                               }
                           }
                           if(instance!=null) instance.connectEnd=true;
+                          if(instance!=null){
+                            instance.startFlag=true;
+                          }
+                          else{
+                            System.out.println("TRUE");
+                            organizer.startFlag=true;
+                          }
                           break;
                   case "Allpeople"://Allpeople:N
                       organizer.allPlayers=Integer.parseInt(id[1]);//全体の人数を取得(主催者用)
@@ -182,7 +183,6 @@ public class Server_activity extends Activity{
                           JsonNode jsonNode = mapper.readTree(dangerplaces);
                           Iterator<String> fieldName=jsonNode.fieldNames();
                           Pattern pattern=Pattern.compile("(0406[0-9]{2})|(0305007)|(0425[0-9]{2})|(0412021)");
-                          int cnt=0;
                           while(fieldName.hasNext()) {//まだデータがあれば取得する
                               String stringJson=fieldName.next();
                               JsonNode node=jsonNode.get(stringJson);

@@ -159,7 +159,7 @@ public class Game_activity extends MapActivity {
         startDialog.setMessage("全員の参加が完了するまでしばらくお待ちください");
         startDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         startDialog.setCanceledOnTouchOutside(false);
-        //startDialog.show();
+        startDialog.show();
         final Timer timer=new Timer();
         final Handler handler=new Handler();
         timer.schedule(new TimerTask() {
