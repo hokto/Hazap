@@ -1,12 +1,17 @@
 package com.example.hazap;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.res.ResourcesCompat;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,6 +45,7 @@ public class Organizer extends Activity {
     public static boolean startFlag=false;
 
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +87,10 @@ public class Organizer extends Activity {
             }
         });
         Button startbtn=new Button(this);//避難開始用のボタン
+        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.btn_custom, null);//リソースから作成したDrawableのリソースを取得
+        startbtn.setBackground(btn_color);//ボタンにDrawableを適用する
+        startbtn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
+        startbtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         startbtn.setText("訓練開始");
         RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(400* MainActivity.DisplayWidth /1080,150* MainActivity.DisplayHeight /1794);
         btnParam.leftMargin=540* MainActivity.DisplayWidth /1080;

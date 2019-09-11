@@ -1,23 +1,13 @@
 package com.example.hazap;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.util.AttributeSet;
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.TypedValue;
 import android.view.View;
@@ -25,21 +15,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import jp.co.yahoo.android.maps.MapActivity;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.routing.RouteOverlay;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Game_activity extends MapActivity {
     private MapView hazapView = null;                   //マップ表示用
@@ -57,6 +41,7 @@ public class Game_activity extends MapActivity {
     public static ProgressBar hpbar;
     public static Bitmap routeMap;
     public static int aliveRate;
+    @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
