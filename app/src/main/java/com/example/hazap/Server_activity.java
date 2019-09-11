@@ -71,12 +71,6 @@ public class Server_activity extends Activity{
                       instance.connectEnd=true;
                       break;
                   case "Start"://Start:ByteSize:disaster:disasterScale
-                          if(instance!=null){
-                              instance.startFlag=true;
-                          }
-                          else{
-                              organizer.startFlag=true;
-                          }
                           dangerplaces="";
                           String[] disasterinfo=id[1].split(":",0);
                           int byteSize=Integer.parseInt(disasterinfo[0]);
@@ -93,6 +87,13 @@ public class Server_activity extends Activity{
                               }
                           }
                           if(instance!=null) instance.connectEnd=true;
+                          if(instance!=null){
+                            instance.startFlag=true;
+                          }
+                          else{
+                            System.out.println("TRUE");
+                            organizer.startFlag=true;
+                          }
                           break;
                   case "Allpeople"://Allpeople:N
                       organizer.allPlayers=Integer.parseInt(id[1]);//全体の人数を取得(主催者用)
@@ -103,13 +104,14 @@ public class Server_activity extends Activity{
                   case "Waiting...": //Waiting...
                       instance.connectEnd=true;
                       break;
-                  case "Result"://End:Aliverate:ImageSize
+                  case "Result"://Result:Aliverate:ImageSize:OrganizerMessage
                       instance.startFlag=false;
                       String[] resultInfo=id[1].split(":",0);
                       instance.aliveRate=Integer.parseInt(resultInfo[0]);
                       int imgSize=Integer.parseInt(resultInfo[1]);
                       int receiveimgSize=0;
-                      ByteBuffer buffer= ByteBuffer.allocate(imgSize);
+                      instance.organizerMessage=resultInfo[2];
+                      ByteBuffer buffer=ByteBuffer.allocate(imgSize);
                       while(true){//jsonファイルが送られるのでこれを取得
                           byte[] receiveBytes=new byte[131072];
                           try{
@@ -124,8 +126,8 @@ public class Server_activity extends Activity{
                       }
                       if(buffer.array()!=null){
                           instance.routeMap= BitmapFactory.decodeByteArray(buffer.array(),0,imgSize);
+                          instance.connectEnd=true;
                       }
-                      instance.connectEnd=true;
                       break;
                   case "Coordinates":
                       String[] coordinates=id[1].split(":",0);
@@ -153,7 +155,6 @@ public class Server_activity extends Activity{
                           JsonNode jsonNode = mapper.readTree(dangerplaces);
                           Iterator<String> fieldName=jsonNode.fieldNames();
                           Pattern pattern=Pattern.compile("(0406[0-9]{2})|(0305007)|(0425[0-9]{2})|(0412021)");
-                          int cnt=0;
                           while(fieldName.hasNext()) {//まだデータがあれば取得する
                               String stringJson=fieldName.next();
                               JsonNode node=jsonNode.get(stringJson);

@@ -41,6 +41,8 @@ public class Game_activity extends MapActivity {
     public static ProgressBar hpbar;
     public static Bitmap routeMap;
     public static int aliveRate;
+    public static String organizerMessage;
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,13 +93,7 @@ public class Game_activity extends MapActivity {
 
             @Override
             public void onClick(View v) {
-                client.Connect("End:" + myId, Game_activity.this, null, null);//避難が終わったことを伝える
                 locationOverlay.disableMyLocation();//位置情報の取得を終了
-                try {
-                    Thread.sleep(100); //20000ミリ秒Sleepする（通信側の処理を反映させるため）
-                } catch (InterruptedException e) {
-                }
-                client.Connect("Cancel:" + myId, Game_activity.this, null, null);//避難が完了したらサーバ上からこのプレイヤーのIDを削除し、終了
                 final Timer timer = new Timer();
                 final Handler handler = new Handler();
                 final ProgressDialog resultDialog=new ProgressDialog(Game_activity.this);
@@ -106,26 +102,33 @@ public class Game_activity extends MapActivity {
                 resultDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 resultDialog.setCanceledOnTouchOutside(false);
                 resultDialog.show();
-                timer.schedule(new TimerTask() {//1秒ごとに同じ処理をする
+                timer.schedule(new TimerTask() {//100msごとに同じ処理をする
                     @Override
                     public void run() {
                         handler.post(new Runnable() {//非同期処理を行う
                             @Override
                             public void run() {
                                 if (routeMap != null) {
+                                    client.Connect("Cancel:" + myId, Game_activity.this, null, null);//避難が完了したらサーバ上からこのプレイヤーのIDを削除し、終了
                                     resultDialog.dismiss();
                                     timer.cancel();
+                                    connectEnd=false;
                                     Result_activity result = new Result_activity();
                                     result.aliveRate = aliveRate;
                                     result.routeMap = routeMap;
+                                    result.message=organizerMessage;
                                     Intent result_intent = new Intent(getApplication(), result.getClass());//リザルト画面への遷移
                                     startActivity(result_intent);
                                     finish();
                                 }
+                                if(connectEnd){
+                                    connectEnd=false;
+                                    client.Connect("End:" + myId+":"+hpbar.getProgress(), Game_activity.this, null, null);//避難が終わったことを伝える
+                                }
                             }
                         });
                     }
-                }, 0, 100);
+                }, 0, 1000);
             }
         });
         final ProgressDialog startDialog=new ProgressDialog(this);

@@ -151,7 +151,7 @@ public class Organizer extends Activity {
         organizerDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         organizerDialog.setCanceledOnTouchOutside(false);
         organizerDialog.show();
-        organizerSocket.Connect("Wait:",null,organizerMap,Organizer.this);
+        organizerSocket.Connect("Wait:",null,organizerMap,this);
         try{
             Thread.sleep(100);
         }catch(InterruptedException e){}
@@ -168,7 +168,7 @@ public class Organizer extends Activity {
                 });
             }
         },0,100);
-        CurrentLocationOverlay locationOverlay=new CurrentLocationOverlay(getApplicationContext(),organizerMap,this,null,null);
+        final CurrentLocationOverlay locationOverlay=new CurrentLocationOverlay(getApplicationContext(),organizerMap,this,null,null);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(mapLayout);
         mapLayout.addView(organizerMap,playDisplay.DisplayWidth*1100/1080,playDisplay.DisplayHeight*1800/1794);
@@ -178,15 +178,18 @@ public class Organizer extends Activity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        organizerSocket.Connect("Coordinates",null,null,Organizer.this);
-                        try{
-                            Thread.sleep(500); //100ミリ秒Sleepする（通信側の処理を反映させるため）
-                        }catch(InterruptedException e){ }
-                        organizerMap.removeOverlayAll();
-                        for(int i=0;i<2;i++){
-                            PinOverlay pin=new PinOverlay(i);
-                            organizerMap.getOverlays().add(pin);
-                            pin.addPoint(playerCoordinates.get(i),Integer.toString(i));
+                        if(startFlag) {
+                            organizerSocket.Connect("Coordinates", null, null, Organizer.this);
+                            try {
+                                Thread.sleep(500); //100ミリ秒Sleepする（通信側の処理を反映させるため）
+                            } catch (InterruptedException e) {
+                            }
+                            organizerMap.removeOverlayAll();
+                            for (int i = 0; i < allPlayers; i++) {
+                                PinOverlay pin = new PinOverlay(i);
+                                organizerMap.getOverlays().add(pin);
+                                pin.addPoint(playerCoordinates.get(i), Integer.toString(i));
+                            }
                         }
                     }
                 });
@@ -202,6 +205,7 @@ public class Organizer extends Activity {
             @Override
             public void onClick(View v) {
                 timer.cancel();
+                locationOverlay.disableMyLocation();
                 final EditText writeMessage=new EditText(Organizer.this);
                 writeMessage.setHint("メッセージ");
                 new AlertDialog.Builder(Organizer.this)
@@ -210,6 +214,7 @@ public class Organizer extends Activity {
                         .setPositiveButton("訓練終了", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                organizerSocket.Connect("Message:"+writeMessage.getText(),null,null,null);//主催者からのメッセージを送信
                                 finish();
                             }
                         })
