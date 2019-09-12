@@ -77,7 +77,18 @@ public class Organizer extends Activity {
                     //何も選択されていないときは特に何もしない
                 }
         });
-        Button back_button = findViewById(R.id.back_btn);
+
+        //ホーム画面に戻るボタン
+        Button back_button = new Button(this);
+        Drawable button_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state,null);
+        back_button.setBackground(button_color);
+        back_button.setTextColor(Color.parseColor("#FFFFFF"));
+        back_button.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
+        back_button.setText("戻る");
+        RelativeLayout.LayoutParams back_btnParam=new RelativeLayout.LayoutParams(300* MainActivity.DisplayWidth /1080,150* MainActivity.DisplayHeight /1794);
+        back_btnParam.leftMargin=100* MainActivity.DisplayWidth /1080;
+        back_btnParam.topMargin=1500* MainActivity.DisplayHeight /1794;
+        relativeLayout.addView(back_button,back_btnParam);
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,6 +97,7 @@ public class Organizer extends Activity {
                 startActivity(home_intent);
             }
         });
+        
         Button startbtn=new Button(this);//避難開始用のボタン
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.btn_custom, null);//リソースから作成したDrawableのリソースを取得
         startbtn.setBackground(btn_color);//ボタンにDrawableを適用する
@@ -93,7 +105,7 @@ public class Organizer extends Activity {
         startbtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         startbtn.setText("訓練開始");
         RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(400* MainActivity.DisplayWidth /1080,150* MainActivity.DisplayHeight /1794);
-        btnParam.leftMargin=540* MainActivity.DisplayWidth /1080;
+        btnParam.leftMargin=580* MainActivity.DisplayWidth /1080;
         btnParam.topMargin=1500* MainActivity.DisplayHeight /1794;
         relativeLayout.addView(startbtn,btnParam);
         final Timer timer=new Timer();//一定時間ごとに同じ処理を行うためのタイマー
