@@ -31,7 +31,7 @@ import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.PinOverlay;
 
 public class Organizer extends Activity {
-    private String[] disasterItems={" ","地震","津波"};//災害の種類を格納した配列
+    private String[] disasterItems={"災害を選択","地震","津波"};//災害の種類を格納した配列
     private String[] earthquakeItems={"震度1","震度2","震度3","震度4","震度5弱","震度5強","震度6弱","震度6強","震度7"};//地震の規模の大きさを格納した配列
     private String[] tsunamiItems={"規模小","規模大"};//津波の規模の大きさを格納した配列
     public static int allPlayers=0;//参加者の人数を格納
@@ -66,7 +66,7 @@ public class Organizer extends Activity {
                         case "津波":
                             setSpinnerItems(nextSpinner,tsunamiItems,relativeLayout,playDisplay);
                             break;
-                        case " ":
+                        case "災害を選択":
                             String[] noneItems={"災害を選択してください"};
                             setSpinnerItems(nextSpinner,noneItems,relativeLayout,playDisplay);
                             break;
@@ -241,7 +241,7 @@ public class Organizer extends Activity {
         spinner.setAdapter(nextAdapter);
         RelativeLayout.LayoutParams nextParams=new RelativeLayout.LayoutParams(820* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
         nextParams.leftMargin=150* MainActivity.DisplayWidth /1080;
-        nextParams.topMargin=900* MainActivity.DisplayHeight /1794;
+        nextParams.topMargin=850* MainActivity.DisplayHeight /1794;
         relativeLayout.addView(spinner,nextParams);
     }
 }
