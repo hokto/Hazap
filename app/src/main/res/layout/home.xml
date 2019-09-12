@@ -53,8 +53,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="384dp"
-        android:layout_height="169dp"
+        android:layout_width="370dp"
+        android:layout_height="150dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
@@ -63,17 +63,16 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.133"
+        app:layout_constraintVertical_bias="0.11"
         app:srcCompat="@drawable/title"
         tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/organizerBtn"
-        android:layout_width="95dp"
-        android:layout_height="60dp"
+        android:layout_width="97dp"
+        android:layout_height="74dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
@@ -82,7 +81,7 @@
         android:background="@drawable/button_state"
         android:text="主催者用画面へ"
         android:textColor="#FFFFFF"
-        android:textSize="19sp"
+        android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.973"
