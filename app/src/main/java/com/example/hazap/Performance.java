@@ -57,10 +57,10 @@ public class Performance extends Activity {
         RelativeLayout relativeLayout=findViewById(R.id.performanceLayout);
         TextView advice=new TextView(this);//主催者からのメッセージに関する設定
         advice.setText("主催者からのメッセージ");
-        advice.setTextSize(10*displayHypotenuse/baseHypotenuse);
+        advice.setTextSize(20*displayHypotenuse/baseHypotenuse);
         RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,50*display.DisplayHeight/1216);
         textParam.topMargin=50*display.DisplayHeight/1216;
-        textParam.leftMargin=100*display.DisplayWidth/800;
+        textParam.leftMargin=75*display.DisplayWidth/800;
         PieChart aliveRateCircle=new PieChart(this);//生存率を表示する設定
         aliveRateCircle.setHoleColor(Color.parseColor("#00000000"));//真ん中の色を透明色に
         aliveRateCircle.setUsePercentValues(true);
@@ -80,11 +80,11 @@ public class Performance extends Activity {
         rateParam.leftMargin=400*display.DisplayWidth/800;
         relativeLayout.addView(aliveRateCircle,rateParam);
         TextView aliveRatetxt=new TextView(this);
-        aliveRatetxt.setText("生存率 "+Integer.valueOf(aliveRate)+"%");
-        aliveRatetxt.setTextSize(10*displayHypotenuse/baseHypotenuse);
+        aliveRatetxt.setText(Integer.valueOf(aliveRate)+"%");
+        aliveRatetxt.setTextSize(35*displayHypotenuse/baseHypotenuse);
         RelativeLayout.LayoutParams ratetxtParam=new RelativeLayout.LayoutParams(150*display.DisplayWidth/800,50*display.DisplayHeight/1216);
-        ratetxtParam.leftMargin=537*display.DisplayWidth/800;
-        ratetxtParam.topMargin=213*display.DisplayHeight/1216;
+        ratetxtParam.leftMargin=550*display.DisplayWidth/800;
+        ratetxtParam.topMargin=190*display.DisplayHeight/1216;
         relativeLayout.addView(aliveRatetxt,ratetxtParam);
         Button btn=new Button(this);//ホームに戻るボタンの設定
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得

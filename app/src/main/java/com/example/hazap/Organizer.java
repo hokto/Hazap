@@ -108,7 +108,7 @@ public class Organizer extends Activity {
         btnParam.leftMargin=580* MainActivity.DisplayWidth /1080;
         btnParam.topMargin=1500* MainActivity.DisplayHeight /1794;
         relativeLayout.addView(startbtn,btnParam);
-        final Timer timer=new Timer();//一定時間ごとに同じ処理を行うためのタイマー
+        final Timer timer=new Timer();//一定時間ごとに同じ99処理を行うためのタイマー
         final Handler handler=new Handler();//非同期処理用
         playerNumText=new TextView(this);//全参加者を表示するテキストの設定
         RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(500*playDisplay.DisplayWidth/1080,80*playDisplay.DisplayHeight/1794);
