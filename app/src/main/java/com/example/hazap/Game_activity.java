@@ -101,6 +101,7 @@ public class Game_activity extends MapActivity {
                 resultDialog.setMessage("避難結果を計算中です。しばらくお待ちください。");
                 resultDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 resultDialog.setCanceledOnTouchOutside(false);
+                resultDialog.setCancelable(false);
                 resultDialog.show();
                 timer.schedule(new TimerTask() {//100msごとに同じ処理をする
                     @Override
@@ -136,6 +137,7 @@ public class Game_activity extends MapActivity {
         startDialog.setMessage("全員の参加が完了するまでしばらくお待ちください");
         startDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         startDialog.setCanceledOnTouchOutside(false);
+        startDialog.setCancelable(false);
         startDialog.show();
         final Timer timer=new Timer();
         final Handler handler=new Handler();

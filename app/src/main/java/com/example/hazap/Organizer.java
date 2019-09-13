@@ -42,6 +42,7 @@ public class Organizer extends Activity {
     private Server_activity organizerSocket=new Server_activity();//サーバに接続するためのインスタンス
     private Spinner disasterSpinner;
     private Spinner nextSpinner;
+    private PinOverlay pin = null;
     public static boolean startFlag=false;
 
 
@@ -162,6 +163,7 @@ public class Organizer extends Activity {
         organizerDialog.setMessage("サーバからの返答待ちです。");
         organizerDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         organizerDialog.setCanceledOnTouchOutside(false);
+        organizerDialog.setCancelable(false);
         organizerDialog.show();
         organizerSocket.Connect("Wait:",null,organizerMap,this);
         try{
@@ -180,6 +182,22 @@ public class Organizer extends Activity {
                 });
             }
         },0,100);
+        if(startFlag) {
+            organizerSocket.Connect("Coordinates", null, null, Organizer.this);
+            try {
+                Thread.sleep(500); //100ミリ秒Sleepする（通信側の処理を反映させるため）
+            } catch (InterruptedException e) {
+            }
+            if(playerCoordinates!=null) {
+                organizerMap.getOverlays().remove(pin);
+                for (int i = 0; i < allPlayers; i++) {
+                    pin = new PinOverlay(i);
+                    organizerMap.getOverlays().add(pin);
+                    pin.addPoint(playerCoordinates.get(i), Integer.toString(i));
+                }
+            }
+        }
+
         final CurrentLocationOverlay locationOverlay=new CurrentLocationOverlay(getApplicationContext(),organizerMap,this,null,null);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(mapLayout);
