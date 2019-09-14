@@ -1,63 +1,35 @@
 package com.example.hazap;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.IntentService;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.Image;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.PatternMatcher;
-import android.telephony.data.ApnSetting;
-import android.util.Base64;
-import android.util.Log;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import android.os.AsyncTask;
-
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 import jp.co.yahoo.android.maps.CircleOverlay;
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
+
+
 public class Server_activity extends Activity{
     private String dangerplaces;
-    public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView,final Organizer organizer){ //サーバとのソケット通信を行う関数
+    @SuppressLint("StaticFieldLeak")
+    public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView, final Organizer organizer){ //サーバとのソケット通信を行う関数
         new AsyncTask<Void,Void,String>(){//非同期処理を行う
           @Override
           protected String doInBackground(Void ... voids){
@@ -68,7 +40,7 @@ public class Server_activity extends Activity{
               byte[] w = new byte[1024];
               int size = 0;
               try{
-                  connect = new Socket("192.168.11.133", 4000); //サーバに接続する
+                  connect = new Socket("192.168.0.24", 4000); //サーバに接続する
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
                   writer.write(sendMessage);//サーバに文字列を送る
@@ -144,7 +116,7 @@ public class Server_activity extends Activity{
                           byte[] receiveBytes=new byte[131072];
                           try{
                               int currentSize=reader.read(receiveBytes);
-                              byte[] addByte=Arrays.copyOf(receiveBytes,currentSize);
+                              byte[] addByte= Arrays.copyOf(receiveBytes,currentSize);
                               buffer.put(addByte);
                               receiveimgSize+=currentSize;
                               if(receiveimgSize>=imgSize) break;

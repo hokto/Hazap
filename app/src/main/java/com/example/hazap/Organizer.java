@@ -1,47 +1,39 @@
 package com.example.hazap;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.location.Location;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.GravityCompat;
+import android.support.v4.content.res.ResourcesCompat;
+import android.text.InputType;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutionException;
 
 import jp.co.yahoo.android.maps.GeoPoint;
-import jp.co.yahoo.android.maps.MapActivity;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.PinOverlay;
 
-import static android.support.v4.view.ViewCompat.generateViewId;
-
 public class Organizer extends Activity {
-    private String[] disasterItems={" ","地震","津波"};//災害の種類を格納した配列
+    private String[] disasterItems={"災害を選択","地震","津波"};//災害の種類を格納した配列
     private String[] earthquakeItems={"震度1","震度2","震度3","震度4","震度5弱","震度5強","震度6弱","震度6強","震度7"};//地震の規模の大きさを格納した配列
-    private String[] tsunamiItems={"規模小","規模大"};//津波の規模の大きさを格納した配列
     public static int allPlayers=0;//参加者の人数を格納
     private TextView playerNumText;//利用者人数を表示する
     private double lat=0,lon=0;//主催者の位置情報
@@ -50,7 +42,12 @@ public class Organizer extends Activity {
     private Server_activity organizerSocket=new Server_activity();//サーバに接続するためのインスタンス
     private Spinner disasterSpinner;
     private Spinner nextSpinner;
+    private PinOverlay pin = null;
     public static boolean startFlag=false;
+    private EditText waveHeight;//津波が選択された場合、波の高さと震源地までの距離を設定
+    private EditText distance;
+
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +55,9 @@ public class Organizer extends Activity {
         disasterSpinner=findViewById(R.id.disasterspinner);//災害の種類を選ばせる処理の設定
         final RelativeLayout relativeLayout=findViewById(R.id.relativeLayout);
         nextSpinner=new Spinner(this);
-        ArrayAdapter<String> disasterAdapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_item,disasterItems);//
+        waveHeight=new EditText(Organizer.this);
+        distance=new EditText(Organizer.this);
+        final ArrayAdapter<String> disasterAdapter=new ArrayAdapter<>(this,R.layout.spinner_item,disasterItems);
         disasterAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         disasterSpinner.setAdapter(disasterAdapter);
         disasterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){ //災害の種類を選ぶところが押された場合
@@ -66,12 +65,28 @@ public class Organizer extends Activity {
                 public void onItemSelected(AdapterView<?> parent, View view, int positio, long id){
                     switch((String)(((Spinner)parent).getSelectedItem())){//各災害が選ばれた時の処理を分岐
                         case "地震":
+                            relativeLayout.removeView(distance);
+                            relativeLayout.removeView(waveHeight);
                             setSpinnerItems(nextSpinner,earthquakeItems,relativeLayout,playDisplay);
                             break;
                         case "津波":
-                            setSpinnerItems(nextSpinner,tsunamiItems,relativeLayout,playDisplay);
+                            relativeLayout.removeView(nextSpinner);
+                            waveHeight.setHint("海岸線での津波の高さを入力");
+                            distance.setHint("海岸線から震源地までの距離を入力");
+                            waveHeight.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);//数値のみ入力可能
+                            distance.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                            RelativeLayout.LayoutParams waveHeightParams=new RelativeLayout.LayoutParams(820* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
+                            waveHeightParams.leftMargin=150* MainActivity.DisplayWidth /1080;
+                            waveHeightParams.topMargin=600* MainActivity.DisplayHeight /1794;
+                            RelativeLayout.LayoutParams distanceParams=new RelativeLayout.LayoutParams(820* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
+                            distanceParams.leftMargin=150* MainActivity.DisplayWidth /1080;
+                            distanceParams.topMargin=850* MainActivity.DisplayHeight /1794;
+                            relativeLayout.addView(waveHeight,waveHeightParams);
+                            relativeLayout.addView(distance,distanceParams);
                             break;
-                        case " ":
+                        case "災害を選択":
+                            relativeLayout.removeView(distance);
+                            relativeLayout.removeView(waveHeight);
                             String[] noneItems={"災害を選択してください"};
                             setSpinnerItems(nextSpinner,noneItems,relativeLayout,playDisplay);
                             break;
@@ -82,11 +97,16 @@ public class Organizer extends Activity {
                     //何も選択されていないときは特に何もしない
                 }
         });
+
         Button startbtn=new Button(this);//避難開始用のボタン
+        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.btn_custom, null);//リソースから作成したDrawableのリソースを取得
+        startbtn.setBackground(btn_color);//ボタンにDrawableを適用する
+        startbtn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
+        startbtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         startbtn.setText("訓練開始");
-        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(400*playDisplay.DisplayWidth/1080,150*playDisplay.DisplayHeight/1794);
-        btnParam.leftMargin=540*playDisplay.DisplayWidth/1080;
-        btnParam.topMargin=1500*playDisplay.DisplayHeight/1794;
+        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(400* MainActivity.DisplayWidth /1080,150* MainActivity.DisplayHeight /1794);
+        btnParam.leftMargin=580* MainActivity.DisplayWidth /1080;
+        btnParam.topMargin=1500* MainActivity.DisplayHeight /1794;
         relativeLayout.addView(startbtn,btnParam);
         final Timer timer=new Timer();//一定時間ごとに同じ処理を行うためのタイマー
         final Handler handler=new Handler();//非同期処理用
@@ -111,6 +131,25 @@ public class Organizer extends Activity {
                 });
             }
         },0,2000);
+        //ホーム画面に戻るボタン
+        Button back_button = new Button(this);
+        Drawable button_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state,null);
+        back_button.setBackground(button_color);
+        back_button.setTextColor(Color.parseColor("#FFFFFF"));
+        back_button.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
+        back_button.setText("戻る");
+        RelativeLayout.LayoutParams back_btnParam=new RelativeLayout.LayoutParams(300* MainActivity.DisplayWidth /1080,150* MainActivity.DisplayHeight /1794);
+        back_btnParam.leftMargin=100* MainActivity.DisplayWidth /1080;
+        back_btnParam.topMargin=1500* MainActivity.DisplayHeight /1794;
+        relativeLayout.addView(back_button,back_btnParam);
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timer.cancel();
+                finish();
+            }
+        });
+
         startbtn.setOnClickListener(new View.OnClickListener() {//開始ボタンが押された場合
             @Override
             public void onClick(View v) {
@@ -129,8 +168,14 @@ public class Organizer extends Activity {
             @Override
             public void run() {
                 try{
-                    //organizerSocket.Connect("Start:"+location.getMyLocation().getLatitude()+","+location.getMyLocation().getLongitude()+":"+(String)disasterSpinner.getSelectedItem()+":"+(String) nextSpinner.getSelectedItem(),null,null,null);//サーバにシミュレーション開始を伝える
-                    organizerSocket.Connect("Start:31.760254,131.080396:"+(String)disasterSpinner.getSelectedItem()+":"+(String) nextSpinner.getSelectedItem(),null,null,null);//サーバにシミュレーション開始を伝える
+                    String disasterInfo=new String();
+                    if(disasterSpinner.getSelectedItem()=="地震"){ //地震が選ばれた場合
+                        disasterInfo=disasterSpinner.getSelectedItem()+":"+nextSpinner.getSelectedItem();
+                    }
+                    else if(disasterSpinner.getSelectedItem()=="津波"){ //津波が選ばれた場合
+                        disasterInfo=disasterSpinner.getSelectedItem()+":"+waveHeight.getText()+","+distance.getText();
+                    }
+                    organizerSocket.Connect("Start:"+location.getMyLocation().getLatitude()+","+location.getMyLocation().getLongitude()+":"+disasterInfo,null,null,null);//サーバにシミュレーション開始を伝える
                     Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                 }catch(InterruptedException e){ }
             }
@@ -142,6 +187,7 @@ public class Organizer extends Activity {
         organizerDialog.setMessage("サーバからの返答待ちです。");
         organizerDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         organizerDialog.setCanceledOnTouchOutside(false);
+        organizerDialog.setCancelable(false);
         organizerDialog.show();
         organizerSocket.Connect("Wait:",null,organizerMap,this);
         try{
@@ -160,6 +206,22 @@ public class Organizer extends Activity {
                 });
             }
         },0,100);
+        if(startFlag) {
+            organizerSocket.Connect("Coordinates", null, null, Organizer.this);
+            try {
+                Thread.sleep(500); //100ミリ秒Sleepする（通信側の処理を反映させるため）
+            } catch (InterruptedException e) {
+            }
+            if(playerCoordinates!=null) {
+                organizerMap.getOverlays().remove(pin);
+                for (int i = 0; i < allPlayers; i++) {
+                    pin = new PinOverlay(i);
+                    organizerMap.getOverlays().add(pin);
+                    pin.addPoint(playerCoordinates.get(i), Integer.toString(i));
+                }
+            }
+        }
+
         final CurrentLocationOverlay locationOverlay=new CurrentLocationOverlay(getApplicationContext(),organizerMap,this,null,null);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(mapLayout);
@@ -216,12 +278,12 @@ public class Organizer extends Activity {
     }
     private void setSpinnerItems(Spinner spinner,String[] items,RelativeLayout relativeLayout,MainActivity playDisplay){ //各災害における選択肢の設定
         relativeLayout.removeView(spinner);//前に設定されていたものを取り除く
-        ArrayAdapter nextAdapter=new ArrayAdapter(this,android.R.layout.simple_spinner_item,items);
+        ArrayAdapter nextAdapter=new ArrayAdapter(this,R.layout.spinner_item,items);
         nextAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(nextAdapter);
-        RelativeLayout.LayoutParams nextParams=new RelativeLayout.LayoutParams(700*playDisplay.DisplayWidth/1080,200*playDisplay.DisplayHeight/1794);
-        nextParams.leftMargin=200*playDisplay.DisplayWidth/1080;
-        nextParams.topMargin=600*playDisplay.DisplayHeight/1794;
+        RelativeLayout.LayoutParams nextParams=new RelativeLayout.LayoutParams(820* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
+        nextParams.leftMargin=150* MainActivity.DisplayWidth /1080;
+        nextParams.topMargin=850* MainActivity.DisplayHeight /1794;
         relativeLayout.addView(spinner,nextParams);
     }
 }
