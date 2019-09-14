@@ -9,13 +9,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import java.time.Instant;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity{
-    String coordinates;
     public static int DisplayHeight=0; //端末の縦方向の長さ
     public static int DisplayWidth=0;  //端末の横方向の長さ
+
+    public ArrayList<ArrayList<Integer>> coastline = new ArrayList<ArrayList<Integer>>();
+    public ArrayList<Integer> point = new ArrayList<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +35,13 @@ public class MainActivity extends AppCompatActivity{
     //ホーム画面
     public void Home() {
         setContentView(R.layout.home);
+        point.add(13974477);
+        point.add(398261);
+        coastline.add(point);
+
+        System.out.println(coastline.get(0).get(0));
+        System.out.println(coastline.get(0).get(1));
+
         Button gamestart_button = findViewById(R.id.gamestart_btn);
         Button option_button = findViewById(R.id.option_btn);
         Button organizerBtn=findViewById(R.id.organizerBtn);

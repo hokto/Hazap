@@ -1,60 +1,29 @@
 package com.example.hazap;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.util.AttributeSet;
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
-import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jp.co.yahoo.android.maps.CircleOverlay;
-import jp.co.yahoo.android.maps.GeoPoint;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import jp.co.yahoo.android.maps.MapActivity;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.routing.RouteOverlay;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Game_activity extends MapActivity {
     private MapView hazapView = null;                   //マップ表示用
@@ -72,6 +41,9 @@ public class Game_activity extends MapActivity {
     public static ProgressBar hpbar;
     public static Bitmap routeMap;
     public static int aliveRate;
+    public static String organizerMessage;
+
+    @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,10 +73,15 @@ public class Game_activity extends MapActivity {
         hpbar.setProgress(hp);//最初の体力(100)
         hpbar.setSecondaryProgress(100);//体力減少用の設定
         RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(playDisplay.DisplayWidth*300/1080,playDisplay.DisplayHeight*30/1794);//体力ゲージを表示する場所を一定にする
+
         barParam.leftMargin=playDisplay.DisplayWidth*700/1080;
         barParam.topMargin=playDisplay.DisplayHeight*100/1794;
         relativeLayout.addView(hpbar,barParam);
         Button button = new Button(this);//終了ボタン
+        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
+        button.setBackground(btn_color);//ボタンにDrawableを適用する
+        button.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
+        button.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         button.setText("避難終了");
         relativeLayout.addView(button, playDisplay.DisplayWidth*350/1080, playDisplay.DisplayHeight*150/1794);
         ViewGroup.LayoutParams layoutParams = button.getLayoutParams();//ボタンの配置を調整
@@ -113,15 +90,10 @@ public class Game_activity extends MapActivity {
         marginLayoutParams.setMargins(marginLayoutParams.leftMargin,top_margin , marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin);
         button.setLayoutParams(marginLayoutParams);
         button.setOnClickListener(new View.OnClickListener() { //避難終了ボタンが押された場合
+
             @Override
             public void onClick(View v) {
-                client.Connect("End:" + myId, Game_activity.this, null, null);//避難が終わったことを伝える
                 locationOverlay.disableMyLocation();//位置情報の取得を終了
-                try {
-                    Thread.sleep(100); //20000ミリ秒Sleepする（通信側の処理を反映させるため）
-                } catch (InterruptedException e) {
-                }
-                client.Connect("Cancel:" + myId, Game_activity.this, null, null);//避難が完了したらサーバ上からこのプレイヤーのIDを削除し、終了
                 final Timer timer = new Timer();
                 final Handler handler = new Handler();
                 final ProgressDialog resultDialog=new ProgressDialog(Game_activity.this);
@@ -129,27 +101,35 @@ public class Game_activity extends MapActivity {
                 resultDialog.setMessage("避難結果を計算中です。しばらくお待ちください。");
                 resultDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 resultDialog.setCanceledOnTouchOutside(false);
+                resultDialog.setCancelable(false);
                 resultDialog.show();
-                timer.schedule(new TimerTask() {//1秒ごとに同じ処理をする
+                timer.schedule(new TimerTask() {//100msごとに同じ処理をする
                     @Override
                     public void run() {
                         handler.post(new Runnable() {//非同期処理を行う
                             @Override
                             public void run() {
                                 if (routeMap != null) {
+                                    client.Connect("Cancel:" + myId, Game_activity.this, null, null);//避難が完了したらサーバ上からこのプレイヤーのIDを削除し、終了
                                     resultDialog.dismiss();
                                     timer.cancel();
+                                    connectEnd=false;
                                     Result_activity result = new Result_activity();
                                     result.aliveRate = aliveRate;
                                     result.routeMap = routeMap;
+                                    result.message=organizerMessage;
                                     Intent result_intent = new Intent(getApplication(), result.getClass());//リザルト画面への遷移
                                     startActivity(result_intent);
                                     finish();
                                 }
+                                if(connectEnd){
+                                    connectEnd=false;
+                                    client.Connect("End:" + myId+":"+hpbar.getProgress(), Game_activity.this, null, null);//避難が終わったことを伝える
+                                }
                             }
                         });
                     }
-                }, 0, 100);
+                }, 0, 1000);
             }
         });
         final ProgressDialog startDialog=new ProgressDialog(this);
@@ -157,6 +137,7 @@ public class Game_activity extends MapActivity {
         startDialog.setMessage("全員の参加が完了するまでしばらくお待ちください");
         startDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         startDialog.setCanceledOnTouchOutside(false);
+        startDialog.setCancelable(false);
         startDialog.show();
         final Timer timer=new Timer();
         final Handler handler=new Handler();
@@ -175,6 +156,7 @@ public class Game_activity extends MapActivity {
             }
         },0,100);
     }
+
     @Override
     protected boolean isRouteDisplayed(){
         return true;

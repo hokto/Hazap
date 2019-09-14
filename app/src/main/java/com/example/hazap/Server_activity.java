@@ -1,63 +1,35 @@
 package com.example.hazap;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.IntentService;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.Image;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.PatternMatcher;
-import android.telephony.data.ApnSetting;
-import android.util.Base64;
-import android.util.Log;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import android.os.AsyncTask;
-
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.net.URI;
-import java.net.UnknownHostException;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 import jp.co.yahoo.android.maps.CircleOverlay;
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
+
+
 public class Server_activity extends Activity{
     private String dangerplaces;
-    public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView,final Organizer organizer){ //サーバとのソケット通信を行う関数
+    @SuppressLint("StaticFieldLeak")
+    public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView, final Organizer organizer){ //サーバとのソケット通信を行う関数
         new AsyncTask<Void,Void,String>(){//非同期処理を行う
           @Override
           protected String doInBackground(Void ... voids){
@@ -99,12 +71,6 @@ public class Server_activity extends Activity{
                       instance.connectEnd=true;
                       break;
                   case "Start"://Start:ByteSize:disaster:disasterScale
-                          if(instance!=null){
-                              instance.startFlag=true;
-                          }
-                          else{
-                              organizer.startFlag=true;
-                          }
                           dangerplaces="";
                           String[] disasterinfo=id[1].split(":",0);
                           int byteSize=Integer.parseInt(disasterinfo[0]);
@@ -121,6 +87,13 @@ public class Server_activity extends Activity{
                               }
                           }
                           if(instance!=null) instance.connectEnd=true;
+                          if(instance!=null){
+                            instance.startFlag=true;
+                          }
+                          else{
+                            System.out.println("TRUE");
+                            organizer.startFlag=true;
+                          }
                           break;
                   case "Allpeople"://Allpeople:N
                       organizer.allPlayers=Integer.parseInt(id[1]);//全体の人数を取得(主催者用)
@@ -131,18 +104,19 @@ public class Server_activity extends Activity{
                   case "Waiting...": //Waiting...
                       instance.connectEnd=true;
                       break;
-                  case "Result"://End:Aliverate:ImageSize
+                  case "Result"://Result:Aliverate:ImageSize:OrganizerMessage
                       instance.startFlag=false;
                       String[] resultInfo=id[1].split(":",0);
                       instance.aliveRate=Integer.parseInt(resultInfo[0]);
                       int imgSize=Integer.parseInt(resultInfo[1]);
                       int receiveimgSize=0;
+                      instance.organizerMessage=resultInfo[2];
                       ByteBuffer buffer=ByteBuffer.allocate(imgSize);
                       while(true){//jsonファイルが送られるのでこれを取得
                           byte[] receiveBytes=new byte[131072];
                           try{
                               int currentSize=reader.read(receiveBytes);
-                              byte[] addByte=Arrays.copyOf(receiveBytes,currentSize);
+                              byte[] addByte= Arrays.copyOf(receiveBytes,currentSize);
                               buffer.put(addByte);
                               receiveimgSize+=currentSize;
                               if(receiveimgSize>=imgSize) break;
@@ -152,8 +126,8 @@ public class Server_activity extends Activity{
                       }
                       if(buffer.array()!=null){
                           instance.routeMap= BitmapFactory.decodeByteArray(buffer.array(),0,imgSize);
+                          instance.connectEnd=true;
                       }
-                      instance.connectEnd=true;
                       break;
                   case "Coordinates":
                       String[] coordinates=id[1].split(":",0);
@@ -181,7 +155,6 @@ public class Server_activity extends Activity{
                           JsonNode jsonNode = mapper.readTree(dangerplaces);
                           Iterator<String> fieldName=jsonNode.fieldNames();
                           Pattern pattern=Pattern.compile("(0406[0-9]{2})|(0305007)|(0425[0-9]{2})|(0412021)");
-                          int cnt=0;
                           while(fieldName.hasNext()) {//まだデータがあれば取得する
                               String stringJson=fieldName.next();
                               JsonNode node=jsonNode.get(stringJson);

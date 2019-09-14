@@ -1,49 +1,39 @@
 package com.example.hazap;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.RotateDrawable;
-import android.os.Build;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
+import android.support.v4.content.res.ResourcesCompat;
+import android.util.TypedValue;
 import android.view.View;
-import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import javax.xml.transform.Templates;
 
 public class Result_activity extends Activity   {
     public static int aliveRate;//生存率
     public static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
+    public static String message;
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -57,7 +47,15 @@ public class Result_activity extends Activity   {
         advice.setTextSize(10*displayHypotenuse/baseHypotenuse);
         RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,50*display.DisplayHeight/1216);
         textParam.topMargin=50*display.DisplayHeight/1216;
-        textParam.leftMargin=100*display.DisplayWidth/800;
+        textParam.leftMargin=80*display.DisplayWidth/800;
+        relativeLayout.addView(advice,textParam);
+        TextView organizerMessage=new TextView(this);
+        organizerMessage.setText(message);
+        organizerMessage.setTextSize(12*displayHypotenuse/baseHypotenuse);
+        RelativeLayout.LayoutParams messageParam=new RelativeLayout.LayoutParams(350*display.DisplayWidth/800,350*display.DisplayHeight/1216);
+        messageParam.topMargin=100*display.DisplayHeight/1216;
+        messageParam.leftMargin=35*display.DisplayWidth/800;
+        relativeLayout.addView(organizerMessage,messageParam);
         PieChart aliveRateCircle=new PieChart(this);//生存率を表示する設定
         aliveRateCircle.setHoleColor(Color.parseColor("#00000000"));//真ん中の色を透明色に
         aliveRateCircle.setUsePercentValues(true);
@@ -72,7 +70,6 @@ public class Result_activity extends Activity   {
         dataSet.setDrawValues(false);
         PieData data=new PieData(dataSet);
         aliveRateCircle.setData(data);//円グラフにデータを代入
-        relativeLayout.addView(advice,textParam);//円グラフ描画
         RelativeLayout.LayoutParams rateParam=new RelativeLayout.LayoutParams(500*display.DisplayWidth/800,500*display.DisplayHeight/1216);
         rateParam.leftMargin=400*display.DisplayWidth/800;
         relativeLayout.addView(aliveRateCircle,rateParam);
@@ -84,6 +81,10 @@ public class Result_activity extends Activity   {
         ratetxtParam.topMargin=213*display.DisplayHeight/1216;
         relativeLayout.addView(aliveRatetxt,ratetxtParam);
         Button btn=new Button(this);//ホームに戻るボタンの設定
+        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
+        btn.setBackground(btn_color);//ボタンにDrawableを適用する
+        btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
+        btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         btn.setText("ホームに戻る");
         btn.setTextSize(20*displayHypotenuse/baseHypotenuse);
         RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(250*display.DisplayWidth/800,100*display.DisplayHeight/1216);
