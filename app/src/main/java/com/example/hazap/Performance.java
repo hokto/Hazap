@@ -59,10 +59,11 @@ public class Performance extends Activity {
         RelativeLayout relativeLayout=findViewById(R.id.performanceLayout);
         TextView advice=new TextView(this);//主催者からのメッセージに関する設定
         advice.setText("主催者からのメッセージ");
-        advice.setTextSize(20*displayHypotenuse/baseHypotenuse);
+        advice.setTextSize(10*displayHypotenuse/baseHypotenuse);
         RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,50*display.DisplayHeight/1216);
         textParam.topMargin=50*display.DisplayHeight/1216;
-        textParam.leftMargin=75*display.DisplayWidth/800;
+        textParam.leftMargin=80*display.DisplayWidth/800;
+        relativeLayout.addView(advice,textParam);
         TextView organizerMessage=new TextView(this);
         organizerMessage.setText(message);
         organizerMessage.setTextSize(12*displayHypotenuse/baseHypotenuse);
@@ -70,31 +71,24 @@ public class Performance extends Activity {
         messageParam.topMargin=100*display.DisplayHeight/1216;
         messageParam.leftMargin=35*display.DisplayWidth/800;
         relativeLayout.addView(organizerMessage,messageParam);
-        PieChart aliveRateCircle=new PieChart(this);//生存率を表示する設定
-        aliveRateCircle.setHoleColor(Color.parseColor("#00000000"));//真ん中の色を透明色に
-        aliveRateCircle.setUsePercentValues(true);
-        List<PieEntry> entryList=new ArrayList<>();//グラフに入れる値を格納するリスト
-        entryList.add(new PieEntry((float)(aliveRate)));
-        entryList.add(new PieEntry((float)(100-aliveRate)));
-        PieDataSet dataSet=new PieDataSet(entryList,"");
-        ArrayList<Integer> colors=new ArrayList<>();//色の設定
-        colors.add(Color.parseColor("#05b371"));
-        colors.add(Color.parseColor("#00000000"));
-        dataSet.setColors(colors);
-        dataSet.setDrawValues(false);
-        PieData data=new PieData(dataSet);
-        aliveRateCircle.setData(data);//円グラフにデータを代入
-        relativeLayout.addView(advice,textParam);//円グラフ描画
-        RelativeLayout.LayoutParams rateParam=new RelativeLayout.LayoutParams(500*display.DisplayWidth/800,500*display.DisplayHeight/1216);
-        rateParam.leftMargin=400*display.DisplayWidth/800;
-        relativeLayout.addView(aliveRateCircle,rateParam);
-        TextView aliveRatetxt=new TextView(this);
-        aliveRatetxt.setText(Integer.valueOf(aliveRate)+"%");
-        aliveRatetxt.setTextSize(35*displayHypotenuse/baseHypotenuse);
-        RelativeLayout.LayoutParams ratetxtParam=new RelativeLayout.LayoutParams(150*display.DisplayWidth/800,50*display.DisplayHeight/1216);
-        ratetxtParam.leftMargin=550*display.DisplayWidth/800;
-        ratetxtParam.topMargin=190*display.DisplayHeight/1216;
-        relativeLayout.addView(aliveRatetxt,ratetxtParam);
+        TextView rateText=new TextView(this);
+        if(aliveRate>=90){
+            rateText.setText("S");
+        }
+        else if(aliveRate>=60){
+            rateText.setText("A");
+        }
+        else if(aliveRate>=40){
+            rateText.setText("B");
+        }
+        else{
+            rateText.setText("C");
+        }
+        rateText.setTextSize(100);
+        RelativeLayout.LayoutParams rateParams=new RelativeLayout.LayoutParams(400,400);
+        rateParams.leftMargin=800;
+        rateParams.topMargin=100;
+        relativeLayout.addView(rateText,rateParams);
         Button btn=new Button(this);//ホームに戻るボタンの設定
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         btn.setBackground(btn_color);//ボタンにDrawableを適用する

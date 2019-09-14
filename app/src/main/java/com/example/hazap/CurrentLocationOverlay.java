@@ -58,10 +58,10 @@ public class CurrentLocationOverlay extends MyLocationOverlay{
                 }
                     if (damageFlag == true) {
                         Client_Info.hp -= 5;//5ずつ体力を減らす
-                        Client_Info.hpbar.setProgress(Client_Info.hp);//体力ゲージの更新
                     }
                     finalTime=System.currentTimeMillis();//最後にダメージを受けた時間の更新
                 }
+                Client_Info.hpbar.setProgress(Client_Info.hp);//体力ゲージの更新
             }
             else
             {

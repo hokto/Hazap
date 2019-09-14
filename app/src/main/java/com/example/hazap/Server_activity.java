@@ -40,7 +40,7 @@ public class Server_activity extends Activity{
               byte[] w = new byte[1024];
               int size = 0;
               try{
-                  connect = new Socket("192.168.0.24", 4000); //サーバに接続する
+                  connect = new Socket("192.168.0.25", 4000); //サーバに接続する
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
                   writer.write(sendMessage);//サーバに文字列を送る
@@ -64,10 +64,13 @@ public class Server_activity extends Activity{
                       instance.myId=id[1];//サーバから割り振られてIDを設定
                       instance.connectEnd=true;
                       break;
-                  case "Around"://Around:aroundPeople,N:AlljoinPeople
+                  case "Around"://Around:aroundPeople,N:AlljoinPeople:Run?
                       String[] str=id[1].split(",",0);
                       instance.aroundpeople=Integer.parseInt(str[0]);//周囲にいる人、全体の人数を格納
                       instance.allpeople=Integer.parseInt(str[1].split(":",0)[1]);
+                      if(Integer.parseInt(str[1].split(":",0)[2])==1){
+                          instance.hp-=5;
+                      }
                       instance.connectEnd=true;
                       break;
                   case "Start"://Start:ByteSize:disaster:disasterScale
