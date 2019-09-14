@@ -35,6 +35,7 @@ public class Performance extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.jisseki);
         BufferedReader resultReader=null;
+        String message;
         String textstring="";
         try{
             resultReader=new BufferedReader(new InputStreamReader(openFileInput("EvacuationResult.txt")));
@@ -46,7 +47,8 @@ public class Performance extends Activity {
         }catch(Exception e){}
         String[] resultInfo=textstring.split(":",0);
         aliveRate=Integer.parseInt(resultInfo[0]);
-        String[] bytedata=resultInfo[1].split(",",0);
+        message=resultInfo[1];
+        String[] bytedata=resultInfo[2].split(",",0);
         byte[] routeMapByte=new byte[bytedata.length];
         for(int i=0;i<bytedata.length;i++){
             routeMapByte[i]=Integer.valueOf(bytedata[i]).byteValue();
@@ -62,6 +64,13 @@ public class Performance extends Activity {
         RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,50*display.DisplayHeight/1216);
         textParam.topMargin=50*display.DisplayHeight/1216;
         textParam.leftMargin=100*display.DisplayWidth/800;
+        TextView organizerMessage=new TextView(this);
+        organizerMessage.setText(message);
+        organizerMessage.setTextSize(12*displayHypotenuse/baseHypotenuse);
+        RelativeLayout.LayoutParams messageParam=new RelativeLayout.LayoutParams(350*display.DisplayWidth/800,350*display.DisplayHeight/1216);
+        messageParam.topMargin=100*display.DisplayHeight/1216;
+        messageParam.leftMargin=35*display.DisplayWidth/800;
+        relativeLayout.addView(organizerMessage,messageParam);
         PieChart aliveRateCircle=new PieChart(this);//生存率を表示する設定
         aliveRateCircle.setHoleColor(Color.parseColor("#00000000"));//真ん中の色を透明色に
         aliveRateCircle.setUsePercentValues(true);

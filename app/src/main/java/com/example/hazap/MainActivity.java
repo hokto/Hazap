@@ -1,5 +1,4 @@
 package com.example.hazap;
-
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-
 import java.time.Instant;
 
 
@@ -27,7 +25,6 @@ public class MainActivity extends AppCompatActivity{
         DisplayHeight = displayMetrics.heightPixels;
         Home();
     }
-
     //ホーム画面
     public void Home() {
         setContentView(R.layout.home);
@@ -86,7 +83,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
-
     //ハザードマップ画面
     public void Hazardmap(){
         setContentView(R.layout.hazardmap);
@@ -99,7 +95,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
-
     //実績確認画面
     public void Jisseki(){
         setContentView(R.layout.jisseki);
@@ -112,7 +107,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
-
     //リザルト画面
     public void Result(){
         setContentView(R.layout.result);
@@ -125,6 +119,4 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
-
-
 }

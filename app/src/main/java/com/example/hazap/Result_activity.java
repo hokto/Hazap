@@ -122,7 +122,7 @@ public class Result_activity extends Activity   {
                             for (int i = 0; i < baos.toByteArray().length; i++) {
                                 bytedata += (Integer.valueOf(baos.toByteArray()[i]).byteValue() + ",");
                             }
-                            resultWriter.write(Integer.valueOf(aliveRate) + ":" + bytedata);//Aliverate:OrganizerMessage:RouteMapBytes
+                            resultWriter.write(Integer.valueOf(aliveRate) + ":"+message+":" + bytedata);//Aliverate:OrganizerMessage:RouteMapBytes
                             resultWriter.close();
                         }catch(IOException e){
                         }
