@@ -63,7 +63,7 @@ public class Game_activity extends MapActivity {
                     Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                 }catch(InterruptedException e){ }
         }});
-
+        hp=100;
         locationOverlay=new CurrentLocationOverlay(getApplicationContext(),hazapView,this,Game_activity.this,relativeLayout);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(relativeLayout);
@@ -122,6 +122,8 @@ public class Game_activity extends MapActivity {
                                     result.message=organizerMessage;
                                     Intent result_intent = new Intent(getApplication(), result.getClass());//リザルト画面への遷移
                                     startActivity(result_intent);
+                                    startFlag=false;
+                                    routeMap=null;
                                     finish();
                                 }
                                 if(connectEnd){
