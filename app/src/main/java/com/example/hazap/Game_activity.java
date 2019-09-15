@@ -42,7 +42,7 @@ public class Game_activity extends MapActivity {
     public static Bitmap routeMap;
     public static int aliveRate;
     public static String organizerMessage;
-
+    private long startTime=0;
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +63,7 @@ public class Game_activity extends MapActivity {
                     Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                 }catch(InterruptedException e){ }
         }});
+
         locationOverlay=new CurrentLocationOverlay(getApplicationContext(),hazapView,this,Game_activity.this,relativeLayout);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(relativeLayout);
@@ -94,6 +95,7 @@ public class Game_activity extends MapActivity {
             @Override
             public void onClick(View v) {
                 locationOverlay.disableMyLocation();//位置情報の取得を終了
+                final long endTime=System.currentTimeMillis();
                 final Timer timer = new Timer();
                 final Handler handler = new Handler();
                 final ProgressDialog resultDialog=new ProgressDialog(Game_activity.this);
@@ -124,7 +126,7 @@ public class Game_activity extends MapActivity {
                                 }
                                 if(connectEnd){
                                     connectEnd=false;
-                                    client.Connect("End:" + myId+":"+hpbar.getProgress(), Game_activity.this, null, null);//避難が終わったことを伝える
+                                    client.Connect("End:" + myId+":"+hpbar.getProgress()+":"+((endTime-startTime)/1000), Game_activity.this, null, null);//避難が終わったことを伝える
                                 }
                             }
                         });
@@ -150,6 +152,7 @@ public class Game_activity extends MapActivity {
                         if(startFlag){
                             timer.cancel();
                             startDialog.dismiss();
+                            startTime=System.currentTimeMillis();
                         }
                     }
                 });
