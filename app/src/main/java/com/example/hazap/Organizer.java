@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -159,6 +158,7 @@ public class Organizer extends Activity {
             }
         });
     }
+    @SuppressLint("NewApi")
     private void OrganizerMap(){
         RelativeLayout mapLayout=new RelativeLayout(this);
         final MapView organizerMap=new MapView(Organizer.this,"dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
@@ -250,6 +250,9 @@ public class Organizer extends Activity {
             }
         },0,1000);
         Button btn=new Button(this);
+        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
+        btn.setBackground(btn_color);//ボタンにDrawableを適用する
+        btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
         btn.setText("メッセージを書く");
         btn.setTextSize(20);
         RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(600*playDisplay.DisplayWidth/1080,250*playDisplay.DisplayHeight/1794);
