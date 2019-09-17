@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,6 +27,8 @@ import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.routing.RouteOverlay;
 
 public class Game_activity extends MapActivity {
+    public static String disastersize;
+    public static String disaster;
     private MapView hazapView = null;                   //マップ表示用
     private RouteOverlay routeOverlay;
     private CurrentLocationOverlay locationOverlay;     //現在地追跡用
@@ -43,6 +46,8 @@ public class Game_activity extends MapActivity {
     public static int aliveRate;
     public static String organizerMessage;
     private long startTime=0;
+    public static List<List<String>> coor= new ArrayList<List<String>>();
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
