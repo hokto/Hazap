@@ -40,7 +40,7 @@ public class Server_activity extends Activity{
               byte[] w = new byte[1024];
               int size = 0;
               try{
-                  connect = new Socket("192.168.0.25", 4000); //サーバに接続する
+                  connect = new Socket("192.168.0.8", 4000); //サーバに接続する
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
                   writer.write(sendMessage);//サーバに文字列を送る
@@ -158,8 +158,15 @@ public class Server_activity extends Activity{
                           JsonNode jsonNode = mapper.readTree(dangerplaces);
                           Iterator<String> fieldName=jsonNode.fieldNames();
                           Pattern pattern=Pattern.compile("(0406[0-9]{2})|(0305007)|(0425[0-9]{2})|(0412021)");
+                          String str=fieldName.next();
+                          String[] minARV_str=jsonNode.get(str).asText().split(",",0);
+                          float[] minARV=new float[3];
+                          for(int i=0;i<3;i++) {
+                              minARV[i]=Float.parseFloat(minARV_str[i]);
+                          }
                           while(fieldName.hasNext()) {//まだデータがあれば取得する
                               String stringJson=fieldName.next();
+                              System.out.println(stringJson);
                               JsonNode node=jsonNode.get(stringJson);
                               String[] coordinates = node.get("Coordinates").asText().split(",", 0);
                               if(!pattern.matcher(node.get("Code").asText()).find()) {
