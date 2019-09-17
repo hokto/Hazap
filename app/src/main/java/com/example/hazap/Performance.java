@@ -2,6 +2,7 @@ package com.example.hazap;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -24,6 +26,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.support.v4.widget.TextViewCompat.setAutoSizeTextTypeWithDefaults;
 
 public class Performance extends Activity {
     private static int aliveRate;//生存率
@@ -59,15 +63,18 @@ public class Performance extends Activity {
         RelativeLayout relativeLayout=findViewById(R.id.performanceLayout);
         TextView advice=new TextView(this);//主催者からのメッセージに関する設定
         advice.setText("主催者からのメッセージ");
-        advice.setTextSize(10*displayHypotenuse/baseHypotenuse);
-        RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,50*display.DisplayHeight/1216);
+        RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(300*display.DisplayWidth/800, 40*display.DisplayHeight/1216);
         textParam.topMargin=50*display.DisplayHeight/1216;
         textParam.leftMargin=80*display.DisplayWidth/800;
+        advice.setTextSize(20*displayHypotenuse/baseHypotenuse);
+        advice.setPadding(4,2,4,2);
+        advice.setBackgroundResource(R.drawable.framestyle);
         relativeLayout.addView(advice,textParam);
         TextView organizerMessage=new TextView(this);
         organizerMessage.setText(message);
-        organizerMessage.setTextSize(12*displayHypotenuse/baseHypotenuse);
-        RelativeLayout.LayoutParams messageParam=new RelativeLayout.LayoutParams(350*display.DisplayWidth/800,350*display.DisplayHeight/1216);
+        organizerMessage.setTextSize(20*displayHypotenuse/baseHypotenuse);
+        organizerMessage.setBackgroundResource(R.drawable.framestyle);
+        RelativeLayout.LayoutParams messageParam=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,300*display.DisplayHeight/1216);
         messageParam.topMargin=100*display.DisplayHeight/1216;
         messageParam.leftMargin=35*display.DisplayWidth/800;
         relativeLayout.addView(organizerMessage,messageParam);

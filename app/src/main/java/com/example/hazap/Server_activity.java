@@ -41,7 +41,7 @@ public class Server_activity extends Activity{
               byte[] w = new byte[1024];
               int size = 0;
               try{
-                  connect = new Socket("192.168.0.8", 4000); //サーバに接続する
+                  connect = new Socket("192.168.0.49", 4000); //サーバに接続する
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
                   writer.write(sendMessage);//サーバに文字列を送る
@@ -168,8 +168,8 @@ public class Server_activity extends Activity{
                               for(int i=0;i<3;i++) {
                                   minARV[i]=Float.parseFloat(minARV_str[i]);
                               }
-                              double MinARV=0.0;
-                              switch (instance.disaster){
+                              double MinARV=9999;
+                              switch (instance.disastersize){
                                   case "震度5強":
                                       MinARV=minARV[2];
                                       break;

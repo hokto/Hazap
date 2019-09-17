@@ -251,9 +251,12 @@ public class Organizer extends Activity {
         },0,1000);
         Button btn=new Button(this);
         btn.setText("メッセージを書く");
+        btn.setBackgroundResource(R.drawable.button_state);
         btn.setTextSize(20);
-        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(600*playDisplay.DisplayWidth/1080,250*playDisplay.DisplayHeight/1794);
-        btnParam.topMargin=1500*playDisplay.DisplayWidth/1080;
+        btn.setTextColor(Color.WHITE);
+        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(550*playDisplay.DisplayWidth/1080,100*playDisplay.DisplayHeight/1794);
+        btnParam.topMargin=725*playDisplay.DisplayHeight/800;
+        btnParam.leftMargin=15*playDisplay.DisplayWidth/1080;
         mapLayout.addView(btn,btnParam);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
