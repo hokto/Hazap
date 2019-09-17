@@ -214,46 +214,6 @@ public class Server_activity extends Activity{
                   } catch (IOException e) { }
               }
           }
-           /* protected void onPostExecute(String result){
-
-                  if((instance.startFlag||organizer.startFlag)&& mapView!=null) {
-                      try {
-                          ObjectMapper mapper = new ObjectMapper(); //受け取った文字列をjson文字列にパースする
-                          JsonNode jsonNode = mapper.readTree(dangerplaces);
-                          Iterator<String> fieldName=jsonNode.fieldNames();
-                          Pattern pattern=Pattern.compile("(0406[0-9]{2})|(0305007)|(0425[0-9]{2})|(0412021)");
-                          while(fieldName.hasNext()) {//まだデータがあれば取得する
-                              String stringJson=fieldName.next();
-                              JsonNode node=jsonNode.get(stringJson);
-                              String[] coordinates = node.get("Coordinates").asText().split(",", 0);
-                              if(!pattern.matcher(node.get("Code").asText()).find()) {
-                                  int lon = (int) (Float.parseFloat(coordinates[0]) * 10E5);//緯度、経度、階数を格納
-                                  int lat = (int) (Float.parseFloat(coordinates[1]) * 10E5);
-                                  int step = (int)(Integer.parseInt(node.get("Step").asText()) * 5*Float.parseFloat(node.get("ARV").asText()));
-                                  GeoPoint mid = new GeoPoint(lat, lon);
-                                  CircleOverlay circleOverlay = new CircleOverlay(mid, step, step) {
-                                      @Override
-                                      protected boolean onTap() {
-                                          //円をタッチした際の処理
-                                          return true;
-                                      }
-                                  };
-                                  //色の変更
-                                  circleOverlay.setFillColor(Color.argb(127, 255, 40, 40));
-                                  circleOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
-                                  mapView.getOverlays().add(circleOverlay);
-                                  mapView.invalidate();
-                                  //リストに各円の緯度、経度、半径をpush
-                                  ArrayList info = new ArrayList();
-                                  info.add(Float.parseFloat(coordinates[1]));
-                                  info.add(Float.parseFloat(coordinates[0]));
-                                  info.add(step);
-                                  if(instance!=null) instance.earthquakeInfo.add(info);
-                              }
-                          }
-                      } catch (IOException e) { }
-                  }
-              }*/
         }.execute();
     }
 }

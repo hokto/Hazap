@@ -16,17 +16,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class Result_activity extends Activity   {
@@ -40,21 +33,21 @@ public class Result_activity extends Activity   {
         setContentView(R.layout.result);
         MainActivity display=new MainActivity();
         int baseHypotenuse=(int)Math.sqrt(Math.pow(1216,2)+Math.pow(800,2));
-        int displayHypotenuse=(int)Math.sqrt(Math.pow(display.DisplayWidth,2)+Math.pow(display.DisplayHeight,2));
+        int displayHypotenuse=(int)Math.sqrt(Math.pow(MainActivity.DisplayWidth,2)+Math.pow(MainActivity.DisplayHeight,2));
         final RelativeLayout relativeLayout=findViewById(R.id.resultLayout);
         TextView advice=new TextView(this);//主催者からのメッセージに関する設定
         advice.setText("主催者からのメッセージ");
         advice.setTextSize(10*displayHypotenuse/baseHypotenuse);
-        RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,50*display.DisplayHeight/1216);
-        textParam.topMargin=50*display.DisplayHeight/1216;
-        textParam.leftMargin=80*display.DisplayWidth/800;
+        RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(400* MainActivity.DisplayWidth /800,50* MainActivity.DisplayHeight /1216);
+        textParam.topMargin=50* MainActivity.DisplayHeight /1216;
+        textParam.leftMargin=80* MainActivity.DisplayWidth /800;
         relativeLayout.addView(advice,textParam);
         TextView organizerMessage=new TextView(this);
         organizerMessage.setText(message);
         organizerMessage.setTextSize(12*displayHypotenuse/baseHypotenuse);
-        RelativeLayout.LayoutParams messageParam=new RelativeLayout.LayoutParams(350*display.DisplayWidth/800,350*display.DisplayHeight/1216);
-        messageParam.topMargin=100*display.DisplayHeight/1216;
-        messageParam.leftMargin=35*display.DisplayWidth/800;
+        RelativeLayout.LayoutParams messageParam=new RelativeLayout.LayoutParams(350* MainActivity.DisplayWidth /800,350* MainActivity.DisplayHeight /1216);
+        messageParam.topMargin=100* MainActivity.DisplayHeight /1216;
+        messageParam.leftMargin=35* MainActivity.DisplayWidth /800;
         relativeLayout.addView(organizerMessage,messageParam);
         TextView rateText=new TextView(this);
         if(aliveRate>=90){
@@ -81,14 +74,14 @@ public class Result_activity extends Activity   {
         btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         btn.setText("ホームに戻る");
         btn.setTextSize(20*displayHypotenuse/baseHypotenuse);
-        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(250*display.DisplayWidth/800,100*display.DisplayHeight/1216);
-        btnParam.topMargin=1050*display.DisplayHeight/1216;
-        btnParam.leftMargin=30*display.DisplayWidth/800;
+        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(250* MainActivity.DisplayWidth /800,100* MainActivity.DisplayHeight /1216);
+        btnParam.topMargin=1050* MainActivity.DisplayHeight /1216;
+        btnParam.leftMargin=30* MainActivity.DisplayWidth /800;
         relativeLayout.addView(btn,btnParam);
         ImageView routeImg=new ImageView(this);//避難結果が表示されている画像の設定
-        RelativeLayout.LayoutParams imgParam=new RelativeLayout.LayoutParams(1000*display.DisplayWidth/800,1000*display.DisplayHeight/1216);
-        imgParam.topMargin=450*display.DisplayHeight/1216;
-        imgParam.leftMargin=15*display.DisplayWidth/800;
+        RelativeLayout.LayoutParams imgParam=new RelativeLayout.LayoutParams(1000* MainActivity.DisplayWidth /800,1000* MainActivity.DisplayHeight /1216);
+        imgParam.topMargin=450* MainActivity.DisplayHeight /1216;
+        imgParam.leftMargin=15* MainActivity.DisplayWidth /800;
         routeImg.setImageBitmap(routeMap);
         relativeLayout.addView(routeImg,imgParam);
         btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る
