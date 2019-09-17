@@ -286,4 +286,8 @@ public class Organizer extends Activity {
         nextParams.topMargin=850* MainActivity.DisplayHeight /1794;
         relativeLayout.addView(spinner,nextParams);
     }
+    @Override
+    public void onBackPressed()
+    {
+    }
 }

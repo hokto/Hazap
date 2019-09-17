@@ -28,6 +28,7 @@ import jp.co.yahoo.android.maps.MapView;
 
 public class Server_activity extends Activity{
     private String dangerplaces;
+    private String[] disasterinfo;
     @SuppressLint("StaticFieldLeak")
     public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView, final Organizer organizer){ //サーバとのソケット通信を行う関数
         new AsyncTask<Void,Void,String>(){//非同期処理を行う
@@ -75,7 +76,9 @@ public class Server_activity extends Activity{
                       break;
                   case "Start"://Start:ByteSize:disaster:disasterScale
                           dangerplaces="";
-                          String[] disasterinfo=id[1].split(":",0);
+                          disasterinfo=id[1].split(":",0);
+                          instance.disaster=disasterinfo[1];
+                          instance.disastersize=disasterinfo[2];
                           int byteSize=Integer.parseInt(disasterinfo[0]);
                           int receiveSize=0;
                           while(true){//jsonファイルが送られるのでこれを取得
@@ -157,41 +160,70 @@ public class Server_activity extends Activity{
                           ObjectMapper mapper = new ObjectMapper(); //受け取った文字列をjson文字列にパースする
                           JsonNode jsonNode = mapper.readTree(dangerplaces);
                           Iterator<String> fieldName=jsonNode.fieldNames();
-                          Pattern pattern=Pattern.compile("(0406[0-9]{2})|(0305007)|(0425[0-9]{2})|(0412021)");
-                          String str=fieldName.next();
-                          String[] minARV_str=jsonNode.get(str).asText().split(",",0);
-                          float[] minARV=new float[3];
-                          for(int i=0;i<3;i++) {
-                              minARV[i]=Float.parseFloat(minARV_str[i]);
-                          }
-                          while(fieldName.hasNext()) {//まだデータがあれば取得する
-                              String stringJson=fieldName.next();
-                              System.out.println(stringJson);
-                              JsonNode node=jsonNode.get(stringJson);
-                              String[] coordinates = node.get("Coordinates").asText().split(",", 0);
-                              if(!pattern.matcher(node.get("Code").asText()).find()) {
-                                  int lon = (int) (Float.parseFloat(coordinates[0]) * 10E5);//緯度、経度、階数を格納
-                                  int lat = (int) (Float.parseFloat(coordinates[1]) * 10E5);
-                                  int step = (int)(Integer.parseInt(node.get("Step").asText()) * 5*Float.parseFloat(node.get("ARV").asText()));
-                                  GeoPoint mid = new GeoPoint(lat, lon);
-                                  CircleOverlay circleOverlay = new CircleOverlay(mid, step, step) {
-                                      @Override
-                                      protected boolean onTap() {
-                                          //円をタッチした際の処理
-                                          return true;
+                          if(disasterinfo[1].equals("地震")){
+                              Pattern pattern=Pattern.compile("(0406[0-9]{2})|(0305007)|(0425[0-9]{2})|(0412021)");
+                              String str=fieldName.next();
+                              String[] minARV_str=jsonNode.get(str).asText().split(",",0);
+                              float[] minARV=new float[3];
+                              for(int i=0;i<3;i++) {
+                                  minARV[i]=Float.parseFloat(minARV_str[i]);
+                              }
+                              double MinARV=0.0;
+                              switch (instance.disaster){
+                                  case "震度5強":
+                                      MinARV=minARV[2];
+                                      break;
+                                  case "震度6":
+                                      MinARV=minARV[1];
+                                      break;
+                                  case "震度7":
+                                      MinARV=minARV[0];
+                                      break;
+                              }
+                              while(fieldName.hasNext()) {//まだデータがあれば取得する
+                                  String stringJson=fieldName.next();
+                                  System.out.println(stringJson);
+                                  JsonNode node=jsonNode.get(stringJson);
+                                  String[] coordinates = node.get("Coordinates").asText().split(",", 0);
+                                  if(!pattern.matcher(node.get("Code").asText()).find()) {
+                                      int lon = (int) (Float.parseFloat(coordinates[0]) * 10E5);//緯度、経度、階数を格納
+                                      int lat = (int) (Float.parseFloat(coordinates[1]) * 10E5);
+                                      int step = (int)(Integer.parseInt(node.get("Step").asText()) * 5*Float.parseFloat(node.get("ARV").asText()));
+                                      GeoPoint mid = new GeoPoint(lat, lon);
+                                      CircleOverlay circleOverlay = new CircleOverlay(mid, step, step) {
+                                          @Override
+                                          protected boolean onTap() {
+                                              //円をタッチした際の処理
+                                              return true;
+                                          }
+                                      };
+                                      //色の変更
+                                      if(MinARV<Float.parseFloat(node.get("ARV").asText())){
+                                          circleOverlay.setFillColor(Color.argb(127, 255, 40, 40));
+                                          circleOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
+                                          mapView.getOverlays().add(circleOverlay);
+                                          mapView.invalidate();
+                                          //リストに各円の緯度、経度、半径をpush
+                                          ArrayList info = new ArrayList();
+                                          info.add(Float.parseFloat(coordinates[1]));
+                                          info.add(Float.parseFloat(coordinates[0]));
+                                          info.add(step);
+                                          if(instance!=null) instance.earthquakeInfo.add(info);
                                       }
-                                  };
-                                  //色の変更
-                                  circleOverlay.setFillColor(Color.argb(127, 255, 40, 40));
-                                  circleOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
-                                  mapView.getOverlays().add(circleOverlay);
-                                  mapView.invalidate();
-                                  //リストに各円の緯度、経度、半径をpush
-                                  ArrayList info = new ArrayList();
-                                  info.add(Float.parseFloat(coordinates[1]));
-                                  info.add(Float.parseFloat(coordinates[0]));
-                                  info.add(step);
-                                  if(instance!=null) instance.earthquakeInfo.add(info);
+                                  }
+                              }
+                          }else if(disasterinfo[1].equals("津波")) {
+                              int i = 0;
+                              while (fieldName.hasNext()) {
+                                  String stringJson = fieldName.next();
+                                  JsonNode node = jsonNode.get(stringJson);
+                                  if (node.get(Integer.valueOf(i)) != null) {
+                                      ArrayList info = new ArrayList();
+                                      info.add(node.get(Integer.valueOf(i)).asText().split(" ", 0)[0]);
+                                      info.add(node.get(Integer.valueOf(i)).asText().split(" ", 0)[1]);
+                                      instance.coor.add(info);
+                                  }
+                                  i++;
                               }
                           }
                       } catch (IOException e) { }

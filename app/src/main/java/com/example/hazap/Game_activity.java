@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,6 +44,9 @@ public class Game_activity extends MapActivity {
     public static int aliveRate;
     public static String organizerMessage;
     private long startTime=0;
+    public static List<List<String>> coor= new ArrayList<List<String>>();
+    public static String disastersize;
+    public static String disaster;
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -175,5 +179,9 @@ public class Game_activity extends MapActivity {
     protected void onPause() {
         super.onPause();
         hazapView.onPause();
+    }
+    @Override
+    public void onBackPressed()
+    {
     }
 }

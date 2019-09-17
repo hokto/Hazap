@@ -85,9 +85,9 @@ public class Performance extends Activity {
             rateText.setText("C");
         }
         rateText.setTextSize(100);
-        RelativeLayout.LayoutParams rateParams=new RelativeLayout.LayoutParams(400,400);
-        rateParams.leftMargin=800;
-        rateParams.topMargin=100;
+        RelativeLayout.LayoutParams rateParams=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,400*display.DisplayHeight/1216);
+        rateParams.leftMargin=600*display.DisplayWidth/800;
+        rateParams.topMargin=100*display.DisplayHeight/1216;
         relativeLayout.addView(rateText,rateParams);
         Button btn=new Button(this);//ホームに戻るボタンの設定
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
