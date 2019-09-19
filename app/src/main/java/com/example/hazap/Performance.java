@@ -81,15 +81,19 @@ public class Performance extends Activity {
         TextView rateText=new TextView(this);
         if(aliveRate>=90){
             rateText.setText("S");
+            rateText.setTextColor(Color.parseColor("#DAA520"));
         }
         else if(aliveRate>=60){
             rateText.setText("A");
+            rateText.setTextColor(Color.parseColor("#fc0101"));
         }
         else if(aliveRate>=40){
             rateText.setText("B");
+            rateText.setTextColor(Color.parseColor("#0101fc"));
         }
         else{
             rateText.setText("C");
+            rateText.setTextColor(Color.parseColor("#fcfc01"));
         }
         rateText.setTextSize(100);
         RelativeLayout.LayoutParams rateParams=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,400*display.DisplayHeight/1216);

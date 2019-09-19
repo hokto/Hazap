@@ -44,30 +44,37 @@ public class Result_activity extends Activity   {
         final RelativeLayout relativeLayout=findViewById(R.id.resultLayout);
         TextView advice=new TextView(this);//主催者からのメッセージに関する設定
         advice.setText("主催者からのメッセージ");
-        advice.setTextSize(10*displayHypotenuse/baseHypotenuse);
-        RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,50*display.DisplayHeight/1216);
+        RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(300*display.DisplayWidth/800, 40*display.DisplayHeight/1216);
         textParam.topMargin=50*display.DisplayHeight/1216;
         textParam.leftMargin=80*display.DisplayWidth/800;
+        advice.setTextSize(20*displayHypotenuse/baseHypotenuse);
+        advice.setPadding(4,2,4,2);
+        advice.setBackgroundResource(R.drawable.framestyle);
         relativeLayout.addView(advice,textParam);
         TextView organizerMessage=new TextView(this);
         organizerMessage.setText(message);
-        organizerMessage.setTextSize(12*displayHypotenuse/baseHypotenuse);
-        RelativeLayout.LayoutParams messageParam=new RelativeLayout.LayoutParams(350*display.DisplayWidth/800,350*display.DisplayHeight/1216);
+        organizerMessage.setTextSize(20*displayHypotenuse/baseHypotenuse);
+        organizerMessage.setBackgroundResource(R.drawable.framestyle);
+        RelativeLayout.LayoutParams messageParam=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,300*display.DisplayHeight/1216);
         messageParam.topMargin=100*display.DisplayHeight/1216;
         messageParam.leftMargin=35*display.DisplayWidth/800;
         relativeLayout.addView(organizerMessage,messageParam);
         TextView rateText=new TextView(this);
         if(aliveRate>=90){
             rateText.setText("S");
+            rateText.setTextColor(Color.parseColor("#DAA520"));
         }
         else if(aliveRate>=60){
             rateText.setText("A");
+            rateText.setTextColor(Color.parseColor("#fc0101"));
         }
         else if(aliveRate>=40){
             rateText.setText("B");
+            rateText.setTextColor(Color.parseColor("#0101fc"));
         }
         else{
             rateText.setText("C");
+            rateText.setTextColor(Color.parseColor("#fcfc01"));
         }
         rateText.setTextSize(100);
         RelativeLayout.LayoutParams rateParams=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,400*display.DisplayHeight/1216);

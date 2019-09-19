@@ -238,11 +238,13 @@ public class Organizer extends Activity {
                                 Thread.sleep(500); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                             } catch (InterruptedException e) {
                             }
-                            organizerMap.removeOverlayAll();
-                            for (int i = 0; i < allPlayers; i++) {
-                                PinOverlay pin = new PinOverlay(i);
-                                organizerMap.getOverlays().add(pin);
-                                pin.addPoint(playerCoordinates.get(i), Integer.toString(i));
+                            if(playerCoordinates!=null) {
+                                organizerMap.getOverlays().remove(pin);
+                                for (int i = 0; i < allPlayers; i++) {
+                                    pin = new PinOverlay(i);
+                                    organizerMap.getOverlays().add(pin);
+                                    pin.addPoint(playerCoordinates.get(i), Integer.toString(i));
+                                }
                             }
                         }
                     }
