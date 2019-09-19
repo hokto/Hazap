@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -57,17 +58,27 @@ public class Result_activity extends Activity   {
         messageParam.leftMargin=35*display.DisplayWidth/800;
         relativeLayout.addView(organizerMessage,messageParam);
         TextView rateText=new TextView(this);
+        AlphaAnimation feedin =new AlphaAnimation(1,0);
+        feedin.setDuration(1000);
         if(aliveRate>=90){
             rateText.setText("S");
+            rateText.setTextColor(Color.YELLOW);
+            rateText.startAnimation(feedin);
         }
         else if(aliveRate>=60){
             rateText.setText("A");
+            rateText.setTextColor(Color.RED);
+            rateText.startAnimation(feedin);
         }
         else if(aliveRate>=40){
             rateText.setText("B");
+            rateText.setTextColor(Color.GREEN);
+            rateText.startAnimation(feedin);
         }
         else{
             rateText.setText("C");
+            rateText.setTextColor(Color.rgb(127,127,0));
+            rateText.startAnimation(feedin);
         }
         rateText.setTextSize(100);
         RelativeLayout.LayoutParams rateParams=new RelativeLayout.LayoutParams(400,400);
