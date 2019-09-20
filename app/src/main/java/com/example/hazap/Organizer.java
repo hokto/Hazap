@@ -254,9 +254,12 @@ public class Organizer extends Activity {
         btn.setBackground(btn_color);//ボタンにDrawableを適用する
         btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
         btn.setText("メッセージを書く");
+        btn.setBackgroundResource(R.drawable.button_state);
         btn.setTextSize(20);
-        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(600*playDisplay.DisplayWidth/1080,250*playDisplay.DisplayHeight/1794);
-        btnParam.topMargin=1500*playDisplay.DisplayWidth/1080;
+        btn.setTextColor(Color.WHITE);
+        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(550*playDisplay.DisplayWidth/1080,100*playDisplay.DisplayHeight/1794);
+        btnParam.topMargin=725*playDisplay.DisplayHeight/800;
+        btnParam.leftMargin=15*playDisplay.DisplayWidth/1080;
         mapLayout.addView(btn,btnParam);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,12 +284,16 @@ public class Organizer extends Activity {
     }
     private void setSpinnerItems(Spinner spinner,String[] items,RelativeLayout relativeLayout,MainActivity playDisplay){ //各災害における選択肢の設定
         relativeLayout.removeView(spinner);//前に設定されていたものを取り除く
-        ArrayAdapter nextAdapter=new ArrayAdapter(this,R.layout.spinner_item,items);
+        ArrayAdapter nextAdapter= new ArrayAdapter(this,R.layout.spinner_item,items);
         nextAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(nextAdapter);
         RelativeLayout.LayoutParams nextParams=new RelativeLayout.LayoutParams(820* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
         nextParams.leftMargin=150* MainActivity.DisplayWidth /1080;
         nextParams.topMargin=850* MainActivity.DisplayHeight /1794;
         relativeLayout.addView(spinner,nextParams);
+    }
+    @Override
+    public void onBackPressed()
+    {
     }
 }

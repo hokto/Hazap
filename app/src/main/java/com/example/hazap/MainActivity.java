@@ -1,7 +1,7 @@
 package com.example.hazap;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.View;
@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity{
         option_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Option();
+                Intent Jisseki_intent = new Intent(getApplication(),Performance.class);
+                startActivity(Jisseki_intent);
             }
         });
         organizerBtn.setOnClickListener(new View.OnClickListener() {
@@ -68,67 +69,8 @@ public class MainActivity extends AppCompatActivity{
         });
     }
 
-    //オプション画面
-    public void Option(){
-        setContentView(R.layout.option);
-        Button backhome_button=findViewById(R.id.Homemove_btn);
-        backhome_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Home();
-            }
-        });
-        Button hazardmap_button=findViewById(R.id.hazardmap_btn);
-        hazardmap_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Hazardmap();
-            }
-        });
-
-        Button jisseki_button=findViewById(R.id.jisseki_btn);
-        jisseki_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent performanceIntent=new Intent(getApplication(),Performance.class);
-                startActivity(performanceIntent);
-            }
-        });
-    }
-    //ハザードマップ画面
-    public void Hazardmap(){
-        setContentView(R.layout.hazardmap);
-        Button backoption_button=findViewById(R.id.backoption_btn);
-        backoption_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v)
-            {
-                Option();
-            }
-        });
-    }
-    //実績確認画面
-    public void Jisseki(){
-        setContentView(R.layout.jisseki);
-        Button backoption_button=findViewById(R.id.backoption_btn);
-        backoption_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v)
-            {
-                Option();
-            }
-        });
-    }
-    //リザルト画面
-    public void Result(){
-        setContentView(R.layout.result);
-        Button backhome_button=findViewById(R.id.Homemove_btn);
-        backhome_button.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v)
-            {
-                Home();
-            }
-        });
+    @Override
+    public void onBackPressed()
+    {
     }
 }
