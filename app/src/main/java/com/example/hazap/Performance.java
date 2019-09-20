@@ -14,9 +14,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
 
 public class Performance extends Activity {
     private static int aliveRate;//生存率

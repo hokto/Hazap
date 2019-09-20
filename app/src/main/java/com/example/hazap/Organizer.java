@@ -20,15 +20,14 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.PinOverlay;
+
 
 public class Organizer extends Activity {
     private String[] disasterItems={"災害を選択","地震","津波"};//災害の種類を格納した配列

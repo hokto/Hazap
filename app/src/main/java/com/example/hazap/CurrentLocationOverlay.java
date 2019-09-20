@@ -3,10 +3,10 @@ package com.example.hazap;
 import android.app.Activity;
 import android.content.Context;
 import android.widget.RelativeLayout;
-
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
+
 
 public class CurrentLocationOverlay extends MyLocationOverlay{
     MapView _mapView;//位置情報を描画する

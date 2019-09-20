@@ -1,4 +1,5 @@
 package com.example.hazap;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +8,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-
 import java.util.ArrayList;
 
 
@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity{
 
     public ArrayList<ArrayList<Integer>> coastline = new ArrayList<ArrayList<Integer>>();
     public ArrayList<Integer> point = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +29,7 @@ public class MainActivity extends AppCompatActivity{
         DisplayHeight = displayMetrics.heightPixels;
         Home();
     }
+
     //ホーム画面
     public void Home() {
         setContentView(R.layout.home);
