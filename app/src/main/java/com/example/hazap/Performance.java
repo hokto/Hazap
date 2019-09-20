@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.TypedValue;
@@ -21,10 +23,16 @@ import java.io.InputStreamReader;
 public class Performance extends Activity {
     private static int aliveRate;//生存率
     private static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
+    public int sound_back;
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        sound_back = soundPool.load(this, R.raw.back, 1);
+
         setContentView(R.layout.jisseki);
         BufferedReader resultReader=null;
         String message;
@@ -105,6 +113,7 @@ public class Performance extends Activity {
         btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る
             @Override
             public void onClick(View v){
+                soundPool.play(sound_back,0.1f,0.1f,0,0,1);
                 finish();
             }
         });

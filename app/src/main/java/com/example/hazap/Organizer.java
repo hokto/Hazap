@@ -7,6 +7,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.res.ResourcesCompat;
@@ -44,11 +46,16 @@ public class Organizer extends Activity {
     public static boolean startFlag=false;
     private EditText waveHeight;//津波が選択された場合、波の高さと震源地までの距離を設定
     private EditText distance;
+    public int sound_back;
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        sound_back = soundPool.load(this, R.raw.back, 1);
+
         setContentView(R.layout.organizerhome);
         disasterSpinner=findViewById(R.id.disasterspinner);//災害の種類を選ばせる処理の設定
         final RelativeLayout relativeLayout=findViewById(R.id.relativeLayout);
@@ -143,6 +150,7 @@ public class Organizer extends Activity {
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                soundPool.play(sound_back,0.1f,0.1f,0,0,1);
                 timer.cancel();
                 finish();
             }

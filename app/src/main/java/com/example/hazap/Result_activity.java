@@ -8,6 +8,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.TypedValue;
@@ -26,10 +28,16 @@ public class Result_activity extends Activity   {
     public static int aliveRate;//生存率
     public static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
     public static String message;
+    public int sound_back;
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        sound_back = soundPool.load(this, R.raw.back, 1);
+
         setContentView(R.layout.result);
         MainActivity display=new MainActivity();
         int baseHypotenuse=(int)Math.sqrt(Math.pow(1216,2)+Math.pow(800,2));
@@ -87,6 +95,7 @@ public class Result_activity extends Activity   {
         btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る
             @Override
             public void onClick(View v){
+                soundPool.play(sound_back,0.1f,0.1f,0,0,1);
                 final ProgressDialog imgsaveDialog=new ProgressDialog(Result_activity.this);
                 imgsaveDialog.setTitle("結果を保存中");
                 imgsaveDialog.setMessage("リザルト結果を端末に保存しています。");

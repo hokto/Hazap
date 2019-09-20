@@ -39,8 +39,6 @@ public class MainActivity extends AppCompatActivity{
         final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         sound1 = soundPool.load(this, R.raw.se_maoudamashii_system42, 1);
 
-        sound1 = soundPool.load(this, R.raw.se_maoudamashii_system42, 1);
-
         setContentView(R.layout.home);
 
         point.add(13974477);
@@ -73,7 +71,6 @@ public class MainActivity extends AppCompatActivity{
         organizerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // ((Vibrator) getSystemService(Context.VIBRATOR_SERVICE)).vibrate(1000);
                 Intent organizer_intent=new Intent(getApplication(),Organizer.class);
                 startActivity(organizer_intent);
             }
