@@ -72,16 +72,16 @@ public class Game_activity extends MapActivity {
         locationOverlay=new CurrentLocationOverlay(getApplicationContext(),hazapView,this,Game_activity.this,relativeLayout);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(relativeLayout);
-        relativeLayout.addView(hazapView,playDisplay.DisplayWidth*1100/1080,playDisplay.DisplayHeight*1800/1794);
+        relativeLayout.addView(hazapView, MainActivity.DisplayWidth *1100/1080, MainActivity.DisplayHeight *1800/1794);
         hpbar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);//体力ゲージの実装
         hpbar.setProgressDrawable(getResources().getDrawable(R.drawable.hpbarcustom));
         hpbar.setMax(hp);//体力の最大値(100)
         hpbar.setProgress(hp);//最初の体力(100)
         hpbar.setSecondaryProgress(100);//体力減少用の設定
-        RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(playDisplay.DisplayWidth*300/1080,playDisplay.DisplayHeight*30/1794);//体力ゲージを表示する場所を一定にする
+        RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(MainActivity.DisplayWidth *300/1080, MainActivity.DisplayHeight *30/1794);//体力ゲージを表示する場所を一定にする
 
-        barParam.leftMargin=playDisplay.DisplayWidth*700/1080;
-        barParam.topMargin=playDisplay.DisplayHeight*100/1794;
+        barParam.leftMargin= MainActivity.DisplayWidth *700/1080;
+        barParam.topMargin= MainActivity.DisplayHeight *100/1794;
         relativeLayout.addView(hpbar,barParam);
         Button button = new Button(this);//終了ボタン
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
@@ -89,10 +89,10 @@ public class Game_activity extends MapActivity {
         button.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
         button.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         button.setText("避難終了");
-        relativeLayout.addView(button, playDisplay.DisplayWidth*350/1080, playDisplay.DisplayHeight*150/1794);
+        relativeLayout.addView(button, MainActivity.DisplayWidth *350/1080, MainActivity.DisplayHeight *150/1794);
         ViewGroup.LayoutParams layoutParams = button.getLayoutParams();//ボタンの配置を調整
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
-        int top_margin=(playDisplay.DisplayHeight*1400)/1794;//ボタンの配置場所を一定にする
+        int top_margin=(MainActivity.DisplayHeight *1400)/1794;//ボタンの配置場所を一定にする
         marginLayoutParams.setMargins(marginLayoutParams.leftMargin,top_margin , marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin);
         button.setLayoutParams(marginLayoutParams);
         button.setOnClickListener(new View.OnClickListener() { //避難終了ボタンが押された場合
@@ -122,9 +122,9 @@ public class Game_activity extends MapActivity {
                                     timer.cancel();
                                     connectEnd=false;
                                     Result_activity result = new Result_activity();
-                                    result.aliveRate = aliveRate;
-                                    result.routeMap = routeMap;
-                                    result.message=organizerMessage;
+                                    Result_activity.aliveRate = aliveRate;
+                                    Result_activity.routeMap = routeMap;
+                                    Result_activity.message =organizerMessage;
                                     Intent result_intent = new Intent(getApplication(), result.getClass());//リザルト画面への遷移
                                     startActivity(result_intent);
                                     startFlag=false;

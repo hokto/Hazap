@@ -62,7 +62,7 @@ public class Organizer extends Activity {
         disasterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){ //災害の種類を選ぶところが押された場合
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int positio, long id){
-                    switch((String)(((Spinner)parent).getSelectedItem())){//各災害が選ばれた時の処理を分岐
+                    switch((String)(parent.getSelectedItem())){//各災害が選ばれた時の処理を分岐
                         case "地震":
                             relativeLayout.removeView(distance);
                             relativeLayout.removeView(waveHeight);
@@ -110,9 +110,9 @@ public class Organizer extends Activity {
         final Timer timer=new Timer();//一定時間ごとに同じ処理を行うためのタイマー
         final Handler handler=new Handler();//非同期処理用
         playerNumText=new TextView(this);//全参加者を表示するテキストの設定
-        RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(500*playDisplay.DisplayWidth/1080,80*playDisplay.DisplayHeight/1794);
-        textParam.leftMargin=300*playDisplay.DisplayWidth/1080;
-        textParam.topMargin=1200*playDisplay.DisplayHeight/1794;
+        RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(500* MainActivity.DisplayWidth /1080,80* MainActivity.DisplayHeight /1794);
+        textParam.leftMargin=300* MainActivity.DisplayWidth /1080;
+        textParam.topMargin=1200* MainActivity.DisplayHeight /1794;
         playerNumText.setTextSize(25);
         relativeLayout.addView(playerNumText,textParam);
         timer.schedule(new TimerTask() {//1秒ごとに同じ処理をする
@@ -168,7 +168,7 @@ public class Organizer extends Activity {
             @Override
             public void run() {
                 try{
-                    String disasterInfo=new String();
+                    String disasterInfo= "";
                     if(disasterSpinner.getSelectedItem()=="地震"){ //地震が選ばれた場合
                         disasterInfo=disasterSpinner.getSelectedItem()+":"+nextSpinner.getSelectedItem();
                     }
@@ -225,7 +225,7 @@ public class Organizer extends Activity {
         final CurrentLocationOverlay locationOverlay=new CurrentLocationOverlay(getApplicationContext(),organizerMap,this,null,null);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(mapLayout);
-        mapLayout.addView(organizerMap,playDisplay.DisplayWidth*1100/1080,playDisplay.DisplayHeight*1800/1794);
+        mapLayout.addView(organizerMap, MainActivity.DisplayWidth *1100/1080, MainActivity.DisplayHeight *1800/1794);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -257,9 +257,9 @@ public class Organizer extends Activity {
         btn.setBackgroundResource(R.drawable.button_state);
         btn.setTextSize(20);
         btn.setTextColor(Color.WHITE);
-        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(550*playDisplay.DisplayWidth/1080,100*playDisplay.DisplayHeight/1794);
-        btnParam.topMargin=725*playDisplay.DisplayHeight/800;
-        btnParam.leftMargin=15*playDisplay.DisplayWidth/1080;
+        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(550* MainActivity.DisplayWidth /1080,100* MainActivity.DisplayHeight /1794);
+        btnParam.topMargin=725* MainActivity.DisplayHeight /800;
+        btnParam.leftMargin=15* MainActivity.DisplayWidth /1080;
         mapLayout.addView(btn,btnParam);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
