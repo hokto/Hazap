@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.TypedValue;
 import android.view.View;
@@ -15,10 +16,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import jp.co.yahoo.android.maps.MapActivity;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
@@ -46,6 +49,8 @@ public class Game_activity extends MapActivity {
     public static String organizerMessage;
     private long startTime=0;
     public static List<List<String>> coor= new ArrayList<List<String>>();
+    public Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
 
     @SuppressLint("NewApi")
     @Override
@@ -67,6 +72,7 @@ public class Game_activity extends MapActivity {
                     Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                 }catch(InterruptedException e){ }
         }});
+
         hp=100;
         locationOverlay=new CurrentLocationOverlay(getApplicationContext(),hazapView,this,Game_activity.this,relativeLayout);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
@@ -156,6 +162,7 @@ public class Game_activity extends MapActivity {
                     @Override
                     public void run() {
                         if(startFlag){
+                            vibrator.vibrate(450);
                             timer.cancel();
                             startDialog.dismiss();
                             startTime=System.currentTimeMillis();
