@@ -239,8 +239,8 @@ public class Organizer extends Activity {
                             } catch (InterruptedException e) {
                             }
                             if(playerCoordinates!=null) {
-                                organizerMap.getOverlays().remove(pin);
                                 for (int i = 0; i < allPlayers; i++) {
+                                    organizerMap.getOverlays().remove(pin);
                                     pin = new PinOverlay(i);
                                     organizerMap.getOverlays().add(pin);
                                     pin.addPoint(playerCoordinates.get(i), Integer.toString(i));

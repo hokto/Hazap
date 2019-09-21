@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -41,7 +42,7 @@ public class Server_activity extends Activity{
               byte[] w = new byte[1024];
               int size = 0;
               try{
-                  connect = new Socket("192.168.0.8", 4000); //サーバに接続する
+                  connect = new Socket("192.168.0.13", 4000); //サーバに接続する
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
                   writer.write(sendMessage);//サーバに文字列を送る
@@ -69,7 +70,7 @@ public class Server_activity extends Activity{
                       String[] str=id[1].split(",",0);
                       instance.aroundpeople=Integer.parseInt(str[0]);//周囲にいる人、全体の人数を格納
                       instance.allpeople=Integer.parseInt(str[1].split(":",0)[1]);
-                      if(Integer.parseInt(str[1].split(":",0)[2])==1){
+                      if(Integer.parseInt(str[1].split(":",0)[2])==1 || instance.aroundpeople/(50.0*50.0*Math.PI)>=1.8){
                           instance.hp-=5;
                       }
                       instance.connectEnd=true;
