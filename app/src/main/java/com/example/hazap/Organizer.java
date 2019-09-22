@@ -46,7 +46,7 @@ public class Organizer extends Activity {
     public static boolean startFlag=false;
     private EditText waveHeight;//津波が選択された場合、波の高さと震源地までの距離を設定
     private EditText distance;
-
+    private HazapModules modules=new HazapModules();
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,14 +75,8 @@ public class Organizer extends Activity {
                             distance.setHint("海岸線から震源地までの距離を入力");
                             waveHeight.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);//数値のみ入力可能
                             distance.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                            RelativeLayout.LayoutParams waveHeightParams=new RelativeLayout.LayoutParams(820* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
-                            waveHeightParams.leftMargin=150* MainActivity.DisplayWidth /1080;
-                            waveHeightParams.topMargin=600* MainActivity.DisplayHeight /1794;
-                            RelativeLayout.LayoutParams distanceParams=new RelativeLayout.LayoutParams(820* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
-                            distanceParams.leftMargin=150* MainActivity.DisplayWidth /1080;
-                            distanceParams.topMargin=850* MainActivity.DisplayHeight /1794;
-                            relativeLayout.addView(waveHeight,waveHeightParams);
-                            relativeLayout.addView(distance,distanceParams);
+                            modules.setView(relativeLayout,waveHeight,820,200,150,600);
+                            modules.setView(relativeLayout,distance,820,200,150,850);
                             break;
                         case "災害を選択":
                             relativeLayout.removeView(distance);
@@ -104,18 +98,12 @@ public class Organizer extends Activity {
         startbtn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
         startbtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         startbtn.setText("訓練開始");
-        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(400* MainActivity.DisplayWidth /1080,150* MainActivity.DisplayHeight /1794);
-        btnParam.leftMargin=580* MainActivity.DisplayWidth /1080;
-        btnParam.topMargin=1500* MainActivity.DisplayHeight /1794;
-        relativeLayout.addView(startbtn,btnParam);
+        modules.setView(relativeLayout,startbtn,250,100,580,1500);
         final Timer timer=new Timer();//一定時間ごとに同じ処理を行うためのタイマー
         final Handler handler=new Handler();//非同期処理用
         playerNumText=new TextView(this);//全参加者を表示するテキストの設定
-        RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(500*playDisplay.DisplayWidth/1080,80*playDisplay.DisplayHeight/1794);
-        textParam.leftMargin=300*playDisplay.DisplayWidth/1080;
-        textParam.topMargin=1200*playDisplay.DisplayHeight/1794;
         playerNumText.setTextSize(25);
-        relativeLayout.addView(playerNumText,textParam);
+        modules.setView(relativeLayout,playerNumText,500,80,300,1200);
         timer.schedule(new TimerTask() {//1秒ごとに同じ処理をする
             @Override
             public void run() {
@@ -138,10 +126,7 @@ public class Organizer extends Activity {
         back_button.setTextColor(Color.parseColor("#FFFFFF"));
         back_button.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
         back_button.setText("戻る");
-        RelativeLayout.LayoutParams back_btnParam=new RelativeLayout.LayoutParams(300* MainActivity.DisplayWidth /1080,150* MainActivity.DisplayHeight /1794);
-        back_btnParam.leftMargin=100* MainActivity.DisplayWidth /1080;
-        back_btnParam.topMargin=1500* MainActivity.DisplayHeight /1794;
-        relativeLayout.addView(back_button,back_btnParam);
+        modules.setView(relativeLayout,back_button,250,100,50,1500);
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -225,7 +210,7 @@ public class Organizer extends Activity {
         final CurrentLocationOverlay locationOverlay=new CurrentLocationOverlay(getApplicationContext(),organizerMap,this,null,null);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(mapLayout);
-        mapLayout.addView(organizerMap,playDisplay.DisplayWidth*1100/1080,playDisplay.DisplayHeight*1800/1794);
+        modules.setView(mapLayout,organizerMap,1100,1800,0,0);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -256,10 +241,7 @@ public class Organizer extends Activity {
         btn.setBackgroundResource(R.drawable.button_state);
         btn.setTextSize(20);
         btn.setTextColor(Color.WHITE);
-        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(550*playDisplay.DisplayWidth/1080,100*playDisplay.DisplayHeight/1794);
-        btnParam.topMargin=725*playDisplay.DisplayHeight/800;
-        btnParam.leftMargin=15*playDisplay.DisplayWidth/1080;
-        mapLayout.addView(btn,btnParam);
+        modules.setView(mapLayout,btn,350,100,30,1550);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -286,10 +268,7 @@ public class Organizer extends Activity {
         ArrayAdapter nextAdapter=new ArrayAdapter(this,R.layout.spinner_item,items);
         nextAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(nextAdapter);
-        RelativeLayout.LayoutParams nextParams=new RelativeLayout.LayoutParams(820* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
-        nextParams.leftMargin=150* MainActivity.DisplayWidth /1080;
-        nextParams.topMargin=850* MainActivity.DisplayHeight /1794;
-        relativeLayout.addView(spinner,nextParams);
+        modules.setView(relativeLayout,spinner,820,200,150,850);
     }
     @Override
     public void onBackPressed()

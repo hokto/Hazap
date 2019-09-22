@@ -26,40 +26,35 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.validation.Validator;
 
 
 public class Result_activity extends Activity   {
     public static int aliveRate;//生存率
     public static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
     public static String message;
+    private HazapModules modules=new HazapModules();
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.result);
-        MainActivity display=new MainActivity();
-        int baseHypotenuse=(int)Math.sqrt(Math.pow(1216,2)+Math.pow(800,2));
-        int displayHypotenuse=(int)Math.sqrt(Math.pow(display.DisplayWidth,2)+Math.pow(display.DisplayHeight,2));
         final RelativeLayout relativeLayout=findViewById(R.id.resultLayout);
         TextView advice=new TextView(this);//主催者からのメッセージに関する設定
         advice.setText("主催者からのメッセージ");
-        RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(300*display.DisplayWidth/800, 40*display.DisplayHeight/1216);
-        textParam.topMargin=50*display.DisplayHeight/1216;
-        textParam.leftMargin=80*display.DisplayWidth/800;
-        advice.setTextSize(20*displayHypotenuse/baseHypotenuse);
+        advice.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
         advice.setPadding(4,2,4,2);
         advice.setBackgroundResource(R.drawable.framestyle);
-        relativeLayout.addView(advice,textParam);
+        modules.setView(relativeLayout,advice,300,40,100,80);
         TextView organizerMessage=new TextView(this);
         organizerMessage.setText(message);
-        organizerMessage.setTextSize(20*displayHypotenuse/baseHypotenuse);
+        organizerMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
         organizerMessage.setBackgroundResource(R.drawable.framestyle);
-        RelativeLayout.LayoutParams messageParam=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,300*display.DisplayHeight/1216);
-        messageParam.topMargin=100*display.DisplayHeight/1216;
-        messageParam.leftMargin=35*display.DisplayWidth/800;
-        relativeLayout.addView(organizerMessage,messageParam);
+        modules.setView(relativeLayout,organizerMessage,400,300,50,150);
         TextView rateText=new TextView(this);
         AlphaAnimation feedin =new AlphaAnimation(0,1);
         feedin.setDuration(2000);
@@ -81,25 +76,18 @@ public class Result_activity extends Activity   {
             rateText.setTextColor(Color.parseColor("#fcfc01"));
         }
         rateText.setTextSize(100);
-        RelativeLayout.LayoutParams rateParams=new RelativeLayout.LayoutParams(400*display.DisplayWidth/800,400*display.DisplayHeight/1216);
-        rateParams.leftMargin=600*display.DisplayWidth/800;
-        rateParams.topMargin=100*display.DisplayHeight/1216;
-        relativeLayout.addView(rateText,rateParams);
+        modules.setView(relativeLayout,rateText,400,400,700,100);
         Button btn=new Button(this);//ホームに戻るボタンの設定
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         btn.setBackground(btn_color);//ボタンにDrawableを適用する
         btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
-        btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
+        btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,50);//ボタンの文字の大きさを調節
         btn.setText("ホームに戻る");
-        btn.setTextSize(20*displayHypotenuse/baseHypotenuse);
-        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(250*display.DisplayWidth/800,100*display.DisplayHeight/1216);
-        btnParam.topMargin=1050*display.DisplayHeight/1216;
-        btnParam.leftMargin=30*display.DisplayWidth/800;
-        relativeLayout.addView(btn,btnParam);
+        modules.setView(relativeLayout,btn,250,100,50,1500);
         ImageView routeImg=new ImageView(this);//避難結果が表示されている画像の設定
-        RelativeLayout.LayoutParams imgParam=new RelativeLayout.LayoutParams(1000*display.DisplayWidth/800,1000*display.DisplayHeight/1216);
-        imgParam.topMargin=450*display.DisplayHeight/1216;
-        imgParam.leftMargin=15*display.DisplayWidth/800;
+        RelativeLayout.LayoutParams imgParam=new RelativeLayout.LayoutParams(1000*modules.DispWid()/800,1000*modules.DispHei()/1216);
+        imgParam.topMargin=450*modules.DispHei()/1216;
+        imgParam.leftMargin=15*modules.DispWid()/800;
         routeImg.setImageBitmap(routeMap);
         relativeLayout.addView(routeImg,imgParam);
         btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る

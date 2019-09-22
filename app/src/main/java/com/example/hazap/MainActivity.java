@@ -12,9 +12,6 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity{
-    public static int DisplayHeight=0; //端末の縦方向の長さ
-    public static int DisplayWidth=0;  //端末の横方向の長さ
-
     public ArrayList<ArrayList<Integer>> coastline = new ArrayList<ArrayList<Integer>>();
     public ArrayList<Integer> point = new ArrayList<>();
 
@@ -23,11 +20,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowManager wm = getWindowManager();
-        Display display = wm.getDefaultDisplay();
-        DisplayMetrics displayMetrics = new DisplayMetrics();//端末の情報を取得
-        display.getMetrics(displayMetrics);
-        DisplayWidth = displayMetrics.widthPixels;//端末の高さ、幅を代入
-        DisplayHeight = displayMetrics.heightPixels;
+        new HazapModules().Init(wm);
         Home();
     }
     //ホーム画面

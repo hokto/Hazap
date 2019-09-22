@@ -28,7 +28,6 @@ import jp.co.yahoo.android.maps.routing.RouteOverlay;
 
 public class Game_activity extends MapActivity {
     private MapView hazapView = null;                   //マップ表示用
-    private RouteOverlay routeOverlay;
     private CurrentLocationOverlay locationOverlay;     //現在地追跡用
     public static String myId="";                               //サーバによって割り振られるID
     public static int allpeople=0;                             //訓練に参加中の参加人数
@@ -47,6 +46,7 @@ public class Game_activity extends MapActivity {
     public static List<List<String>> coor= new ArrayList<List<String>>();
     public static String disastersize;
     public static String disaster;
+    private HazapModules modules=new HazapModules();
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,29 +71,20 @@ public class Game_activity extends MapActivity {
         locationOverlay=new CurrentLocationOverlay(getApplicationContext(),hazapView,this,Game_activity.this,relativeLayout);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(relativeLayout);
-        relativeLayout.addView(hazapView,playDisplay.DisplayWidth*1100/1080,playDisplay.DisplayHeight*1800/1794);
+        modules.setView(relativeLayout,hazapView,1100,1800,0,0);
         hpbar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);//体力ゲージの実装
         hpbar.setProgressDrawable(getResources().getDrawable(R.drawable.hpbarcustom));
         hpbar.setMax(hp);//体力の最大値(100)
         hpbar.setProgress(hp);//最初の体力(100)
         hpbar.setSecondaryProgress(100);//体力減少用の設定
-        RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(playDisplay.DisplayWidth*300/1080,playDisplay.DisplayHeight*30/1794);//体力ゲージを表示する場所を一定にする
-
-        barParam.leftMargin=playDisplay.DisplayWidth*700/1080;
-        barParam.topMargin=playDisplay.DisplayHeight*100/1794;
-        relativeLayout.addView(hpbar,barParam);
+        modules.setView(relativeLayout,hpbar,300,30,600,100);
         Button button = new Button(this);//終了ボタン
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         button.setBackground(btn_color);//ボタンにDrawableを適用する
         button.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
         button.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         button.setText("避難終了");
-        relativeLayout.addView(button, playDisplay.DisplayWidth*350/1080, playDisplay.DisplayHeight*150/1794);
-        ViewGroup.LayoutParams layoutParams = button.getLayoutParams();//ボタンの配置を調整
-        ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
-        int top_margin=(playDisplay.DisplayHeight*1400)/1794;//ボタンの配置場所を一定にする
-        marginLayoutParams.setMargins(marginLayoutParams.leftMargin,top_margin , marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin);
-        button.setLayoutParams(marginLayoutParams);
+        modules.setView(relativeLayout,button,300,100,50,1500);
         button.setOnClickListener(new View.OnClickListener() { //避難終了ボタンが押された場合
 
             @Override
