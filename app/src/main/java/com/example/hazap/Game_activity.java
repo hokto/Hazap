@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.TypedValue;
 import android.view.View;
@@ -15,18 +16,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import jp.co.yahoo.android.maps.MapActivity;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
-import jp.co.yahoo.android.maps.routing.RouteOverlay;
 
 public class Game_activity extends MapActivity {
+    public static String disastersize;
+    public static String disaster;
     private MapView hazapView = null;                   //マップ表示用
     private CurrentLocationOverlay locationOverlay;     //現在地追跡用
     private long startTime=0;
@@ -46,13 +46,14 @@ public class Game_activity extends MapActivity {
     public static int aliveRate;
     public static String organizerMessage;
     public static List<List<String>> coor= new ArrayList<List<String>>();
-    public static String disastersize;
-    public static String disaster;
+    public Vibrator vibrator;
+
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainActivity playDisplay=new MainActivity();
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         final RelativeLayout relativeLayout = new RelativeLayout(Game_activity.this);//マップ表示やボタン配置用のレイアウト
         hazapView = new MapView(this, "dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
         location=new MyLocationOverlay(getApplicationContext(),hazapView);
@@ -67,6 +68,7 @@ public class Game_activity extends MapActivity {
                     Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                 }catch(InterruptedException e){ }
         }});
+
         hp=100;
         locationOverlay=new CurrentLocationOverlay(getApplicationContext(),hazapView,this,Game_activity.this,relativeLayout);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
@@ -112,9 +114,9 @@ public class Game_activity extends MapActivity {
                                     timer.cancel();
                                     connectEnd=false;
                                     Result_activity result = new Result_activity();
-                                    result.aliveRate = aliveRate;
-                                    result.routeMap = routeMap;
-                                    result.message=organizerMessage;
+                                    Result_activity.aliveRate = aliveRate;
+                                    Result_activity.routeMap = routeMap;
+                                    Result_activity.message =organizerMessage;
                                     Intent result_intent = new Intent(getApplication(), result.getClass());//リザルト画面への遷移
                                     startActivity(result_intent);
                                     startFlag=false;
@@ -147,6 +149,7 @@ public class Game_activity extends MapActivity {
                     @Override
                     public void run() {
                         if(startFlag){
+                            vibrator.vibrate(450);
                             timer.cancel();
                             startDialog.dismiss();
                             startTime=System.currentTimeMillis();

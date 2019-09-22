@@ -5,9 +5,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.res.ResourcesCompat;
@@ -21,15 +22,14 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.PinOverlay;
+
 
 public class Organizer extends Activity {
     private String[] disasterItems={"災害を選択","地震","津波"};//災害の種類を格納した配列
@@ -45,6 +45,8 @@ public class Organizer extends Activity {
     private EditText distance;
     private HazapModules modules=new HazapModules();
 
+    public int sound_back;
+    public int sound_start;
     public static int allPlayers=0;//参加者の人数を格納
     public static List<GeoPoint> playerCoordinates;
     public static boolean startFlag=false;
@@ -52,6 +54,12 @@ public class Organizer extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        sound_back = soundPool.load(this, R.raw.back, 1);
+        final SoundPool sound_s = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        sound_start = sound_s.load(this, R.raw.se_maoudamashii_onepoint30, 1);
+
         setContentView(R.layout.organizerhome);
         disasterSpinner=findViewById(R.id.disasterspinner);//災害の種類を選ばせる処理の設定
         final RelativeLayout relativeLayout=findViewById(R.id.relativeLayout);
@@ -64,7 +72,7 @@ public class Organizer extends Activity {
         disasterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){ //災害の種類を選ぶところが押された場合
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int positio, long id){
-                    switch((String)(((Spinner)parent).getSelectedItem())){//各災害が選ばれた時の処理を分岐
+                    switch((String)(parent.getSelectedItem())){//各災害が選ばれた時の処理を分岐
                         case "地震":
                             relativeLayout.removeView(distance);
                             relativeLayout.removeView(waveHeight);
@@ -131,6 +139,7 @@ public class Organizer extends Activity {
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                soundPool.play(sound_back,0.1f,0.1f,0,0,1);
                 timer.cancel();
                 finish();
             }
@@ -140,11 +149,13 @@ public class Organizer extends Activity {
             @Override
             public void onClick(View v) {
                 //避難開始
+                sound_s.play(sound_start,0.1f,0.1f,0,0,1);
                 timer.cancel();//2秒ごとの処理を止める
                 OrganizerMap();
             }
         });
     }
+    @SuppressLint("NewApi")
     private void OrganizerMap(){
         RelativeLayout mapLayout=new RelativeLayout(this);
         final MapView organizerMap=new MapView(Organizer.this,"dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
@@ -154,7 +165,7 @@ public class Organizer extends Activity {
             @Override
             public void run() {
                 try{
-                    String disasterInfo=new String();
+                    String disasterInfo= "";
                     if(disasterSpinner.getSelectedItem()=="地震"){ //地震が選ばれた場合
                         disasterInfo=disasterSpinner.getSelectedItem()+":"+nextSpinner.getSelectedItem();
                     }
@@ -238,6 +249,9 @@ public class Organizer extends Activity {
             }
         },0,1000);
         Button btn=new Button(this);
+        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
+        btn.setBackground(btn_color);//ボタンにDrawableを適用する
+        btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
         btn.setText("メッセージを書く");
         btn.setBackgroundResource(R.drawable.button_state);
         btn.setTextSize(20);
@@ -266,7 +280,7 @@ public class Organizer extends Activity {
     }
     private void setSpinnerItems(Spinner spinner,String[] items,RelativeLayout relativeLayout,MainActivity playDisplay){ //各災害における選択肢の設定
         relativeLayout.removeView(spinner);//前に設定されていたものを取り除く
-        ArrayAdapter nextAdapter=new ArrayAdapter(this,R.layout.spinner_item,items);
+        ArrayAdapter nextAdapter= new ArrayAdapter(this,R.layout.spinner_item,items);
         nextAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(nextAdapter);
         modules.setView(relativeLayout,spinner,820,200,150,850);

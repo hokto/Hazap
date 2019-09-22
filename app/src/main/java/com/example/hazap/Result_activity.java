@@ -1,4 +1,5 @@
 package com.example.hazap;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -7,6 +8,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.TypedValue;
@@ -16,32 +19,26 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.TypeVariable;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.validation.Validator;
-
-
 public class Result_activity extends Activity   {
     public static int aliveRate;//生存率
     public static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
     public static String message;
     private HazapModules modules=new HazapModules();
+
+    public int sound_back;
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        sound_back = soundPool.load(this, R.raw.back, 1);
+
         setContentView(R.layout.result);
         final RelativeLayout relativeLayout=findViewById(R.id.resultLayout);
         TextView advice=new TextView(this);//主催者からのメッセージに関する設定
@@ -76,7 +73,7 @@ public class Result_activity extends Activity   {
             rateText.setTextColor(Color.parseColor("#fcfc01"));
         }
         rateText.setTextSize(100);
-        modules.setView(relativeLayout,rateText,400,400,700,100);
+        modules.setView(relativeLayout,rateText,400,400,750,150);
         ImageView routeImg=new ImageView(this);//避難結果が表示されている画像の設定
         RelativeLayout.LayoutParams imgParam=new RelativeLayout.LayoutParams(1000*modules.DispWid()/800,1000*modules.DispHei()/1216);
         imgParam.topMargin=450*modules.DispHei()/1216;
@@ -87,12 +84,13 @@ public class Result_activity extends Activity   {
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         back_btn.setBackground(btn_color);//ボタンにDrawableを適用する
         back_btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
-        back_btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,50);//ボタンの文字の大きさを調節
+        back_btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);//ボタンの文字の大きさを調節
         back_btn.setText("ホームに戻る");
         modules.setView(relativeLayout,back_btn,250,100,50,1500);
         back_btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る
             @Override
             public void onClick(View v){
+                soundPool.play(sound_back,0.1f,0.1f,0,0,1);
                 final ProgressDialog imgsaveDialog=new ProgressDialog(Result_activity.this);
                 imgsaveDialog.setTitle("結果を保存中");
                 imgsaveDialog.setMessage("リザルト結果を端末に保存しています。");
