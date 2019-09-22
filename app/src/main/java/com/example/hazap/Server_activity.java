@@ -31,7 +31,7 @@ public class Server_activity extends Activity{
     private String dangerplaces;
     private String[] disasterinfo;
     @SuppressLint("StaticFieldLeak")
-    public void Connect(final String sendMessage, final Game_activity instance, final MapView mapView, final Organizer organizer){ //サーバとのソケット通信を行う関数
+    public void Connect(final String sendMessage, final Game_activity player, final MapView mapView, final Organizer organizer){ //サーバとのソケット通信を行う関数
         new AsyncTask<Void,Void,String>(){//非同期処理を行う
           @Override
           protected String doInBackground(Void ... voids){
@@ -60,26 +60,26 @@ public class Server_activity extends Activity{
               }
               System.out.println("SendMessage:"+sendMessage);
               System.out.println("ReceiveMessage:"+receiveMessage);
-              String[] id=receiveMessage.split(":",2);//サーバからの情報を':'で2分割
-              switch (id[0]){ //サーバからの文字列で処理を分岐
+              String[] orderMes=receiveMessage.split(":",2);//サーバからの情報を':'で2分割
+              switch (orderMes[0]){ //サーバからの文字列で処理を分岐
                   case "number"://number:Mynumber
-                      instance.myId=id[1];//サーバから割り振られてIDを設定
-                      instance.connectEnd=true;
+                      player.myId=orderMes[1];//サーバから割り振られてIDを設定
+                      player.connectEnd=true;
                       break;
                   case "Around"://Around:aroundPeople,N:AlljoinPeople:Run?
-                      String[] str=id[1].split(",",0);
-                      instance.aroundpeople=Integer.parseInt(str[0]);//周囲にいる人、全体の人数を格納
-                      instance.allpeople=Integer.parseInt(str[1].split(":",0)[1]);
-                      if(Integer.parseInt(str[1].split(":",0)[2])==1 || instance.aroundpeople/(50.0*50.0*Math.PI)>=1.8){
-                          instance.hp-=5;
+                      String[] str=orderMes[1].split(",",0);
+                      player.aroundpeople=Integer.parseInt(str[0]);//周囲にいる人、全体の人数を格納
+                      player.allpeople=Integer.parseInt(str[1].split(":",0)[1]);
+                      if(Integer.parseInt(str[1].split(":",0)[2])==1 || player.aroundpeople/(50.0*50.0*Math.PI)>=1.8){
+                          player.hp-=5;
                       }
-                      instance.connectEnd=true;
+                      player.connectEnd=true;
                       break;
                   case "Start"://Start:ByteSize:disaster:disasterScale
                           dangerplaces="";
-                          disasterinfo=id[1].split(":",0);
-                          instance.disaster=disasterinfo[1];
-                          instance.disastersize=disasterinfo[2];
+                          disasterinfo=orderMes[1].split(":",0);
+                          player.disaster=disasterinfo[1];
+                          player.disastersize=disasterinfo[2];
                           int byteSize=Integer.parseInt(disasterinfo[0]);
                           int receiveSize=0;
                           while(true){//jsonファイルが送られるのでこれを取得
@@ -93,31 +93,30 @@ public class Server_activity extends Activity{
                                   System.out.println("CausedException!");
                               }
                           }
-                          if(instance!=null) instance.connectEnd=true;
-                          if(instance!=null){
-                            instance.startFlag=true;
+                          if(player!=null) player.connectEnd=true;
+                          if(player!=null){
+                            player.startFlag=true;
                           }
                           else{
-                            System.out.println("TRUE");
                             organizer.startFlag=true;
                           }
                           break;
                   case "Allpeople"://Allpeople:N
-                      organizer.allPlayers=Integer.parseInt(id[1]);//全体の人数を取得(主催者用)
+                      organizer.allPlayers=Integer.parseInt(orderMes[1]);//全体の人数を取得(主催者用)
                       break;
                   case "DisasterStart": //Disaster:
                       System.out.println("OK!Start");
                       break;
                   case "Waiting...": //Waiting...
-                      instance.connectEnd=true;
+                      player.connectEnd=true;
                       break;
                   case "Result"://Result:Aliverate:ImageSize:OrganizerMessage
-                      instance.startFlag=false;
-                      String[] resultInfo=id[1].split(":",0);
-                      instance.aliveRate=Integer.parseInt(resultInfo[0]);
+                      player.startFlag=false;
+                      String[] resultInfo=orderMes[1].split(":",0);
+                      player.aliveRate=Integer.parseInt(resultInfo[0]);
                       int imgSize=Integer.parseInt(resultInfo[1]);
                       int receiveimgSize=0;
-                      instance.organizerMessage=resultInfo[2];
+                      player.organizerMessage=resultInfo[2];
                       ByteBuffer buffer=ByteBuffer.allocate(imgSize);
                       while(true){//jsonファイルが送られるのでこれを取得
                           byte[] receiveBytes=new byte[131072];
@@ -132,12 +131,12 @@ public class Server_activity extends Activity{
                           }
                       }
                       if(buffer.array()!=null){
-                          instance.routeMap= BitmapFactory.decodeByteArray(buffer.array(),0,imgSize);
-                          instance.connectEnd=true;
+                          player.routeMap= BitmapFactory.decodeByteArray(buffer.array(),0,imgSize);
+                          player.connectEnd=true;
                       }
                       break;
                   case "Coordinates":
-                      String[] coordinates=id[1].split(":",0);
+                      String[] coordinates=orderMes[1].split(":",0);
                       organizer.playerCoordinates=new ArrayList<GeoPoint>();
                       for(int i=0;i<coordinates.length;i++){
                           String[] playerCoord=coordinates[i].split(",",0);
@@ -156,34 +155,33 @@ public class Server_activity extends Activity{
           }
           @Override
             protected void onPostExecute(String result){
-                  if((instance.startFlag||organizer.startFlag)&& mapView!=null) {
+                  if((player.startFlag||organizer.startFlag)&& mapView!=null) {
                       try {
                           ObjectMapper mapper = new ObjectMapper(); //受け取った文字列をjson文字列にパースする
                           JsonNode jsonNode = mapper.readTree(dangerplaces);
                           Iterator<String> fieldName=jsonNode.fieldNames();
                           if(disasterinfo[1].equals("地震")){
                               Pattern pattern=Pattern.compile("(0406[0-9]{2})|(0305007)|(0425[0-9]{2})|(0412021)");
-                              String str=fieldName.next();
-                              String[] minARV_str=jsonNode.get(str).asText().split(",",0);
-                              float[] minARV=new float[3];
+                              String arv=fieldName.next();
+                              String[] minARV_str=jsonNode.get(arv).asText().split(",",0);
+                              float[] ARV=new float[3];
                               for(int i=0;i<3;i++) {
-                                  minARV[i]=Float.parseFloat(minARV_str[i]);
+                                  ARV[i]=Float.parseFloat(minARV_str[i]);
                               }
                               double MinARV=9999;
-                              switch (instance.disastersize){
+                              switch (player.disastersize){
                                   case "震度5強":
-                                      MinARV=minARV[2];
+                                      MinARV=ARV[2];
                                       break;
                                   case "震度6":
-                                      MinARV=minARV[1];
+                                      MinARV=ARV[1];
                                       break;
                                   case "震度7":
-                                      MinARV=minARV[0];
+                                      MinARV=ARV[0];
                                       break;
                               }
                               while(fieldName.hasNext()) {//まだデータがあれば取得する
                                   String stringJson=fieldName.next();
-                                  System.out.println(stringJson);
                                   JsonNode node=jsonNode.get(stringJson);
                                   String[] coordinates = node.get("Coordinates").asText().split(",", 0);
                                   if(!pattern.matcher(node.get("Code").asText()).find()) {
@@ -209,7 +207,7 @@ public class Server_activity extends Activity{
                                           info.add(Float.parseFloat(coordinates[1]));
                                           info.add(Float.parseFloat(coordinates[0]));
                                           info.add(step);
-                                          if(instance!=null) instance.earthquakeInfo.add(info);
+                                          if(player!=null) player.earthquakeInfo.add(info);
                                       }
                                   }
                               }
@@ -222,7 +220,7 @@ public class Server_activity extends Activity{
                                       ArrayList info = new ArrayList();
                                       info.add(node.get(Integer.valueOf(i)).asText().split(" ", 0)[0]);
                                       info.add(node.get(Integer.valueOf(i)).asText().split(" ", 0)[1]);
-                                      instance.coor.add(info);
+                                      player.coor.add(info);
                                   }
                                   i++;
                               }

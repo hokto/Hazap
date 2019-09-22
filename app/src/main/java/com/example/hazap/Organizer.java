@@ -34,19 +34,20 @@ import jp.co.yahoo.android.maps.PinOverlay;
 public class Organizer extends Activity {
     private String[] disasterItems={"災害を選択","地震","津波"};//災害の種類を格納した配列
     private String[] earthquakeItems={"震度1","震度2","震度3","震度4","震度5弱","震度5強","震度6弱","震度6強","震度7"};//地震の規模の大きさを格納した配列
-    public static int allPlayers=0;//参加者の人数を格納
     private TextView playerNumText;//利用者人数を表示する
     private double lat=0,lon=0;//主催者の位置情報
     private MainActivity playDisplay=new MainActivity();
-    public static List<GeoPoint> playerCoordinates;
     private Server_activity organizerSocket=new Server_activity();//サーバに接続するためのインスタンス
     private Spinner disasterSpinner;
     private Spinner nextSpinner;
     private PinOverlay pin = null;
-    public static boolean startFlag=false;
     private EditText waveHeight;//津波が選択された場合、波の高さと震源地までの距離を設定
     private EditText distance;
     private HazapModules modules=new HazapModules();
+
+    public static int allPlayers=0;//参加者の人数を格納
+    public static List<GeoPoint> playerCoordinates;
+    public static boolean startFlag=false;
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

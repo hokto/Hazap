@@ -77,20 +77,20 @@ public class Result_activity extends Activity   {
         }
         rateText.setTextSize(100);
         modules.setView(relativeLayout,rateText,400,400,700,100);
-        Button btn=new Button(this);//ホームに戻るボタンの設定
-        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
-        btn.setBackground(btn_color);//ボタンにDrawableを適用する
-        btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
-        btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,50);//ボタンの文字の大きさを調節
-        btn.setText("ホームに戻る");
-        modules.setView(relativeLayout,btn,250,100,50,1500);
         ImageView routeImg=new ImageView(this);//避難結果が表示されている画像の設定
         RelativeLayout.LayoutParams imgParam=new RelativeLayout.LayoutParams(1000*modules.DispWid()/800,1000*modules.DispHei()/1216);
         imgParam.topMargin=450*modules.DispHei()/1216;
         imgParam.leftMargin=15*modules.DispWid()/800;
         routeImg.setImageBitmap(routeMap);
         relativeLayout.addView(routeImg,imgParam);
-        btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る
+        Button back_btn=new Button(this);//ホームに戻るボタンの設定
+        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
+        back_btn.setBackground(btn_color);//ボタンにDrawableを適用する
+        back_btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
+        back_btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,50);//ボタンの文字の大きさを調節
+        back_btn.setText("ホームに戻る");
+        modules.setView(relativeLayout,back_btn,250,100,50,1500);
+        back_btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る
             @Override
             public void onClick(View v){
                 final ProgressDialog imgsaveDialog=new ProgressDialog(Result_activity.this);

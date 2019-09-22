@@ -32,9 +32,9 @@ public class Performance extends Activity {
         String textstring="";
         try{
             resultReader=new BufferedReader(new InputStreamReader(openFileInput("EvacuationResult.txt")));
-            String str;
-            while((str=resultReader.readLine())!=null){
-                textstring+=str;
+            String tempStr;
+            while((tempStr=resultReader.readLine())!=null){
+                textstring+=tempStr;
             }
             resultReader.close();
         }catch(Exception e){}

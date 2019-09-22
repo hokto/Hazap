@@ -26,13 +26,6 @@ public class MainActivity extends AppCompatActivity{
     //ホーム画面
     public void Home() {
         setContentView(R.layout.home);
-        point.add(13974477);
-        point.add(398261);
-        coastline.add(point);
-
-        System.out.println(coastline.get(0).get(0));
-        System.out.println(coastline.get(0).get(1));
-
         Button gamestart_button = findViewById(R.id.gamestart_btn);
         Button option_button = findViewById(R.id.option_btn);
         Button organizerBtn=findViewById(R.id.organizerBtn);

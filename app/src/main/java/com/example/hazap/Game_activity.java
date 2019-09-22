@@ -29,24 +29,25 @@ import jp.co.yahoo.android.maps.routing.RouteOverlay;
 public class Game_activity extends MapActivity {
     private MapView hazapView = null;                   //マップ表示用
     private CurrentLocationOverlay locationOverlay;     //現在地追跡用
+    private long startTime=0;
+    private HazapModules modules=new HazapModules();
+    private MyLocationOverlay location;                          //スタートしたり終了したりするために必要
+    private Server_activity client=new Server_activity();        //サーバと接続するためにインスタンス
+
     public static String myId="";                               //サーバによって割り振られるID
     public static int allpeople=0;                             //訓練に参加中の参加人数
     public static int aroundpeople=0;                          //自分の周囲にいる人数
     public static boolean startFlag=false;//スタートしたかどうかのフラグ
     public static boolean connectEnd=false;
     public static ArrayList<ArrayList> earthquakeInfo=new ArrayList<ArrayList>();
-    MyLocationOverlay location;                          //スタートしたり終了したりするために必要
-    Server_activity client=new Server_activity();        //サーバと接続するためにインスタンス
     public static int hp=100;
     public static ProgressBar hpbar;
     public static Bitmap routeMap;
     public static int aliveRate;
     public static String organizerMessage;
-    private long startTime=0;
     public static List<List<String>> coor= new ArrayList<List<String>>();
     public static String disastersize;
     public static String disaster;
-    private HazapModules modules=new HazapModules();
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,6 @@ public class Game_activity extends MapActivity {
         location.runOnFirstFix(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Debug1");
                 client.Connect("Recruit:"+location.getMyLocation().getLatitude()+","+location.getMyLocation().getLongitude(),Game_activity.this,null,null);//サーバに参加することを伝え、IDをもらう
                 try{
                     Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
