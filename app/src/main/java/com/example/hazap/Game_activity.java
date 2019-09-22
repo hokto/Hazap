@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.TypedValue;
 import android.view.View;
@@ -15,39 +16,44 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import jp.co.yahoo.android.maps.MapActivity;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
-import jp.co.yahoo.android.maps.routing.RouteOverlay;
 
 public class Game_activity extends MapActivity {
+    public static String disastersize;
+    public static String disaster;
     private MapView hazapView = null;                   //マップ表示用
-    private RouteOverlay routeOverlay;
     private CurrentLocationOverlay locationOverlay;     //現在地追跡用
+    private long startTime=0;
+    private HazapModules modules=new HazapModules();
+    private MyLocationOverlay location;                          //スタートしたり終了したりするために必要
+    private Server_activity client=new Server_activity();        //サーバと接続するためにインスタンス
+
     public static String myId="";                               //サーバによって割り振られるID
     public static int allpeople=0;                             //訓練に参加中の参加人数
     public static int aroundpeople=0;                          //自分の周囲にいる人数
     public static boolean startFlag=false;//スタートしたかどうかのフラグ
     public static boolean connectEnd=false;
     public static ArrayList<ArrayList> earthquakeInfo=new ArrayList<ArrayList>();
-    MyLocationOverlay location;                          //スタートしたり終了したりするために必要
-    Server_activity client=new Server_activity();        //サーバと接続するためにインスタンス
     public static int hp=100;
     public static ProgressBar hpbar;
     public static Bitmap routeMap;
     public static int aliveRate;
     public static String organizerMessage;
-    private long startTime=0;
+    public static List<List<String>> coor= new ArrayList<List<String>>();
+    public Vibrator vibrator;
+
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainActivity playDisplay=new MainActivity();
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         final RelativeLayout relativeLayout = new RelativeLayout(Game_activity.this);//マップ表示やボタン配置用のレイアウト
         hazapView = new MapView(this, "dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
         location=new MyLocationOverlay(getApplicationContext(),hazapView);
@@ -57,39 +63,30 @@ public class Game_activity extends MapActivity {
         location.runOnFirstFix(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Debug1");
                 client.Connect("Recruit:"+location.getMyLocation().getLatitude()+","+location.getMyLocation().getLongitude(),Game_activity.this,null,null);//サーバに参加することを伝え、IDをもらう
                 try{
                     Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                 }catch(InterruptedException e){ }
         }});
 
+        hp=100;
         locationOverlay=new CurrentLocationOverlay(getApplicationContext(),hazapView,this,Game_activity.this,relativeLayout);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(relativeLayout);
-        relativeLayout.addView(hazapView,playDisplay.DisplayWidth*1100/1080,playDisplay.DisplayHeight*1800/1794);
+        modules.setView(relativeLayout,hazapView,1100,1800,0,0);
         hpbar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);//体力ゲージの実装
         hpbar.setProgressDrawable(getResources().getDrawable(R.drawable.hpbarcustom));
         hpbar.setMax(hp);//体力の最大値(100)
         hpbar.setProgress(hp);//最初の体力(100)
         hpbar.setSecondaryProgress(100);//体力減少用の設定
-        RelativeLayout.LayoutParams barParam=new RelativeLayout.LayoutParams(playDisplay.DisplayWidth*300/1080,playDisplay.DisplayHeight*30/1794);//体力ゲージを表示する場所を一定にする
-
-        barParam.leftMargin=playDisplay.DisplayWidth*700/1080;
-        barParam.topMargin=playDisplay.DisplayHeight*100/1794;
-        relativeLayout.addView(hpbar,barParam);
+        modules.setView(relativeLayout,hpbar,300,30,600,100);
         Button button = new Button(this);//終了ボタン
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         button.setBackground(btn_color);//ボタンにDrawableを適用する
         button.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
         button.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         button.setText("避難終了");
-        relativeLayout.addView(button, playDisplay.DisplayWidth*350/1080, playDisplay.DisplayHeight*150/1794);
-        ViewGroup.LayoutParams layoutParams = button.getLayoutParams();//ボタンの配置を調整
-        ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
-        int top_margin=(playDisplay.DisplayHeight*1400)/1794;//ボタンの配置場所を一定にする
-        marginLayoutParams.setMargins(marginLayoutParams.leftMargin,top_margin , marginLayoutParams.rightMargin, marginLayoutParams.bottomMargin);
-        button.setLayoutParams(marginLayoutParams);
+        modules.setView(relativeLayout,button,300,100,50,1500);
         button.setOnClickListener(new View.OnClickListener() { //避難終了ボタンが押された場合
 
             @Override
@@ -117,11 +114,13 @@ public class Game_activity extends MapActivity {
                                     timer.cancel();
                                     connectEnd=false;
                                     Result_activity result = new Result_activity();
-                                    result.aliveRate = aliveRate;
-                                    result.routeMap = routeMap;
-                                    result.message=organizerMessage;
+                                    Result_activity.aliveRate = aliveRate;
+                                    Result_activity.routeMap = routeMap;
+                                    Result_activity.message =organizerMessage;
                                     Intent result_intent = new Intent(getApplication(), result.getClass());//リザルト画面への遷移
                                     startActivity(result_intent);
+                                    startFlag=false;
+                                    routeMap=null;
                                     finish();
                                 }
                                 if(connectEnd){
@@ -150,6 +149,7 @@ public class Game_activity extends MapActivity {
                     @Override
                     public void run() {
                         if(startFlag){
+                            vibrator.vibrate(450);
                             timer.cancel();
                             startDialog.dismiss();
                             startTime=System.currentTimeMillis();
@@ -173,5 +173,9 @@ public class Game_activity extends MapActivity {
     protected void onPause() {
         super.onPause();
         hazapView.onPause();
+    }
+    @Override
+    public void onBackPressed()
+    {
     }
 }

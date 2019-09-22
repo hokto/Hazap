@@ -5,9 +5,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.res.ResourcesCompat;
@@ -21,36 +22,44 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.PinOverlay;
 
+
 public class Organizer extends Activity {
     private String[] disasterItems={"災害を選択","地震","津波"};//災害の種類を格納した配列
     private String[] earthquakeItems={"震度1","震度2","震度3","震度4","震度5弱","震度5強","震度6弱","震度6強","震度7"};//地震の規模の大きさを格納した配列
-    public static int allPlayers=0;//参加者の人数を格納
     private TextView playerNumText;//利用者人数を表示する
     private double lat=0,lon=0;//主催者の位置情報
     private MainActivity playDisplay=new MainActivity();
-    public static List<GeoPoint> playerCoordinates;
     private Server_activity organizerSocket=new Server_activity();//サーバに接続するためのインスタンス
     private Spinner disasterSpinner;
     private Spinner nextSpinner;
     private PinOverlay pin = null;
-    public static boolean startFlag=false;
     private EditText waveHeight;//津波が選択された場合、波の高さと震源地までの距離を設定
     private EditText distance;
+    private HazapModules modules=new HazapModules();
 
+    public int sound_back;
+    public int sound_start;
+    public static int allPlayers=0;//参加者の人数を格納
+    public static List<GeoPoint> playerCoordinates;
+    public static boolean startFlag=false;
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        sound_back = soundPool.load(this, R.raw.back, 1);
+        final SoundPool sound_s = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        sound_start = sound_s.load(this, R.raw.se_maoudamashii_onepoint30, 1);
+
         setContentView(R.layout.organizerhome);
         disasterSpinner=findViewById(R.id.disasterspinner);//災害の種類を選ばせる処理の設定
         final RelativeLayout relativeLayout=findViewById(R.id.relativeLayout);
@@ -63,7 +72,7 @@ public class Organizer extends Activity {
         disasterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){ //災害の種類を選ぶところが押された場合
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int positio, long id){
-                    switch((String)(((Spinner)parent).getSelectedItem())){//各災害が選ばれた時の処理を分岐
+                    switch((String)(parent.getSelectedItem())){//各災害が選ばれた時の処理を分岐
                         case "地震":
                             relativeLayout.removeView(distance);
                             relativeLayout.removeView(waveHeight);
@@ -75,14 +84,8 @@ public class Organizer extends Activity {
                             distance.setHint("海岸線から震源地までの距離を入力");
                             waveHeight.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);//数値のみ入力可能
                             distance.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                            RelativeLayout.LayoutParams waveHeightParams=new RelativeLayout.LayoutParams(820* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
-                            waveHeightParams.leftMargin=150* MainActivity.DisplayWidth /1080;
-                            waveHeightParams.topMargin=600* MainActivity.DisplayHeight /1794;
-                            RelativeLayout.LayoutParams distanceParams=new RelativeLayout.LayoutParams(820* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
-                            distanceParams.leftMargin=150* MainActivity.DisplayWidth /1080;
-                            distanceParams.topMargin=850* MainActivity.DisplayHeight /1794;
-                            relativeLayout.addView(waveHeight,waveHeightParams);
-                            relativeLayout.addView(distance,distanceParams);
+                            modules.setView(relativeLayout,waveHeight,820,200,150,600);
+                            modules.setView(relativeLayout,distance,820,200,150,850);
                             break;
                         case "災害を選択":
                             relativeLayout.removeView(distance);
@@ -104,18 +107,12 @@ public class Organizer extends Activity {
         startbtn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
         startbtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         startbtn.setText("訓練開始");
-        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(400* MainActivity.DisplayWidth /1080,150* MainActivity.DisplayHeight /1794);
-        btnParam.leftMargin=580* MainActivity.DisplayWidth /1080;
-        btnParam.topMargin=1500* MainActivity.DisplayHeight /1794;
-        relativeLayout.addView(startbtn,btnParam);
+        modules.setView(relativeLayout,startbtn,250,100,580,1500);
         final Timer timer=new Timer();//一定時間ごとに同じ処理を行うためのタイマー
         final Handler handler=new Handler();//非同期処理用
         playerNumText=new TextView(this);//全参加者を表示するテキストの設定
-        RelativeLayout.LayoutParams textParam=new RelativeLayout.LayoutParams(500*playDisplay.DisplayWidth/1080,80*playDisplay.DisplayHeight/1794);
-        textParam.leftMargin=300*playDisplay.DisplayWidth/1080;
-        textParam.topMargin=1200*playDisplay.DisplayHeight/1794;
         playerNumText.setTextSize(25);
-        relativeLayout.addView(playerNumText,textParam);
+        modules.setView(relativeLayout,playerNumText,500,80,300,1200);
         timer.schedule(new TimerTask() {//1秒ごとに同じ処理をする
             @Override
             public void run() {
@@ -138,13 +135,11 @@ public class Organizer extends Activity {
         back_button.setTextColor(Color.parseColor("#FFFFFF"));
         back_button.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
         back_button.setText("戻る");
-        RelativeLayout.LayoutParams back_btnParam=new RelativeLayout.LayoutParams(300* MainActivity.DisplayWidth /1080,150* MainActivity.DisplayHeight /1794);
-        back_btnParam.leftMargin=100* MainActivity.DisplayWidth /1080;
-        back_btnParam.topMargin=1500* MainActivity.DisplayHeight /1794;
-        relativeLayout.addView(back_button,back_btnParam);
+        modules.setView(relativeLayout,back_button,250,100,50,1500);
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                soundPool.play(sound_back,0.1f,0.1f,0,0,1);
                 timer.cancel();
                 finish();
             }
@@ -154,11 +149,13 @@ public class Organizer extends Activity {
             @Override
             public void onClick(View v) {
                 //避難開始
+                sound_s.play(sound_start,0.1f,0.1f,0,0,1);
                 timer.cancel();//2秒ごとの処理を止める
                 OrganizerMap();
             }
         });
     }
+    @SuppressLint("NewApi")
     private void OrganizerMap(){
         RelativeLayout mapLayout=new RelativeLayout(this);
         final MapView organizerMap=new MapView(Organizer.this,"dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
@@ -168,7 +165,7 @@ public class Organizer extends Activity {
             @Override
             public void run() {
                 try{
-                    String disasterInfo=new String();
+                    String disasterInfo= "";
                     if(disasterSpinner.getSelectedItem()=="地震"){ //地震が選ばれた場合
                         disasterInfo=disasterSpinner.getSelectedItem()+":"+nextSpinner.getSelectedItem();
                     }
@@ -225,7 +222,7 @@ public class Organizer extends Activity {
         final CurrentLocationOverlay locationOverlay=new CurrentLocationOverlay(getApplicationContext(),organizerMap,this,null,null);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
         setContentView(mapLayout);
-        mapLayout.addView(organizerMap,playDisplay.DisplayWidth*1100/1080,playDisplay.DisplayHeight*1800/1794);
+        modules.setView(mapLayout,organizerMap,1100,1800,0,0);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -238,11 +235,13 @@ public class Organizer extends Activity {
                                 Thread.sleep(500); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                             } catch (InterruptedException e) {
                             }
-                            organizerMap.removeOverlayAll();
-                            for (int i = 0; i < allPlayers; i++) {
-                                PinOverlay pin = new PinOverlay(i);
-                                organizerMap.getOverlays().add(pin);
-                                pin.addPoint(playerCoordinates.get(i), Integer.toString(i));
+                            if(playerCoordinates!=null) {
+                                for (int i = 0; i < allPlayers; i++) {
+                                    organizerMap.getOverlays().remove(pin);
+                                    pin = new PinOverlay(i);
+                                    organizerMap.getOverlays().add(pin);
+                                    pin.addPoint(playerCoordinates.get(i), Integer.toString(i));
+                                }
                             }
                         }
                     }
@@ -250,11 +249,14 @@ public class Organizer extends Activity {
             }
         },0,1000);
         Button btn=new Button(this);
+        Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
+        btn.setBackground(btn_color);//ボタンにDrawableを適用する
+        btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
         btn.setText("メッセージを書く");
+        btn.setBackgroundResource(R.drawable.button_state);
         btn.setTextSize(20);
-        RelativeLayout.LayoutParams btnParam=new RelativeLayout.LayoutParams(600*playDisplay.DisplayWidth/1080,250*playDisplay.DisplayHeight/1794);
-        btnParam.topMargin=1500*playDisplay.DisplayWidth/1080;
-        mapLayout.addView(btn,btnParam);
+        btn.setTextColor(Color.WHITE);
+        modules.setView(mapLayout,btn,350,100,30,1550);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,12 +280,13 @@ public class Organizer extends Activity {
     }
     private void setSpinnerItems(Spinner spinner,String[] items,RelativeLayout relativeLayout,MainActivity playDisplay){ //各災害における選択肢の設定
         relativeLayout.removeView(spinner);//前に設定されていたものを取り除く
-        ArrayAdapter nextAdapter=new ArrayAdapter(this,R.layout.spinner_item,items);
+        ArrayAdapter nextAdapter= new ArrayAdapter(this,R.layout.spinner_item,items);
         nextAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(nextAdapter);
-        RelativeLayout.LayoutParams nextParams=new RelativeLayout.LayoutParams(820* MainActivity.DisplayWidth /1080,200* MainActivity.DisplayHeight /1794);
-        nextParams.leftMargin=150* MainActivity.DisplayWidth /1080;
-        nextParams.topMargin=850* MainActivity.DisplayHeight /1794;
-        relativeLayout.addView(spinner,nextParams);
+        modules.setView(relativeLayout,spinner,820,200,150,850);
+    }
+    @Override
+    public void onBackPressed()
+    {
     }
 }
