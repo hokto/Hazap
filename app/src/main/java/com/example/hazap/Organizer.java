@@ -47,6 +47,7 @@ public class Organizer extends Activity {
     private EditText waveHeight;//津波が選択された場合、波の高さと震源地までの距離を設定
     private EditText distance;
     public int sound_back;
+    public int sound_start;
 
     @SuppressLint("NewApi")
     @Override
@@ -55,6 +56,8 @@ public class Organizer extends Activity {
 
         final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         sound_back = soundPool.load(this, R.raw.back, 1);
+        final SoundPool sound_s = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        sound_start = sound_s.load(this, R.raw.se_maoudamashii_onepoint30, 1);
 
         setContentView(R.layout.organizerhome);
         disasterSpinner=findViewById(R.id.disasterspinner);//災害の種類を選ばせる処理の設定
@@ -160,6 +163,7 @@ public class Organizer extends Activity {
             @Override
             public void onClick(View v) {
                 //避難開始
+                sound_s.play(sound_start,0.1f,0.1f,0,0,1);
                 timer.cancel();//2秒ごとの処理を止める
                 OrganizerMap();
             }
