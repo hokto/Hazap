@@ -28,8 +28,7 @@ public class CurrentLocationOverlay extends MyLocationOverlay{
     public void onLocationChanged(android.location.Location location){ //位置情報を更新する関数
         super.onLocationChanged(location);
         if(_mapView.getMapController()!=null) {
-            //GeoPoint currentlocation = new GeoPoint((int) (location.getLatitude() * 1E6), (int) (location.getLongitude() * 1E6));//現在の位置情報を設定
-            GeoPoint currentlocation = new GeoPoint(32271499, 131301898);//現在の位置情報を設定
+            GeoPoint currentlocation = new GeoPoint((int) (location.getLatitude() * 1E6), (int) (location.getLongitude() * 1E6));//現在の位置情報を設定
             _mapView.getMapController().animateTo(currentlocation);
             _mapView.invalidate();
             final Server_activity client=new Server_activity();//サーバに接続するためのインスタンス
@@ -64,6 +63,12 @@ public class CurrentLocationOverlay extends MyLocationOverlay{
                         finalTime = System.currentTimeMillis();//最後にダメージを受けた時間の更新
                     }
                     player.hpbar.setProgress(player.hp);//体力ゲージの更新
+                }
+                else if(player.disaster.equals("津波")){
+                    if(new tsunami().isSwallowed(currentlocation)){
+                        player.hp=0;
+                        player.hpbar.setProgress(player.hp);
+                    }
                 }
             } else {
                 if (player.connectEnd) {//サーバとの通信がすでに終わっている場合

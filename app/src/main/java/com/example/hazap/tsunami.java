@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
@@ -29,6 +30,7 @@ import jp.co.yahoo.android.maps.PolylineOverlay;
 public class tsunami extends Activity {
     private int tsunamiIdx=1;//津波のシミュレーションが何秒進んでいるかを示す
     private List<GeoPoint> coastPlaces=new ArrayList<GeoPoint>();//海岸線の座標
+    private static List<GeoPoint> places;//津波のシミュレーションによる座標が格納されたリスト
     private PolygonOverlay polygonOverlay=null;//ポリゴン表示用
     @SuppressLint("StaticFieldLeak")
     public void Simulate(RelativeLayout relativeLayout, final MapView mapView, final JsonNode tsunamiNode){//一度呼び出せば、シミュレーションが実行される
@@ -55,11 +57,8 @@ public class tsunami extends Activity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if(tsunamiNode.get(String.valueOf(tsunamiIdx))==null){//これ以上シミュレーションを行わないなら止める
-                            simulateTimer.cancel();
-                        }
                         int i=0;
-                        List<GeoPoint> places=new ArrayList<GeoPoint>(coastPlaces);//津波が進んでいる座標を格納するリスト
+                        places=new ArrayList<GeoPoint>(coastPlaces);//津波が進んでいる座標を格納するリスト
                         String place;
                         while(tsunamiNode.get(String.valueOf(tsunamiIdx)).size()>i){//全て取得
                             place=tsunamiNode.get(String.valueOf(tsunamiIdx)).get(String.valueOf(i)).asText();
@@ -67,7 +66,10 @@ public class tsunami extends Activity {
                             places.add(new GeoPoint((int)(Float.parseFloat(placePos[1])*Math.pow(10.0,6.0)),(int)(Float.parseFloat(placePos[0])*Math.pow(10.0,6.0))));
                             i++;
                         }
-                        if(polylineOverlay!=null) mapView.getOverlays().remove(polylineOverlay);
+                        if(polygonOverlay!=null) {
+                            mapView.getOverlays().remove(polygonOverlay);
+                            System.out.println("Removed");
+                        }
                         polygonOverlay=new PolygonOverlay((GeoPoint[]) places.toArray(new GeoPoint[]{})){
                             @Override
                             protected boolean onTap(){
@@ -78,10 +80,33 @@ public class tsunami extends Activity {
                         polygonOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
                         mapView.getOverlays().add(polygonOverlay);
                         tsunamiIdx++;
-                        System.out.println("Idx:"+tsunamiIdx);
+                        if(tsunamiNode.get(String.valueOf(tsunamiIdx))==null){//これ以上シミュレーションを行わないなら止める
+                            simulateTimer.cancel();
+                        }
                     }
                 });
             }
         },0,1000);
     }
+    public boolean isSwallowed(GeoPoint currentLocation){//津波に飲み込まれているかどうかの判定処理(Winding Number Algorithm)
+        double sumDec=0;
+        if(places==null){//シミュレーションが始まってなければfalse
+            return false;
+        }
+        for(int i=0;i<places.size()-1;i++){
+            double x1=places.get(i).getLongitude()-currentLocation.getLongitude();
+            double x2=places.get(i+1).getLongitude()-currentLocation.getLongitude();
+            double y1=places.get(i).getLatitude()-currentLocation.getLatitude();
+            double y2=places.get(i+1).getLatitude()-currentLocation.getLatitude();
+            sumDec+=Math.atan((x1*y2-y1*x2)/(x1*x2+y1*y2));//Atan(外積/内積)で回転方向を含めた角度を算出
+        }
+        System.out.println("Dec:"+sumDec);
+        if((int)sumDec==0){//合計角度がほぼ0であれば外側であると判定
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
 }
