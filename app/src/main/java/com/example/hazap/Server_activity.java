@@ -209,18 +209,14 @@ public class Server_activity extends Activity{
                                   }
                               }
                           }else if(disasterinfo[1].equals("津波")) {
-                              int i = 0;
-                              while (fieldName.hasNext()) {
-                                  String stringJson = fieldName.next();
-                                  JsonNode node = jsonNode.get(stringJson);
-                                  if (node.get(Integer.valueOf(i)) != null) {
-                                      ArrayList info = new ArrayList();
-                                      info.add(node.get(Integer.valueOf(i)).asText().split(" ", 0)[0]);
-                                      info.add(node.get(Integer.valueOf(i)).asText().split(" ", 0)[1]);
-                                      player.coor.add(info);
-                                  }
-                                  i++;
+                              if(player!=null){
+                                  System.out.println(dangerplaces);
+                                  player.tsunamiNode=mapper.readTree(dangerplaces);;
                               }
+                              else{
+                                  organizer.tsunamiNode=mapper.readTree(dangerplaces);;
+                              }
+
                           }
                   } catch (IOException e) { }
               }

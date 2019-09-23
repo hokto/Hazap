@@ -22,6 +22,9 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -50,6 +53,7 @@ public class Organizer extends Activity {
     public static int allPlayers=0;//参加者の人数を格納
     public static List<GeoPoint> playerCoordinates;
     public static boolean startFlag=false;
+    public static JsonNode tsunamiNode=null;
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +161,7 @@ public class Organizer extends Activity {
     }
     @SuppressLint("NewApi")
     private void OrganizerMap(){
-        RelativeLayout mapLayout=new RelativeLayout(this);
+        final RelativeLayout mapLayout=new RelativeLayout(this);
         final MapView organizerMap=new MapView(Organizer.this,"dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
         final MyLocationOverlay location=new MyLocationOverlay(getApplicationContext(),organizerMap);//主催者の現在地（スタート地点）を取得
         location.enableMyLocation();
@@ -198,6 +202,9 @@ public class Organizer extends Activity {
                     public void run() {
                         if(startFlag){
                             organizerDialog.dismiss();
+                            if(disasterSpinner.getSelectedItem()=="津波"){
+                                new tsunami().Simulate(mapLayout,organizerMap,tsunamiNode);
+                            }
                         }
                     }
                 });
