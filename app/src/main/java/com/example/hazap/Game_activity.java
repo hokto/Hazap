@@ -16,6 +16,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -47,7 +50,7 @@ public class Game_activity extends MapActivity {
     public static String organizerMessage;
     public static List<List<String>> coor= new ArrayList<List<String>>();
     public Vibrator vibrator;
-
+    public static JsonNode tsunamiNode=null;
 
     @SuppressLint("NewApi")
     @Override
@@ -80,6 +83,34 @@ public class Game_activity extends MapActivity {
         hpbar.setProgress(hp);//最初の体力(100)
         hpbar.setSecondaryProgress(100);//体力減少用の設定
         modules.setView(relativeLayout,hpbar,300,30,600,100);
+        final ProgressDialog startDialog=new ProgressDialog(this);
+        startDialog.setTitle("待機中");
+        startDialog.setMessage("全員の参加が完了するまでしばらくお待ちください");
+        startDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        startDialog.setCanceledOnTouchOutside(false);
+        startDialog.setCancelable(false);
+        startDialog.show();
+        final Timer timer=new Timer();
+        final Handler handler=new Handler();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(startFlag){
+                            vibrator.vibrate(450);
+                            timer.cancel();
+                            startDialog.dismiss();
+                            startTime=System.currentTimeMillis();
+                            if(disaster.equals("津波")){
+                                new tsunami().Simulate(relativeLayout,hazapView,tsunamiNode);
+                            }
+                        }
+                    }
+                });
+            }
+        },0,100);
         Button button = new Button(this);//終了ボタン
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         button.setBackground(btn_color);//ボタンにDrawableを適用する
@@ -133,31 +164,6 @@ public class Game_activity extends MapActivity {
                 }, 0, 1000);
             }
         });
-        final ProgressDialog startDialog=new ProgressDialog(this);
-        startDialog.setTitle("待機中");
-        startDialog.setMessage("全員の参加が完了するまでしばらくお待ちください");
-        startDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        startDialog.setCanceledOnTouchOutside(false);
-        startDialog.setCancelable(false);
-        startDialog.show();
-        final Timer timer=new Timer();
-        final Handler handler=new Handler();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(startFlag){
-                            vibrator.vibrate(450);
-                            timer.cancel();
-                            startDialog.dismiss();
-                            startTime=System.currentTimeMillis();
-                        }
-                    }
-                });
-            }
-        },0,100);
     }
 
     @Override

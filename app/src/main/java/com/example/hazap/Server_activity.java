@@ -39,7 +39,7 @@ public class Server_activity extends Activity{
               byte[] w = new byte[1024];
               int size = 0;
               try{
-                  connect = new Socket("192.168.0.24", 4000); //サーバに接続する
+                  connect = new Socket("192.168.0.17", 4000); //サーバに接続する
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
                   writer.write(sendMessage);//サーバに文字列を送る
@@ -209,18 +209,14 @@ public class Server_activity extends Activity{
                                   }
                               }
                           }else if(disasterinfo[1].equals("津波")) {
-                              int i = 0;
-                              while (fieldName.hasNext()) {
-                                  String stringJson = fieldName.next();
-                                  JsonNode node = jsonNode.get(stringJson);
-                                  if (node.get(Integer.valueOf(i)) != null) {
-                                      ArrayList info = new ArrayList();
-                                      info.add(node.get(Integer.valueOf(i)).asText().split(" ", 0)[0]);
-                                      info.add(node.get(Integer.valueOf(i)).asText().split(" ", 0)[1]);
-                                      player.coor.add(info);
-                                  }
-                                  i++;
+                              if(player!=null){
+                                  System.out.println(dangerplaces);
+                                  player.tsunamiNode=mapper.readTree(dangerplaces);;
                               }
+                              else{
+                                  organizer.tsunamiNode=mapper.readTree(dangerplaces);;
+                              }
+
                           }
                   } catch (IOException e) { }
               }
