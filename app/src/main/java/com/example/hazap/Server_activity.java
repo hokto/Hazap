@@ -39,7 +39,7 @@ public class Server_activity extends Activity{
               byte[] w = new byte[1024];
               int size = 0;
               try{
-                  connect = new Socket("192.168.0.17", 4000); //サーバに接続する
+                  connect = new Socket("192.168.0.13", 4000); //サーバに接続する
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
                   writer.write(sendMessage);//サーバに文字列を送る

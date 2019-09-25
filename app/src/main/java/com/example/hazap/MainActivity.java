@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity{
     //ホーム画面
     public void Home() {
         final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-        //sound1 = soundPool.load(this, R.raw.se_maoudamashii_onepoint30, 1);
+        sound1 = soundPool.load(this, R.raw.se_maoudamashii_onepoint30, 1);
 
         setContentView(R.layout.home);
         Button gamestart_button = findViewById(R.id.gamestart_btn);
