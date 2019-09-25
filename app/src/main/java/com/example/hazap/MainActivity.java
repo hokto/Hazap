@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         WindowManager wm = getWindowManager();
         new HazapModules().Init(wm);
         Home();
