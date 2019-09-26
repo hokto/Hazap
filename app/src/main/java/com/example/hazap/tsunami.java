@@ -3,29 +3,18 @@ package com.example.hazap;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Handler;
-import android.provider.Settings;
-import android.util.DisplayMetrics;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.PolygonOverlay;
 import jp.co.yahoo.android.maps.PolylineOverlay;
+
 
 public class tsunami extends Activity {
     private int tsunamiIdx=1;//津波のシミュレーションが何秒進んでいるかを示す

@@ -111,7 +111,7 @@ public class Organizer extends Activity {
         startbtn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
         startbtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         startbtn.setText("訓練開始");
-        modules.setView(relativeLayout,startbtn,250,100,620,1500);
+        modules.setView(relativeLayout,startbtn,250,100,600,1500);
         final Timer timer=new Timer();//一定時間ごとに同じ処理を行うためのタイマー
         final Handler handler=new Handler();//非同期処理用
         playerNumText=new TextView(this);//全参加者を表示するテキストの設定

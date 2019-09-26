@@ -8,12 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity{
-    public ArrayList<ArrayList<Integer>> coastline = new ArrayList<ArrayList<Integer>>();
-    public ArrayList<Integer> point = new ArrayList<>();
     //効果音用
     public int start_sound;
     public int jisseki_sound;
