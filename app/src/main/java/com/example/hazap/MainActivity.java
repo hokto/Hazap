@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-
 import java.util.ArrayList;
 
 
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity{
                                                 @Override
                                                 public void onClick(View v) {
                                                     Intent game_intent = new Intent(getApplication(), Game_activity.class);
-                                                    Start_sound.play(start_sound,0.1f,0.1f,0,0,1);
+                                                    Start_sound.play(start_sound,0.2f,0.2f,0,0,1);
                                                     startActivity(game_intent);
 
                                                 }
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Intent Jisseki_intent = new Intent(getApplication(),Performance.class);
-                Jisseki_sound.play(jisseki_sound,0.1f,0.1f,0,0,1);
+                Jisseki_sound.play(jisseki_sound,0.2f,0.2f,0,0,1);
                 startActivity(Jisseki_intent);
             }
         });
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Intent organizer_intent=new Intent(getApplication(),Organizer.class);
-                Organizer_sound.play(organizer_sound,0.1f,0.1f,0,0,1);
+                Organizer_sound.play(organizer_sound,0.5f,0.5f,0,0,1);
                 startActivity(organizer_intent);
             }
         });

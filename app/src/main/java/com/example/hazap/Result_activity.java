@@ -90,7 +90,7 @@ public class Result_activity extends Activity   {
         back_btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る
             @Override
             public void onClick(View v){
-                soundPool.play(sound_back,0.1f,0.1f,0,0,1);
+                soundPool.play(sound_back,0.2f,0.2f,0,0,1);
                 final ProgressDialog imgsaveDialog=new ProgressDialog(Result_activity.this);
                 imgsaveDialog.setTitle("結果を保存中");
                 imgsaveDialog.setMessage("リザルト結果を端末に保存しています。");

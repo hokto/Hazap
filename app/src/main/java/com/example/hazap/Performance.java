@@ -105,7 +105,7 @@ public class Performance extends Activity {
         btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る
             @Override
             public void onClick(View v){
-                soundPool.play(sound_back,0.1f,0.1f,0,0,1);
+                soundPool.play(sound_back,0.2f,0.2f,0,0,1);
                 finish();
             }
         });

@@ -33,46 +33,46 @@ public class CurrentLocationOverlay extends MyLocationOverlay{
             _mapView.invalidate();
             final Server_activity client=new Server_activity();//サーバに接続するためのインスタンス
             //別スレッドで処理しているため反映されるまでに少し時間がかかる
-            if(player.startFlag) { //シミュレーションがすでにスタートしている場合
-                client.Connect("Number:" + player.myId + ":" + location.getLatitude() + "," + location.getLongitude(), player, null, null);//自分のIDと現在位置をサーバに送信
+            if(Game_activity.startFlag) { //シミュレーションがすでにスタートしている場合
+                client.Connect("Number:" + Game_activity.myId + ":" + location.getLatitude() + "," + location.getLongitude(), player, null, null);//自分のIDと現在位置をサーバに送信
                 try {
                     Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
                 } catch (InterruptedException e) {
                 }
-                if (player.disaster.equals("地震")) {
+                if (Game_activity.disaster.equals("地震")) {
                     boolean damageFlag = false;//ダメージを受けたかどうかの判定
                     long starttime = System.currentTimeMillis();//ダメージ判定をするときの時間を取得
-                    if (player.aroundpeople > Math.ceil(player.allpeople / 2))//サーバから送られる周囲の人数が全体の半分以上であれば混んでいると判定
+                    if (Game_activity.aroundpeople > Math.ceil(Game_activity.allpeople / 2))//サーバから送られる周囲の人数が全体の半分以上であれば混んでいると判定
                     {
                         damageFlag = true;
                     } else {
                         if ((starttime - finalTime) / 1000 >= 10) {//最後にダメージを受けた時間よりも10秒以上たっている
-                            for (int i = 0; i < player.earthquakeInfo.size(); i++) {//どこかの円の中に利用者が入っていればダメージを受ける
-                                double dif_lat = Math.abs(location.getLatitude() - (float) player.earthquakeInfo.get(i).get(0));
-                                double dif_lon = Math.abs(location.getLongitude() - (float) player.earthquakeInfo.get(i).get(1));
+                            for (int i = 0; i < Game_activity.earthquakeInfo.size(); i++) {//どこかの円の中に利用者が入っていればダメージを受ける
+                                double dif_lat = Math.abs(location.getLatitude() - (float) Game_activity.earthquakeInfo.get(i).get(0));
+                                double dif_lon = Math.abs(location.getLongitude() - (float) Game_activity.earthquakeInfo.get(i).get(1));
                                 double dif_distance = earthR * Math.sqrt(Math.pow(Math.toRadians(dif_lat), 2) + Math.pow(Math.toRadians(dif_lon), 2));
-                                if ((int) dif_distance <= (int) player.earthquakeInfo.get(i).get(2)) {
+                                if ((int) dif_distance <= (int) Game_activity.earthquakeInfo.get(i).get(2)) {
                                     damageFlag = true;
                                     break;//一度ダメージ判定をしたら一度処理を終わる
                                 }
                             }
                         }
                         if (damageFlag == true) {
-                            player.hp -= 5;//5ずつ体力を減らす
+                            Game_activity.hp -= 5;//5ずつ体力を減らす
                         }
                         finalTime = System.currentTimeMillis();//最後にダメージを受けた時間の更新
                     }
-                    player.hpbar.setProgress(player.hp);//体力ゲージの更新
+                    Game_activity.hpbar.setProgress(Game_activity.hp);//体力ゲージの更新
                 }
-                else if(player.disaster.equals("津波")){
+                else if(Game_activity.disaster.equals("津波")){
                     if(new tsunami().isSwallowed(currentlocation)){
-                        player.hp=0;
-                        player.hpbar.setProgress(player.hp);
+                        Game_activity.hp =0;
+                        Game_activity.hpbar.setProgress(Game_activity.hp);
                     }
                 }
             } else {
-                if (player.connectEnd) {//サーバとの通信がすでに終わっている場合
-                    player.connectEnd = false; //サーバとの通信状態を初期化する
+                if (Game_activity.connectEnd) {//サーバとの通信がすでに終わっている場合
+                    Game_activity.connectEnd = false; //サーバとの通信状態を初期化する
                     client.Connect("Wait:", player, _mapView, null);//サーバにシミュレーションが始まったかどうかを確認
                     try {
                         Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
