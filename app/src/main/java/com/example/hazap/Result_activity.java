@@ -23,10 +23,14 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Result_activity extends Activity   {
     public static int aliveRate;//生存率
     public static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
     public static String message;
+    public static int[] evacuParams=new int[4];
     private HazapModules modules=new HazapModules();
 
     public int sound_back;
@@ -56,24 +60,7 @@ public class Result_activity extends Activity   {
         AlphaAnimation feedin =new AlphaAnimation(0,1);
         feedin.setDuration(2000);
         rateText.startAnimation(feedin);
-        if(aliveRate>=90){
-            rateText.setText("S");
-            rateText.setTextColor(Color.parseColor("#DAA520"));
-        }
-        else if(aliveRate>=60){
-            rateText.setText("A");
-            rateText.setTextColor(Color.parseColor("#fc0101"));
-        }
-        else if(aliveRate>=40){
-            rateText.setText("B");
-            rateText.setTextColor(Color.parseColor("#0101fc"));
-        }
-        else {
-            rateText.setText("C");
-            rateText.setTextColor(Color.parseColor("#fcfc01"));
-        }
-        rateText.setTextSize(100);
-        modules.setView(relativeLayout,rateText,400,400,750,150);
+        modules.JudgeEvacu(relativeLayout,rateText,aliveRate,400,400,750,150,100);//避難評価判定用の関数
         ImageView routeImg=new ImageView(this);//避難結果が表示されている画像の設定
         RelativeLayout.LayoutParams imgParam=new RelativeLayout.LayoutParams(1000*modules.DispWid()/800,1000*modules.DispHei()/1216);
         imgParam.topMargin=450*modules.DispHei()/1216;
@@ -109,7 +96,7 @@ public class Result_activity extends Activity   {
                             for (int i = 0; i < baos.toByteArray().length; i++) {
                                 bytedata += (Integer.valueOf(baos.toByteArray()[i]).byteValue() + ",");
                             }
-                            resultWriter.write(Integer.valueOf(aliveRate) + ":"+message+":" + bytedata);//Aliverate:OrganizerMessage:RouteMapBytes
+                            resultWriter.write(Integer.valueOf(aliveRate) + ":"+message+":" + bytedata+":"+Integer.valueOf(evacuParams[0])+":"+Integer.valueOf(evacuParams[1])+":"+Integer.valueOf(evacuParams[2])+":"+Integer.valueOf(evacuParams[3]));//Aliverate:OrganizerMessage:RouteMapBytes:Place:HP:Route:Time
                             resultWriter.close();
                         }catch(IOException e){
                         }

@@ -28,6 +28,7 @@ public class CurrentLocationOverlay extends MyLocationOverlay{
     public void onLocationChanged(android.location.Location location){ //位置情報を更新する関数
         super.onLocationChanged(location);
         if(_mapView.getMapController()!=null) {
+            //32.1010909,131.4150033
             GeoPoint currentlocation = new GeoPoint((int) (location.getLatitude() * 1E6), (int) (location.getLongitude() * 1E6));//現在の位置情報を設定
             _mapView.getMapController().animateTo(currentlocation);
             _mapView.invalidate();
