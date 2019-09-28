@@ -39,7 +39,7 @@ public class Server_activity extends Activity{
               byte[] w = new byte[1024];
               int size = 0;
               try{
-                  connect = new Socket("192.168.0.13", 4000); //サーバに接続する
+                  connect = new Socket("192.168.0.22", 4000); //サーバに接続する
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
                   writer.write(sendMessage);//サーバに文字列を送る
@@ -107,13 +107,16 @@ public class Server_activity extends Activity{
                   case "Waiting...": //Waiting...
                       player.connectEnd=true;
                       break;
-                  case "Result"://Result:Aliverate:ImageSize:OrganizerMessage
+                  case "Result"://Result:Aliverate:ImageSize:OrganizerMessage:Place:HP:Route:Time
                       player.startFlag=false;
                       String[] resultInfo=orderMes[1].split(":",0);
                       player.aliveRate=Integer.parseInt(resultInfo[0]);
                       int imgSize=Integer.parseInt(resultInfo[1]);
                       int receiveimgSize=0;
                       player.organizerMessage=resultInfo[2];
+                      for(int i=0;i<4;i++){
+                          player.evacuParams[i]=(int)Float.parseFloat(resultInfo[i+3]);
+                      }
                       ByteBuffer buffer=ByteBuffer.allocate(imgSize);
                       while(true){//jsonファイルが送られるのでこれを取得
                           byte[] receiveBytes=new byte[131072];
