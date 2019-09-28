@@ -8,7 +8,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -19,25 +18,31 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+
+import static android.media.AudioManager.STREAM_MUSIC;
+
 public class Result_activity extends Activity   {
+    private HazapModules modules=new HazapModules();
+
     public static int aliveRate;//生存率
     public static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
     public static String message;
-    private HazapModules modules=new HazapModules();
-
     public int sound_back;
+    public int rank_sound;
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        final SoundPool soundPool = new SoundPool(1, STREAM_MUSIC, 0);
         sound_back = soundPool.load(this, R.raw.back, 1);
+        final SoundPool Rank_sound = new SoundPool(1,STREAM_MUSIC,0);
 
         setContentView(R.layout.result);
         final RelativeLayout relativeLayout=findViewById(R.id.resultLayout);
@@ -59,18 +64,22 @@ public class Result_activity extends Activity   {
         if(aliveRate>=90){
             rateText.setText("S");
             rateText.setTextColor(Color.parseColor("#DAA520"));
+            rank_sound = Rank_sound.load(this,R.raw.,1);
         }
         else if(aliveRate>=60){
             rateText.setText("A");
             rateText.setTextColor(Color.parseColor("#fc0101"));
+            rank_sound = Rank_sound.load(this,R.raw.,1);
         }
         else if(aliveRate>=40){
             rateText.setText("B");
             rateText.setTextColor(Color.parseColor("#0101fc"));
+            rank_sound = Rank_sound.load(this,R.raw.,1);
         }
         else {
             rateText.setText("C");
             rateText.setTextColor(Color.parseColor("#fcfc01"));
+            rank_sound = Rank_sound.load(this,R.raw.,1);
         }
         rateText.setTextSize(100);
         modules.setView(relativeLayout,rateText,400,400,750,150);
@@ -80,6 +89,7 @@ public class Result_activity extends Activity   {
         imgParam.leftMargin=15*modules.DispWid()/800;
         routeImg.setImageBitmap(routeMap);
         relativeLayout.addView(routeImg,imgParam);
+        Rank_sound.play(rank_sound,0.3f,0.3f,0,0,1);
         Button back_btn=new Button(this);//ホームに戻るボタンの設定
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         back_btn.setBackground(btn_color);//ボタンにDrawableを適用する
