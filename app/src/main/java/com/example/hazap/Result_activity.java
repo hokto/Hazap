@@ -64,22 +64,22 @@ public class Result_activity extends Activity   {
         if(aliveRate>=90){
             rateText.setText("S");
             rateText.setTextColor(Color.parseColor("#DAA520"));
-            rank_sound = Rank_sound.load(this,R.raw.,1);
+            rank_sound = Rank_sound.load(this,R.raw.se_maoudamashii_onepoint26,1);
         }
         else if(aliveRate>=60){
             rateText.setText("A");
             rateText.setTextColor(Color.parseColor("#fc0101"));
-            rank_sound = Rank_sound.load(this,R.raw.,1);
+            rank_sound = Rank_sound.load(this,R.raw.se_maoudamashii_onepoint26,1);
         }
         else if(aliveRate>=40){
             rateText.setText("B");
             rateText.setTextColor(Color.parseColor("#0101fc"));
-            rank_sound = Rank_sound.load(this,R.raw.,1);
+            rank_sound = Rank_sound.load(this,R.raw.se_maoudamashii_onepoint26,1);
         }
         else {
             rateText.setText("C");
             rateText.setTextColor(Color.parseColor("#fcfc01"));
-            rank_sound = Rank_sound.load(this,R.raw.,1);
+            rank_sound = Rank_sound.load(this,R.raw.se_maoudamashii_onepoint26,1);
         }
         rateText.setTextSize(100);
         modules.setView(relativeLayout,rateText,400,400,750,150);

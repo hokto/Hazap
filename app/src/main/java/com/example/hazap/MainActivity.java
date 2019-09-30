@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity{
         Button gamestart_button = findViewById(R.id.gamestart_btn);
         Button option_button = findViewById(R.id.option_btn);
         Button organizerBtn=findViewById(R.id.organizerBtn);
+        Button manual_btn = findViewById(R.id.pdf_btn);
+
         gamestart_button.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
@@ -62,6 +64,13 @@ public class MainActivity extends AppCompatActivity{
                 Intent organizer_intent=new Intent(getApplication(),Organizer.class);
                 Organizer_sound.play(organizer_sound,0.5f,0.5f,0,0,1);
                 startActivity(organizer_intent);
+            }
+        });
+        manual_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pdf_intent = new Intent(getApplication(),manual.class);
+                startActivity(pdf_intent);
             }
         });
     }
