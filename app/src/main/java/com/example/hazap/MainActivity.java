@@ -9,12 +9,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import java.util.ArrayList;
-
 
 public class MainActivity extends AppCompatActivity{
-    public ArrayList<ArrayList<Integer>> coastline = new ArrayList<ArrayList<Integer>>();
-    public ArrayList<Integer> point = new ArrayList<>();
     //効果音用
     public int start_sound;
     public int jisseki_sound;
@@ -41,11 +37,12 @@ public class MainActivity extends AppCompatActivity{
         final Button gamestart_button = findViewById(R.id.gamestart_btn);
         Button option_button = findViewById(R.id.option_btn);
         Button organizerBtn=findViewById(R.id.organizerBtn);
+        Button manual_btn =  findViewById(R.id.pdfbtn);
         gamestart_button.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
                                                     Intent game_intent = new Intent(getApplication(), Game_activity.class);
-                                                    Start_sound.play(start_sound,0.1f,0.1f,0,0,1);
+                                                    Start_sound.play(start_sound,0.2f,0.2f,0,0,1);
                                                     startActivity(game_intent);
 
                                                 }
@@ -55,7 +52,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Intent Jisseki_intent = new Intent(getApplication(),Performance.class);
-                Jisseki_sound.play(jisseki_sound,0.1f,0.1f,0,0,1);
+                Jisseki_sound.play(jisseki_sound,0.2f,0.2f,0,0,1);
                 startActivity(Jisseki_intent);
             }
         });
@@ -63,8 +60,15 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Intent organizer_intent=new Intent(getApplication(),Organizer.class);
-                Organizer_sound.play(organizer_sound,0.1f,0.1f,0,0,1);
+                Organizer_sound.play(organizer_sound,0.5f,0.5f,0,0,1);
                 startActivity(organizer_intent);
+            }
+        });
+        manual_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pdf_intent = new Intent(getApplication(),manual.class);
+                startActivity(pdf_intent);
             }
         });
     }

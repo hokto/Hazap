@@ -8,7 +8,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -19,6 +18,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,22 +26,26 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.media.AudioManager.STREAM_MUSIC;
+
 public class Result_activity extends Activity   {
+    private HazapModules modules=new HazapModules();
+
     public static int aliveRate;//生存率
     public static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
     public static String message;
     public static int[] evacuParams=new int[4];
-    private HazapModules modules=new HazapModules();
-
     public int sound_back;
+    public int rank_sound;
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
-        final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
+        final SoundPool soundPool = new SoundPool(1, STREAM_MUSIC, 0);
         sound_back = soundPool.load(this, R.raw.back, 1);
+        final SoundPool Rank_sound = new SoundPool(1,STREAM_MUSIC,0);
 
         setContentView(R.layout.result);
         final RelativeLayout relativeLayout=findViewById(R.id.resultLayout);
@@ -60,13 +64,16 @@ public class Result_activity extends Activity   {
         AlphaAnimation feedin =new AlphaAnimation(0,1);
         feedin.setDuration(2000);
         rateText.startAnimation(feedin);
+
         modules.JudgeEvacu(relativeLayout,rateText,aliveRate,400,400,750,150,100);//避難評価判定用の関数
+
         ImageView routeImg=new ImageView(this);//避難結果が表示されている画像の設定
         RelativeLayout.LayoutParams imgParam=new RelativeLayout.LayoutParams(1000*modules.DispWid()/800,1000*modules.DispHei()/1216);
         imgParam.topMargin=450*modules.DispHei()/1216;
         imgParam.leftMargin=15*modules.DispWid()/800;
         routeImg.setImageBitmap(routeMap);
         relativeLayout.addView(routeImg,imgParam);
+        Rank_sound.play(rank_sound,0.3f,0.3f,0,0,1);
         Button back_btn=new Button(this);//ホームに戻るボタンの設定
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         back_btn.setBackground(btn_color);//ボタンにDrawableを適用する
@@ -77,7 +84,7 @@ public class Result_activity extends Activity   {
         back_btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る
             @Override
             public void onClick(View v){
-                soundPool.play(sound_back,0.1f,0.1f,0,0,1);
+                soundPool.play(sound_back,0.2f,0.2f,0,0,1);
                 final ProgressDialog imgsaveDialog=new ProgressDialog(Result_activity.this);
                 imgsaveDialog.setTitle("結果を保存中");
                 imgsaveDialog.setMessage("リザルト結果を端末に保存しています。");
