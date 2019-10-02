@@ -13,6 +13,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -50,6 +51,8 @@ public class Game_activity extends MapActivity {
     public Vibrator vibrator;
     public static JsonNode tsunamiNode=null;
     public static int[] evacuParams;
+    public ImageView tairyoku = new ImageView(this);
+    //public ImageView
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
