@@ -2,6 +2,7 @@ package com.example.hazap;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.SyncAdapterType;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -21,10 +22,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 public class Performance extends Activity {
-    private static int aliveRate;//生存率
-    private static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
+    private int aliveRate;//生存率
+    private Bitmap routeMap;//サーバから取得した避難結果の画像を格納
     private HazapModules modules=new HazapModules();
-
+    private int[] evacuParams=new int[4];//0:Place 1:HP 2:Route 3:Time
     public int sound_back;
     @SuppressLint("NewApi")
     @Override
@@ -54,6 +55,9 @@ public class Performance extends Activity {
         for(int i=0;i<bytedata.length;i++){
             routeMapByte[i]=Integer.valueOf(bytedata[i]).byteValue();
         }
+        for(int i=0;i<4;i++){
+            evacuParams[i]=(int)Float.parseFloat(resultInfo[i+3]);
+        }
         routeMap=BitmapFactory.decodeByteArray(routeMapByte,0,routeMapByte.length);
         RelativeLayout relativeLayout=findViewById(R.id.performanceLayout);
         TextView advice=new TextView(this);//主催者からのメッセージに関する設定
@@ -68,27 +72,10 @@ public class Performance extends Activity {
         organizerMessage.setBackgroundResource(R.drawable.framestyle);
         modules.setView(relativeLayout,organizerMessage,400,300,50,150);
         TextView rateText=new TextView(this);
-        AlphaAnimation feedin =new AlphaAnimation(0,1);
+        AlphaAnimation feedin =new AlphaAnimation(0,1);//アニメーション処理
         feedin.setDuration(1000);
-        if(aliveRate>=90){
-            rateText.setText("S");
-            rateText.setTextColor(Color.parseColor("#DAA520"));
-        }
-        else if(aliveRate>=60){
-            rateText.setText("A");
-            rateText.setTextColor(Color.parseColor("#fc0101"));
-        }
-        else if(aliveRate>=40){
-            rateText.setText("B");
-            rateText.setTextColor(Color.parseColor("#0101fc"));
-        }
-        else {
-            rateText.setText("C");
-            rateText.setTextColor(Color.parseColor("#fcfc01"));
-        }
-        rateText.setTextSize(100);
+        modules.JudgeEvacu(relativeLayout,rateText,aliveRate,400,400,750,150,100);//避難評価判定用の関数
         rateText.startAnimation(feedin);
-        modules.setView(relativeLayout,rateText,400,400,750,150);
         Button btn=new Button(this);//ホームに戻るボタンの設定
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         btn.setBackground(btn_color);//ボタンにDrawableを適用する

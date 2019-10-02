@@ -49,7 +49,7 @@ public class Game_activity extends MapActivity {
     public static List<List<String>> coor= new ArrayList<List<String>>();
     public Vibrator vibrator;
     public static JsonNode tsunamiNode=null;
-
+    public static int[] evacuParams;
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,7 @@ public class Game_activity extends MapActivity {
                 });
             }
         },0,100);
-        Button button = new Button(this);//終了ボタン
+        final Button button = new Button(this);//終了ボタン
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         button.setBackground(btn_color);//ボタンにDrawableを適用する
         button.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
@@ -131,6 +131,7 @@ public class Game_activity extends MapActivity {
                 resultDialog.setCanceledOnTouchOutside(false);
                 resultDialog.setCancelable(false);
                 resultDialog.show();
+                evacuParams=new int[4];
                 timer.schedule(new TimerTask() {//100msごとに同じ処理をする
                     @Override
                     public void run() {
@@ -146,10 +147,12 @@ public class Game_activity extends MapActivity {
                                     Result_activity.aliveRate = aliveRate;
                                     Result_activity.routeMap = routeMap;
                                     Result_activity.message =organizerMessage;
+                                    Result_activity.evacuParams=evacuParams;
                                     Intent result_intent = new Intent(getApplication(), result.getClass());//リザルト画面への遷移
                                     startActivity(result_intent);
                                     startFlag=false;
                                     routeMap=null;
+                                    button.setOnClickListener(null);
                                     finish();
                                 }
                                 if(connectEnd){

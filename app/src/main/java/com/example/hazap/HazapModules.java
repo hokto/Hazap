@@ -2,12 +2,15 @@ package com.example.hazap;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class HazapModules extends Activity{
     private  static int DisplayHeight=0; //端末の縦方向の長さ
@@ -30,5 +33,25 @@ public class HazapModules extends Activity{
     }
     public int DispHei(){
         return DisplayHeight;
+    }
+    public void JudgeEvacu(RelativeLayout relativeLayout, TextView view, int target, int width, int height, int lmargin, int tmargin, int textSize){
+        if(target>=90){
+            view.setText("S");
+            view.setTextColor(Color.parseColor("#DAA520"));
+        }
+        else if(target>=60){
+            view.setText("A");
+            view.setTextColor(Color.parseColor("#fc0101"));
+        }
+        else if(target>=40){
+            view.setText("B");
+            view.setTextColor(Color.parseColor("#0101fc"));
+        }
+        else {
+            view.setText("C");
+            view.setTextColor(Color.parseColor("#fcfc01"));
+        }
+        view.setTextSize(TypedValue.COMPLEX_UNIT_SP,textSize);
+        setView(relativeLayout,view,width,height,lmargin,tmargin);
     }
 }
