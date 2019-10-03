@@ -35,6 +35,11 @@ public class Result_activity extends Activity   {
     public static int[] evacuParams=new int[4];
     public int sound_back;
     public int rank_sound;
+    public ImageView tairyoku = new ImageView(this);
+    public ImageView time = new ImageView(this);
+    public ImageView route = new ImageView(this);
+    public ImageView place = new ImageView(this);
+
 
     @SuppressLint("NewApi")
     @Override
@@ -53,16 +58,19 @@ public class Result_activity extends Activity   {
         advice.setPadding(4,2,4,2);
         advice.setBackgroundResource(R.drawable.framestyle);
         modules.setView(relativeLayout,advice,300,40,100,80);
+
         TextView organizerMessage=new TextView(this);
         organizerMessage.setText(message);
         organizerMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
         organizerMessage.setBackgroundResource(R.drawable.framestyle);
         modules.setView(relativeLayout,organizerMessage,400,300,50,150);
+
         TextView rateText=new TextView(this);
         AlphaAnimation feedin =new AlphaAnimation(0,1);
         feedin.setDuration(2000);
         rateText.startAnimation(feedin);
         modules.JudgeEvacu(relativeLayout,rateText,aliveRate,400,400,750,150,100);//避難評価判定用の関数
+
         ImageView routeImg=new ImageView(this);//避難結果が表示されている画像の設定
         RelativeLayout.LayoutParams imgParam=new RelativeLayout.LayoutParams(1000*modules.DispWid()/800,1000*modules.DispHei()/1216);
         imgParam.topMargin=450*modules.DispHei()/1216;
@@ -70,6 +78,7 @@ public class Result_activity extends Activity   {
         routeImg.setImageBitmap(routeMap);
         relativeLayout.addView(routeImg,imgParam);
         Rank_sound.play(rank_sound,0.3f,0.3f,0,0,1);
+
         Button back_btn=new Button(this);//ホームに戻るボタンの設定
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         back_btn.setBackground(btn_color);//ボタンにDrawableを適用する
@@ -77,6 +86,14 @@ public class Result_activity extends Activity   {
         back_btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);//ボタンの文字の大きさを調節
         back_btn.setText("ホームに戻る");
         modules.setView(relativeLayout,back_btn,250,100,50,1500);
+
+
+        tairyoku.setImageResource(R.drawable.hpbar);
+        setContentView(tairyoku);
+        modules.setView(relativeLayout,tairyoku,250,100,50,1500);
+
+        
+
         back_btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る
             @Override
             public void onClick(View v){

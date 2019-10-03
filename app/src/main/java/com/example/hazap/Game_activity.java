@@ -51,8 +51,7 @@ public class Game_activity extends MapActivity {
     public Vibrator vibrator;
     public static JsonNode tsunamiNode=null;
     public static int[] evacuParams;
-    public ImageView tairyoku = new ImageView(this);
-    //public ImageView
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
