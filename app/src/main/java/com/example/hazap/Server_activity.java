@@ -38,7 +38,7 @@ public class Server_activity extends Activity{
               byte[] w = new byte[1024];
               int size = 0;
               try{
-                  connect = new Socket("192.168.0.22", 4000); //サーバに接続する
+                  connect = new Socket("192.168.0.13", 4000); //サーバに接続する
                   reader = connect.getInputStream();
                   writer = new BufferedWriter(new OutputStreamWriter(connect.getOutputStream()));
                   writer.write(sendMessage);//サーバに文字列を送る
@@ -161,7 +161,7 @@ public class Server_activity extends Activity{
                           Iterator<String> fieldName=jsonNode.fieldNames();
                           if(disasterinfo[1].equals("地震")){
                               Pattern pattern=Pattern.compile("(0406[0-9]{2})|(0305007)|(0425[0-9]{2})|(0412021)");
-                              String arv=fieldName.next();
+                              /*String arv=fieldName.next();
                               String[] minARV_str=jsonNode.get(arv).asText().split(",",0);
                               float[] ARV=new float[3];
                               for(int i=0;i<3;i++) {
@@ -178,10 +178,11 @@ public class Server_activity extends Activity{
                                   case "震度7":
                                       MinARV=ARV[0];
                                       break;
-                              }
+                              }*/
                               while(fieldName.hasNext()) {//まだデータがあれば取得する
                                   String stringJson=fieldName.next();
                                   JsonNode node=jsonNode.get(stringJson);
+                                  if(stringJson=="MinARV")continue;
                                   String[] coordinates = node.get("Coordinates").asText().split(",", 0);
                                   if(!pattern.matcher(node.get("Code").asText()).find()) {
                                       int lon = (int) (Float.parseFloat(coordinates[0]) * 10E5);//緯度、経度、階数を格納
@@ -196,7 +197,7 @@ public class Server_activity extends Activity{
                                           }
                                       };
                                       //色の変更
-                                      if(MinARV<Float.parseFloat(node.get("ARV").asText())){
+                                      //if(MinARV<Float.parseFloat(node.get("ARV").asText())){
                                           circleOverlay.setFillColor(Color.argb(127, 255, 40, 40));
                                           circleOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
                                           mapView.getOverlays().add(circleOverlay);
@@ -207,7 +208,7 @@ public class Server_activity extends Activity{
                                           info.add(Float.parseFloat(coordinates[0]));
                                           info.add(step);
                                           if(player!=null) player.earthquakeInfo.add(info);
-                                      }
+                                      //}
                                   }
                               }
                           }else if(disasterinfo[1].equals("津波")) {
