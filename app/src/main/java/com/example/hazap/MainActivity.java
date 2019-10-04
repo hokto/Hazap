@@ -15,6 +15,9 @@ public class MainActivity extends AppCompatActivity{
     public int start_sound;
     public int jisseki_sound;
     public int organizer_sound;
+    private HazapModules modules=new HazapModules();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
