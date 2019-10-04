@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.SoundPool;
@@ -30,7 +31,6 @@ import static android.media.AudioManager.STREAM_MUSIC;
 
 public class Result_activity extends Activity   {
     private HazapModules modules=new HazapModules();
-
     public static int aliveRate;//生存率
     public static Bitmap routeMap;//サーバから取得した避難結果の画像を格納
     public static String message;
@@ -38,11 +38,15 @@ public class Result_activity extends Activity   {
     public int sound_back;
     public int rank_sound;
 
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
+        ImageView tairyoku = new ImageView(this);
+        ImageView time = new ImageView(this);
+        ImageView route = new ImageView(this);
+        ImageView place = new ImageView(this);
         final SoundPool soundPool = new SoundPool(1, STREAM_MUSIC, 0);
         sound_back = soundPool.load(this, R.raw.back, 1);
         final SoundPool Rank_sound = new SoundPool(1,STREAM_MUSIC,0);
@@ -55,16 +59,17 @@ public class Result_activity extends Activity   {
         advice.setPadding(4,2,4,2);
         advice.setBackgroundResource(R.drawable.framestyle);
         modules.setView(relativeLayout,advice,300,40,100,80);
+
         TextView organizerMessage=new TextView(this);
         organizerMessage.setText(message);
         organizerMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
         organizerMessage.setBackgroundResource(R.drawable.framestyle);
         modules.setView(relativeLayout,organizerMessage,400,300,50,150);
+
         TextView rateText=new TextView(this);
         AlphaAnimation feedin =new AlphaAnimation(0,1);
         feedin.setDuration(2000);
         rateText.startAnimation(feedin);
-
         modules.JudgeEvacu(relativeLayout,rateText,aliveRate,400,400,750,150,100);//避難評価判定用の関数
 
         ImageView routeImg=new ImageView(this);//避難結果が表示されている画像の設定
@@ -74,6 +79,7 @@ public class Result_activity extends Activity   {
         routeImg.setImageBitmap(routeMap);
         relativeLayout.addView(routeImg,imgParam);
         Rank_sound.play(rank_sound,0.3f,0.3f,0,0,1);
+
         Button back_btn=new Button(this);//ホームに戻るボタンの設定
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         back_btn.setBackground(btn_color);//ボタンにDrawableを適用する
@@ -81,6 +87,47 @@ public class Result_activity extends Activity   {
         back_btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);//ボタンの文字の大きさを調節
         back_btn.setText("ホームに戻る");
         modules.setView(relativeLayout,back_btn,250,100,50,1500);
+
+        RelativeLayout.LayoutParams tairyoku_Param =new RelativeLayout.LayoutParams(80*modules.DispWid()/800,80*modules.DispHei()/1216);
+        tairyoku_Param.topMargin=300*modules.DispHei()/1216;
+        tairyoku_Param.leftMargin=400*modules.DispWid()/800;
+        tairyoku.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.hpbar));
+        relativeLayout.addView(tairyoku,tairyoku_Param);
+        TextView tairyoku_text = new TextView(this);
+        feedin.setDuration(1000);
+        tairyoku_text.startAnimation(feedin);
+        modules.JudgeEvacu(relativeLayout,tairyoku_text,evacuParams[1],100,100,560,510,40);
+
+        RelativeLayout.LayoutParams time_Param =new RelativeLayout.LayoutParams(80*modules.DispWid()/800,80*modules.DispHei()/1216);
+        time_Param.topMargin=300*modules.DispHei()/1216;
+        time_Param.leftMargin=490*modules.DispWid()/800;
+        time.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.time));
+        relativeLayout.addView(time,time_Param);
+        TextView time_text = new TextView(this);
+        feedin.setDuration(1000);
+        time_text.startAnimation(feedin);
+        modules.JudgeEvacu(relativeLayout,time_text,evacuParams[3],100,100,680,510,40);
+
+        RelativeLayout.LayoutParams place_Param =new RelativeLayout.LayoutParams(80*modules.DispWid()/800,80*modules.DispHei()/1216);
+        place_Param.topMargin=300*modules.DispHei()/1216;
+        place_Param.leftMargin=580*modules.DispWid()/800;
+        place.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.place_eva));
+        relativeLayout.addView(place,place_Param);
+        TextView place_text = new TextView(this);
+        feedin.setDuration(1000);
+        place_text.startAnimation(feedin);
+        modules.JudgeEvacu(relativeLayout,place_text,evacuParams[0],100,100,800,510,40);
+
+        RelativeLayout.LayoutParams route_Param =new RelativeLayout.LayoutParams(80*modules.DispWid()/800,80*modules.DispHei()/1216);
+        route_Param.topMargin=300*modules.DispHei()/1216;
+        route_Param.leftMargin=670*modules.DispWid()/800;
+        route.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.route));
+        relativeLayout.addView(route,route_Param);
+        TextView route_text = new TextView(this);
+        feedin.setDuration(1000);
+        route_text.startAnimation(feedin);
+        modules.JudgeEvacu(relativeLayout,route_text,evacuParams[2],100,100,920,510,40);
+
         back_btn.setOnClickListener(new View.OnClickListener(){ //ボタンが押された場合、ホームに戻る
             @Override
             public void onClick(View v){

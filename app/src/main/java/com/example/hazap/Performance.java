@@ -36,7 +36,10 @@ public class Performance extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
+        ImageView tairyoku = new ImageView(this);
+        ImageView time = new ImageView(this);
+        ImageView route = new ImageView(this);
+        ImageView place = new ImageView(this);
         final SoundPool soundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         sound_back = soundPool.load(this, R.raw.back, 1);
 
@@ -89,6 +92,46 @@ public class Performance extends Activity {
             btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
             btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,50);//ボタンの文字の大きさを調節
             btn.setText("戻る");
+            RelativeLayout.LayoutParams tairyoku_Param =new RelativeLayout.LayoutParams(80*modules.DispWid()/800,80*modules.DispHei()/1216);
+            tairyoku_Param.topMargin=300*modules.DispHei()/1216;
+            tairyoku_Param.leftMargin=400*modules.DispWid()/800;
+            tairyoku.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.hpbar));
+            relativeLayout.addView(tairyoku,tairyoku_Param);
+            TextView tairyoku_text = new TextView(this);
+            feedin.setDuration(1000);
+            tairyoku_text.startAnimation(feedin);
+            modules.JudgeEvacu(relativeLayout,tairyoku_text,evacuParams[1],100,100,560,510,40);
+
+            RelativeLayout.LayoutParams time_Param =new RelativeLayout.LayoutParams(80*modules.DispWid()/800,80*modules.DispHei()/1216);
+            time_Param.topMargin=300*modules.DispHei()/1216;
+            time_Param.leftMargin=490*modules.DispWid()/800;
+            time.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.time));
+            relativeLayout.addView(time,time_Param);
+            TextView time_text = new TextView(this);
+            feedin.setDuration(1000);
+            time_text.startAnimation(feedin);
+            modules.JudgeEvacu(relativeLayout,time_text,evacuParams[3],100,100,680,510,40);
+
+            RelativeLayout.LayoutParams place_Param =new RelativeLayout.LayoutParams(80*modules.DispWid()/800,80*modules.DispHei()/1216);
+            place_Param.topMargin=300*modules.DispHei()/1216;
+            place_Param.leftMargin=580*modules.DispWid()/800;
+            place.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.place_eva));
+            relativeLayout.addView(place,place_Param);
+            TextView place_text = new TextView(this);
+            feedin.setDuration(1000);
+            place_text.startAnimation(feedin);
+            modules.JudgeEvacu(relativeLayout,place_text,evacuParams[0],100,100,800,510,40);
+
+            RelativeLayout.LayoutParams route_Param =new RelativeLayout.LayoutParams(80*modules.DispWid()/800,80*modules.DispHei()/1216);
+            route_Param.topMargin=300*modules.DispHei()/1216;
+            route_Param.leftMargin=670*modules.DispWid()/800;
+            route.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.route));
+            relativeLayout.addView(route,route_Param);
+            TextView route_text = new TextView(this);
+            feedin.setDuration(1000);
+            route_text.startAnimation(feedin);
+            modules.JudgeEvacu(relativeLayout,route_text,evacuParams[2],100,100,920,510,40);
+
             modules.setView(relativeLayout,btn,250,100,50,1500);
             ImageView routeImg=new ImageView(this);//避難結果が表示されている画像の設定
             RelativeLayout.LayoutParams imgParam=new RelativeLayout.LayoutParams(1000*modules.DispWid()/800,1000*modules.DispHei()/1216);
