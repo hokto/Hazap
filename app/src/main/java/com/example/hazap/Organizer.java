@@ -32,6 +32,7 @@ import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.PinOverlay;
+import jp.co.yahoo.android.maps.PopupOverlay;
 
 
 public class Organizer extends Activity {
@@ -43,7 +44,8 @@ public class Organizer extends Activity {
     private Server_activity organizerSocket=new Server_activity();//サーバに接続するためのインスタンス
     private Spinner disasterSpinner;
     private Spinner nextSpinner;
-    private PinOverlay pin = null;
+    private PinOverlay[] pinArr;
+    private PopupOverlay[] popupArr;
     private EditText waveHeight;//津波が選択された場合、波の高さと震源地までの距離を設定
     private EditText distance;
     private HazapModules modules=new HazapModules();
@@ -111,7 +113,7 @@ public class Organizer extends Activity {
         startbtn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
         startbtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
         startbtn.setText("訓練開始");
-        modules.setView(relativeLayout,startbtn,250,100,580,1500);
+        modules.setView(relativeLayout,startbtn,250,100,600,1500);
         final Timer timer=new Timer();//一定時間ごとに同じ処理を行うためのタイマー
         final Handler handler=new Handler();//非同期処理用
         playerNumText=new TextView(this);//全参加者を表示するテキストの設定
@@ -164,6 +166,8 @@ public class Organizer extends Activity {
         final RelativeLayout mapLayout=new RelativeLayout(this);
         final MapView organizerMap=new MapView(Organizer.this,"dj00aiZpPWNIMG5nZEpkSXk3OSZzPWNvbnN1bWVyc2VjcmV0Jng9ZDk-");
         final MyLocationOverlay location=new MyLocationOverlay(getApplicationContext(),organizerMap);//主催者の現在地（スタート地点）を取得
+        pinArr=new PinOverlay[allPlayers];
+        popupArr=new PopupOverlay[allPlayers];
         location.enableMyLocation();
         location.runOnFirstFix(new Runnable() {
             @Override
@@ -210,21 +214,6 @@ public class Organizer extends Activity {
                 });
             }
         },0,100);
-        if(startFlag) {
-            organizerSocket.Connect("Coordinates", null, null, Organizer.this);
-            try {
-                Thread.sleep(500); //100ミリ秒Sleepする（通信側の処理を反映させるため）
-            } catch (InterruptedException e) {
-            }
-            if(playerCoordinates!=null) {
-                organizerMap.getOverlays().remove(pin);
-                for (int i = 0; i < allPlayers; i++) {
-                    pin = new PinOverlay(i);
-                    organizerMap.getOverlays().add(pin);
-                    pin.addPoint(playerCoordinates.get(i), Integer.toString(i));
-                }
-            }
-        }
 
         final CurrentLocationOverlay locationOverlay=new CurrentLocationOverlay(getApplicationContext(),organizerMap,this,null,null);
         locationOverlay.enableMyLocation();//locationOverlayの現在地の有効化
@@ -244,10 +233,14 @@ public class Organizer extends Activity {
                             }
                             if(playerCoordinates!=null) {
                                 for (int i = 0; i < allPlayers; i++) {
-                                    organizerMap.getOverlays().remove(pin);
-                                    pin = new PinOverlay(i);
-                                    organizerMap.getOverlays().add(pin);
-                                    pin.addPoint(playerCoordinates.get(i), Integer.toString(i));
+                                    organizerMap.getOverlays().remove(pinArr[i]);
+                                    organizerMap.getOverlays().remove(popupArr[i]);
+                                    pinArr[i] = new PinOverlay(i%3);
+                                    organizerMap.getOverlays().add(pinArr[i]);
+                                    popupArr[i]=new PopupOverlay();
+                                    organizerMap.getOverlays().add(popupArr[i]);
+                                    pinArr[i].setOnFocusChangeListener(popupArr[i]);
+                                    pinArr[i].addPoint(playerCoordinates.get(i), "参加者ID:"+String.valueOf(i+1));
                                 }
                             }
                         }

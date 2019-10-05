@@ -12,13 +12,11 @@ import android.os.Vibrator;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -27,9 +25,8 @@ import jp.co.yahoo.android.maps.MapActivity;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 
+
 public class Game_activity extends MapActivity {
-    public static String disastersize;
-    public static String disaster;
     private MapView hazapView = null;                   //マップ表示用
     private CurrentLocationOverlay locationOverlay;     //現在地追跡用
     private long startTime=0;
@@ -37,6 +34,8 @@ public class Game_activity extends MapActivity {
     private MyLocationOverlay location;                          //スタートしたり終了したりするために必要
     private Server_activity client=new Server_activity();        //サーバと接続するためにインスタンス
 
+    public static String disastersize;
+    public static String disaster;
     public static String myId="";                               //サーバによって割り振られるID
     public static int allpeople=0;                             //訓練に参加中の参加人数
     public static int aroundpeople=0;                          //自分の周囲にいる人数
@@ -52,6 +51,7 @@ public class Game_activity extends MapActivity {
     public Vibrator vibrator;
     public static JsonNode tsunamiNode=null;
     public static int[] evacuParams;
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,7 +115,7 @@ public class Game_activity extends MapActivity {
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         button.setBackground(btn_color);//ボタンにDrawableを適用する
         button.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
-        button.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
+        button.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(25));//ボタンの文字の大きさを調節
         button.setText("避難終了");
         modules.setView(relativeLayout,button,300,100,50,1500);
         button.setOnClickListener(new View.OnClickListener() { //避難終了ボタンが押された場合
