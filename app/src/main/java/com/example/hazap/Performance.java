@@ -72,13 +72,13 @@ public class Performance extends Activity {
             RelativeLayout relativeLayout=findViewById(R.id.performanceLayout);
             TextView advice=new TextView(this);//主催者からのメッセージに関する設定
             advice.setText("主催者からのメッセージ");
-            advice.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+            advice.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(10));
             advice.setPadding(4,2,4,2);
             advice.setBackgroundResource(R.drawable.framestyle);
             modules.setView(relativeLayout,advice,300,40,100,80);
             TextView organizerMessage=new TextView(this);
             organizerMessage.setText(message);
-            organizerMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+            organizerMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(15));
             organizerMessage.setBackgroundResource(R.drawable.framestyle);
             modules.setView(relativeLayout,organizerMessage,400,300,50,150);
             TextView rateText=new TextView(this);
@@ -90,47 +90,56 @@ public class Performance extends Activity {
             Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
             btn.setBackground(btn_color);//ボタンにDrawableを適用する
             btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
-            btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,50);//ボタンの文字の大きさを調節
+            btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(20));//ボタンの文字の大きさを調節
             btn.setText("戻る");
-            RelativeLayout.LayoutParams tairyoku_Param =new RelativeLayout.LayoutParams(80*modules.DispWid()/800,80*modules.DispHei()/1216);
+
+            //hp用の画像
+            RelativeLayout.LayoutParams tairyoku_Param =new RelativeLayout.LayoutParams(75*modules.DispWid()/800,75*modules.DispHei()/1216);
             tairyoku_Param.topMargin=300*modules.DispHei()/1216;
-            tairyoku_Param.leftMargin=400*modules.DispWid()/800;
+            tairyoku_Param.leftMargin=430*modules.DispWid()/800;
             tairyoku.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.hpbar));
             relativeLayout.addView(tairyoku,tairyoku_Param);
+            //hpのランク
             TextView tairyoku_text = new TextView(this);
             feedin.setDuration(1000);
             tairyoku_text.startAnimation(feedin);
-            modules.JudgeEvacu(relativeLayout,tairyoku_text,evacuParams[1],100,100,560,510,40);
+            modules.JudgeEvacu(relativeLayout,tairyoku_text,evacuParams[1],100,100,595,510,35);
 
+            //time用の画像
             RelativeLayout.LayoutParams time_Param =new RelativeLayout.LayoutParams(80*modules.DispWid()/800,80*modules.DispHei()/1216);
             time_Param.topMargin=300*modules.DispHei()/1216;
-            time_Param.leftMargin=490*modules.DispWid()/800;
+            time_Param.leftMargin=525*modules.DispWid()/800;
             time.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.time));
             relativeLayout.addView(time,time_Param);
+            //timeのランク
             TextView time_text = new TextView(this);
             feedin.setDuration(1000);
             time_text.startAnimation(feedin);
-            modules.JudgeEvacu(relativeLayout,time_text,evacuParams[3],100,100,680,510,40);
+            modules.JudgeEvacu(relativeLayout,time_text,evacuParams[3],100,100,725,510,35);
 
-            RelativeLayout.LayoutParams place_Param =new RelativeLayout.LayoutParams(80*modules.DispWid()/800,80*modules.DispHei()/1216);
+            //place用の画像
+            RelativeLayout.LayoutParams place_Param =new RelativeLayout.LayoutParams(75*modules.DispWid()/800,75*modules.DispHei()/1216);
             place_Param.topMargin=300*modules.DispHei()/1216;
-            place_Param.leftMargin=580*modules.DispWid()/800;
+            place_Param.leftMargin=620*modules.DispWid()/800;
             place.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.place_eva));
             relativeLayout.addView(place,place_Param);
+            //placeのランク
             TextView place_text = new TextView(this);
             feedin.setDuration(1000);
             place_text.startAnimation(feedin);
-            modules.JudgeEvacu(relativeLayout,place_text,evacuParams[0],100,100,800,510,40);
+            modules.JudgeEvacu(relativeLayout,place_text,evacuParams[0],100,100,855,510,35);
 
-            RelativeLayout.LayoutParams route_Param =new RelativeLayout.LayoutParams(80*modules.DispWid()/800,80*modules.DispHei()/1216);
+            //route用の画像
+            RelativeLayout.LayoutParams route_Param =new RelativeLayout.LayoutParams(75*modules.DispWid()/800,75*modules.DispHei()/1216);
             route_Param.topMargin=300*modules.DispHei()/1216;
-            route_Param.leftMargin=670*modules.DispWid()/800;
+            route_Param.leftMargin=715*modules.DispWid()/800;
             route.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.route));
             relativeLayout.addView(route,route_Param);
             TextView route_text = new TextView(this);
+            //routeのランク
             feedin.setDuration(1000);
             route_text.startAnimation(feedin);
-            modules.JudgeEvacu(relativeLayout,route_text,evacuParams[2],100,100,920,510,40);
+            modules.JudgeEvacu(relativeLayout,route_text,evacuParams[2],100,100,985,510,35);
 
             modules.setView(relativeLayout,btn,250,100,50,1500);
             ImageView routeImg=new ImageView(this);//避難結果が表示されている画像の設定
