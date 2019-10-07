@@ -65,8 +65,8 @@ public class tsunami extends Activity {
                                 return true;
                             }
                         };
-                        polygonOverlay.setFillColor(Color.argb(127, 255, 40, 40));
-                        polygonOverlay.setStrokeColor(Color.argb(127, 255, 50, 50));
+                        polygonOverlay.setFillColor(Color.argb(15, 255, 40, 40));
+                        polygonOverlay.setStrokeColor(Color.argb(255, 255, 50, 50));
                         mapView.getOverlays().add(polygonOverlay);
                         tsunamiIdx++;
                         if(tsunamiNode.get(String.valueOf(tsunamiIdx))==null){//これ以上シミュレーションを行わないなら止める
@@ -90,7 +90,7 @@ public class tsunami extends Activity {
             sumDec+=Math.atan((x1*y2-y1*x2)/(x1*x2+y1*y2));//Atan(外積/内積)で回転方向を含めた角度を算出
         }
         System.out.println("Dec:"+sumDec);
-        if((int)sumDec==0){//合計角度がほぼ0であれば外側であると判定
+        if((int)sumDec<3&&(int)sumDec>-3){//合計角度がほぼ0であれば外側であると判定
             return false;
         }
         else{

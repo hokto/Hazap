@@ -157,7 +157,7 @@ public class Game_activity extends MapActivity {
                                     button.setOnClickListener(null);
                                     finish();
                                 }
-                                if(connectEnd){
+                                if(connectEnd) {
                                     connectEnd=false;
                                     client.Connect("End:" + myId+":"+hpbar.getProgress()+":"+((endTime-startTime)/1000), Game_activity.this, null, null);//避難が終わったことを伝える
                                 }

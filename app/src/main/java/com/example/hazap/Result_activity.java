@@ -70,7 +70,7 @@ public class Result_activity extends Activity   {
         AlphaAnimation feedin =new AlphaAnimation(0,1);
         feedin.setDuration(2000);
         rateText.startAnimation(feedin);
-        modules.JudgeEvacu(relativeLayout,rateText,aliveRate,400,400,700,100,100);//避難評価判定用の関数
+        modules.JudgeEvacu(relativeLayout,rateText,aliveRate,400,400,700,80,100);//避難評価判定用の関数
 
         ImageView routeImg=new ImageView(this);//避難結果が表示されている画像の設定
         RelativeLayout.LayoutParams imgParam=new RelativeLayout.LayoutParams(1000*modules.DispWid()/800,1000*modules.DispHei()/1216);
@@ -84,7 +84,7 @@ public class Result_activity extends Activity   {
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         back_btn.setBackground(btn_color);//ボタンにDrawableを適用する
         back_btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
-        back_btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(18));//ボタンの文字の大きさを調節
+        back_btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(15));//ボタンの文字の大きさを調節
         back_btn.setText("ホームに戻る");
         modules.setView(relativeLayout,back_btn,250,100,50,1500);
 
