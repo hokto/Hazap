@@ -283,6 +283,7 @@ public class Organizer extends Activity {
         ArrayAdapter nextAdapter= new ArrayAdapter(this,R.layout.spinner_item,items);
         nextAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(nextAdapter);
+        spinner.setBackground( ResourcesCompat.getDrawable(getResources(), R.drawable.spinner_custom, null));//枠線設定
         modules.setView(relativeLayout,spinner,820,200,150,850);
     }
     @Override
