@@ -34,6 +34,8 @@ import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.PinOverlay;
 import jp.co.yahoo.android.maps.PopupOverlay;
 
+import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
+
 
 public class Organizer extends Activity {
     private String[] disasterItems={"災害を選択","地震","津波"};//災害の種類を格納した配列
@@ -50,6 +52,7 @@ public class Organizer extends Activity {
     private EditText distance;
     private HazapModules modules=new HazapModules();
 
+    public static String disasterInfo= "";;
     public int sound_back;
     public int sound_start;
     public static int allPlayers=0;//参加者の人数を格納
@@ -173,7 +176,6 @@ public class Organizer extends Activity {
             @Override
             public void run() {
                 try{
-                    String disasterInfo= "";
                     if(disasterSpinner.getSelectedItem()=="地震"){ //地震が選ばれた場合
                         disasterInfo=disasterSpinner.getSelectedItem()+":"+nextSpinner.getSelectedItem();
                     }
