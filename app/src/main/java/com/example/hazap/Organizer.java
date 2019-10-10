@@ -28,13 +28,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 import jp.co.yahoo.android.maps.PinOverlay;
 import jp.co.yahoo.android.maps.PopupOverlay;
-
-import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
 
 
 public class Organizer extends Activity {
@@ -52,7 +51,7 @@ public class Organizer extends Activity {
     private EditText distance;
     private HazapModules modules=new HazapModules();
 
-    public static String disasterInfo= "";;
+    public static String disasterInfo= "";
     public int sound_back;
     public int sound_start;
     public static int allPlayers=0;//参加者の人数を格納
