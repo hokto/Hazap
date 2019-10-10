@@ -178,12 +178,12 @@ public class Game_activity extends MapActivity {
         eventText.setText(hazardevent);
         int tsize=28;
         eventText.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(tsize));
-        eventText.setTextColor(Color.WHITE);
+        eventText.setTextColor(Color.GREEN);
         eventText.setBackgroundColor(Color.rgb(200,200,200));
         eventText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         eventText.setSingleLine(true);
         eventText.setSelected(true);
-        modules.setView(relativeLayout,eventText,1000,50,30,1650);
+        modules.setView(relativeLayout,eventText,1300,50,0,1650);
     }
 
     @Override
