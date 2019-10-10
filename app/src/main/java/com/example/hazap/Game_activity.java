@@ -176,6 +176,9 @@ public class Game_activity extends MapActivity {
         TextView eventText =new TextView(this);
         String hazardevent="避難訓練中...    今回の想定:"+disasterInfo;
         eventText.setText(hazardevent);
+        int tsize=28;
+        eventText.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(tsize));
+        eventText.setTextColor(Color.WHITE);
         eventText.setBackgroundColor(Color.rgb(200,200,200));
         eventText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         eventText.setSingleLine(true);
