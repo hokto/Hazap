@@ -10,12 +10,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,9 @@ import java.util.TimerTask;
 import jp.co.yahoo.android.maps.MapActivity;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
+
+import static com.example.hazap.Organizer.disasterInfo;
+import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
 
 
 public class Game_activity extends MapActivity {
@@ -167,6 +173,17 @@ public class Game_activity extends MapActivity {
                 }, 0, 1000);
             }
         });
+        TextView eventText =new TextView(this);
+        String hazardevent="避難訓練中...    今回の想定:"+disasterInfo;
+        eventText.setText(hazardevent);
+        int tsize=28;
+        eventText.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(tsize));
+        eventText.setTextColor(Color.WHITE);
+        eventText.setBackgroundColor(Color.rgb(200,200,200));
+        eventText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        eventText.setSingleLine(true);
+        eventText.setSelected(true);
+        modules.setView(relativeLayout,eventText,1000,50,30,1650);
     }
 
     @Override
