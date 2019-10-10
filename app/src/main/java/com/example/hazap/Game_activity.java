@@ -29,7 +29,6 @@ import jp.co.yahoo.android.maps.MapActivity;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
 
-import static com.example.hazap.Organizer.disasterInfo;
 
 
 public class Game_activity extends MapActivity {
@@ -110,7 +109,7 @@ public class Game_activity extends MapActivity {
                             startDialog.dismiss();
                             startTime=System.currentTimeMillis();
                             TextView eventText =new TextView(Game_activity.this);
-                            String hazardevent="避難訓練中...    今回の想定:"+ disasterInfo+" 規模:"+disastersize;
+                            String hazardevent="避難訓練中...    今回の想定:"+ disaster+"     規模:"+disastersize;
                             eventText.setText(hazardevent);
                             int tsize=28;
                             eventText.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(tsize));
@@ -118,7 +117,7 @@ public class Game_activity extends MapActivity {
                             eventText.setBackgroundColor(Color.rgb(200,200,200));
                             eventText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
                             eventText.setSingleLine(true);
-                            eventText.setMarqueeRepeatLimit(1000);
+                            eventText.setMarqueeRepeatLimit(10000);
                             eventText.setSelected(true);
                             modules.setView(relativeLayout,eventText,1000,100,0,1650);
                             if(disaster.equals("津波")){

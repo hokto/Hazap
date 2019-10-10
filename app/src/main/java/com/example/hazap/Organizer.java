@@ -179,7 +179,7 @@ public class Organizer extends Activity {
                         disasterInfo=disasterSpinner.getSelectedItem()+":"+nextSpinner.getSelectedItem();
                     }
                     else if(disasterSpinner.getSelectedItem()=="津波"){ //津波が選ばれた場合
-                        disasterInfo=disasterSpinner.getSelectedItem()+":"+waveHeight.getText()+","+distance.getText();
+                        disasterInfo=disasterSpinner.getSelectedItem()+":"+waveHeight.getText()+":"+distance.getText();
                     }
                     organizerSocket.Connect("Start:"+location.getMyLocation().getLatitude()+","+location.getMyLocation().getLongitude()+":"+disasterInfo,null,null,null);//サーバにシミュレーション開始を伝える
                     Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
