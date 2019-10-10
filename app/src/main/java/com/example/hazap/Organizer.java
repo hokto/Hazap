@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import jp.co.yahoo.android.maps.GeoPoint;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
@@ -50,6 +51,7 @@ public class Organizer extends Activity {
     private EditText distance;
     private HazapModules modules=new HazapModules();
 
+    public static String disasterInfo= "";
     public int sound_back;
     public int sound_start;
     public static int allPlayers=0;//参加者の人数を格納
@@ -173,12 +175,11 @@ public class Organizer extends Activity {
             @Override
             public void run() {
                 try{
-                    String disasterInfo= "";
                     if(disasterSpinner.getSelectedItem()=="地震"){ //地震が選ばれた場合
                         disasterInfo=disasterSpinner.getSelectedItem()+":"+nextSpinner.getSelectedItem();
                     }
                     else if(disasterSpinner.getSelectedItem()=="津波"){ //津波が選ばれた場合
-                        disasterInfo=disasterSpinner.getSelectedItem()+":"+waveHeight.getText()+","+distance.getText();
+                        disasterInfo=disasterSpinner.getSelectedItem()+":"+waveHeight.getText()+":"+distance.getText();
                     }
                     organizerSocket.Connect("Start:"+location.getMyLocation().getLatitude()+","+location.getMyLocation().getLongitude()+":"+disasterInfo,null,null,null);//サーバにシミュレーション開始を伝える
                     Thread.sleep(100); //100ミリ秒Sleepする（通信側の処理を反映させるため）
@@ -283,6 +284,7 @@ public class Organizer extends Activity {
         ArrayAdapter nextAdapter= new ArrayAdapter(this,R.layout.spinner_item,items);
         nextAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(nextAdapter);
+        //spinner.setBackground( ResourcesCompat.getDrawable(getResources(), R.drawable.spinner_custom, null));//枠線設定
         modules.setView(relativeLayout,spinner,820,200,150,850);
     }
     @Override

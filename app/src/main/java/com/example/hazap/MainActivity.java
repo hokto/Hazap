@@ -15,9 +15,6 @@ public class MainActivity extends AppCompatActivity{
     public int start_sound;
     public int jisseki_sound;
     public int organizer_sound;
-    private HazapModules modules=new HazapModules();
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +37,7 @@ public class MainActivity extends AppCompatActivity{
         final Button gamestart_button = findViewById(R.id.gamestart_btn);
         Button option_button = findViewById(R.id.option_btn);
         Button organizerBtn=findViewById(R.id.organizerBtn);
-        Button manual_btn =  findViewById(R.id.pdfbtn);
+        Button manual_btn =  findViewById(R.id.pdf_btn);
         gamestart_button.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {

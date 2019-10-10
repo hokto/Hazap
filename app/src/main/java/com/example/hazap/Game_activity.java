@@ -10,20 +10,25 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
 import com.fasterxml.jackson.databind.JsonNode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import jp.co.yahoo.android.maps.MapActivity;
 import jp.co.yahoo.android.maps.MapView;
 import jp.co.yahoo.android.maps.MyLocationOverlay;
+
 
 
 public class Game_activity extends MapActivity {
@@ -63,7 +68,7 @@ public class Game_activity extends MapActivity {
         location.enableMyLocation();//locationの現在地の有効化
         hazapView.getMapController().setZoom(0);
         setContentView(hazapView);
-        location.runOnFirstFix(new Runnable() {
+       location.runOnFirstFix(new Runnable() {
             @Override
             public void run() {
                 client.Connect("Recruit:"+location.getMyLocation().getLatitude()+","+location.getMyLocation().getLongitude(),Game_activity.this,null,null);//サーバに参加することを伝え、IDをもらう
@@ -83,7 +88,7 @@ public class Game_activity extends MapActivity {
         hpbar.setProgress(hp);//最初の体力(100)
         hpbar.setSecondaryProgress(100);//体力減少用の設定
         modules.setView(relativeLayout,hpbar,300,30,600,100);
-        final ProgressDialog startDialog=new ProgressDialog(this);
+       final ProgressDialog startDialog=new ProgressDialog(this);
         startDialog.setTitle("待機中");
         startDialog.setMessage("全員の参加が完了するまでしばらくお待ちください");
         startDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -103,6 +108,18 @@ public class Game_activity extends MapActivity {
                             timer.cancel();
                             startDialog.dismiss();
                             startTime=System.currentTimeMillis();
+                            TextView eventText =new TextView(Game_activity.this);
+                            String hazardevent="避難訓練中...    今回の想定:"+ disaster+"     規模:"+disastersize;
+                            eventText.setText(hazardevent);
+                            int tsize=28;
+                            eventText.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(tsize));
+                            eventText.setTextColor(Color.WHITE);
+                            eventText.setBackgroundColor(Color.rgb(200,200,200));
+                            eventText.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                            eventText.setSingleLine(true);
+                            eventText.setMarqueeRepeatLimit(10000);
+                            eventText.setSelected(true);
+                            modules.setView(relativeLayout,eventText,1000,100,0,1650);
                             if(disaster.equals("津波")){
                                 new tsunami().Simulate(relativeLayout,hazapView,tsunamiNode);
                             }
@@ -157,7 +174,7 @@ public class Game_activity extends MapActivity {
                                     button.setOnClickListener(null);
                                     finish();
                                 }
-                                if(connectEnd){
+                                if(connectEnd) {
                                     connectEnd=false;
                                     client.Connect("End:" + myId+":"+hpbar.getProgress()+":"+((endTime-startTime)/1000), Game_activity.this, null, null);//避難が終わったことを伝える
                                 }
@@ -167,6 +184,7 @@ public class Game_activity extends MapActivity {
                 }, 0, 1000);
             }
         });
+
     }
 
     @Override

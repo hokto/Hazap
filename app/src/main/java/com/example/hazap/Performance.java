@@ -84,13 +84,13 @@ public class Performance extends Activity {
             TextView rateText=new TextView(this);
             AlphaAnimation feedin =new AlphaAnimation(0,1);//アニメーション処理
             feedin.setDuration(1000);
-            modules.JudgeEvacu(relativeLayout,rateText,aliveRate,400,400,700,100,100);//避難評価判定用の関数
+            modules.JudgeEvacu(relativeLayout,rateText,aliveRate,400,400,700,50,100);//避難評価判定用の関数
             rateText.startAnimation(feedin);
             Button btn=new Button(this);//ホームに戻るボタンの設定
             Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
             btn.setBackground(btn_color);//ボタンにDrawableを適用する
             btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
-            btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(20));//ボタンの文字の大きさを調節
+            btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(15));//ボタンの文字の大きさを調節
             btn.setText("戻る");
 
             //hp用の画像
