@@ -43,11 +43,11 @@ public class HazapModules extends Activity{
             view.setText("S");
             view.setTextColor(Color.parseColor("#DAA520"));
         }
-        else if(target>=60){
+        else if(target>=70){
             view.setText("A");
             view.setTextColor(Color.parseColor("#fc0101"));
         }
-        else if(target>=40){
+        else if(target>=50){
             view.setText("B");
             view.setTextColor(Color.parseColor("#0101fc"));
         }
