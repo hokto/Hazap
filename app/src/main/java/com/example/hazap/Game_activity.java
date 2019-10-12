@@ -132,7 +132,7 @@ public class Game_activity extends MapActivity {
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
         button.setBackground(btn_color);//ボタンにDrawableを適用する
         button.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
-        button.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(25));//ボタンの文字の大きさを調節
+        button.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(20));//ボタンの文字の大きさを調節
         button.setText("避難終了");
         modules.setView(relativeLayout,button,300,100,50,1500);
         button.setOnClickListener(new View.OnClickListener() { //避難終了ボタンが押された場合

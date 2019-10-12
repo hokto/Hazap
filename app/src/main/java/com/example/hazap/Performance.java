@@ -72,13 +72,13 @@ public class Performance extends Activity {
             RelativeLayout relativeLayout=findViewById(R.id.performanceLayout);
             TextView advice=new TextView(this);//主催者からのメッセージに関する設定
             advice.setText("主催者からのメッセージ");
-            advice.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(10));
+            advice.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(7));
             advice.setPadding(4,2,4,2);
             advice.setBackgroundResource(R.drawable.framestyle);
             modules.setView(relativeLayout,advice,300,40,100,80);
             TextView organizerMessage=new TextView(this);
             organizerMessage.setText(message);
-            organizerMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(15));
+            organizerMessage.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(10));
             organizerMessage.setBackgroundResource(R.drawable.framestyle);
             modules.setView(relativeLayout,organizerMessage,400,300,50,150);
             TextView rateText=new TextView(this);
@@ -90,7 +90,7 @@ public class Performance extends Activity {
             Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state, null);//リソースから作成したDrawableのリソースを取得
             btn.setBackground(btn_color);//ボタンにDrawableを適用する
             btn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
-            btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(15));//ボタンの文字の大きさを調節
+            btn.setTextSize(TypedValue.COMPLEX_UNIT_SP,modules.getTextHeight(10));//ボタンの文字の大きさを調節
             btn.setText("戻る");
 
             //hp用の画像
