@@ -113,13 +113,13 @@ public class Organizer extends Activity {
         Drawable btn_color = ResourcesCompat.getDrawable(getResources(), R.drawable.btn_custom, null);//リソースから作成したDrawableのリソースを取得
         startbtn.setBackground(btn_color);//ボタンにDrawableを適用する
         startbtn.setTextColor(Color.parseColor("#FFFFFF"));//ボタンの文字の色を白に変更する
-        startbtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);//ボタンの文字の大きさを調節
+        startbtn.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);//ボタンの文字の大きさを調節
         startbtn.setText("訓練開始");
         modules.setView(relativeLayout,startbtn,250,100,600,1500);
         final Timer timer=new Timer();//一定時間ごとに同じ処理を行うためのタイマー
         final Handler handler=new Handler();//非同期処理用
         playerNumText=new TextView(this);//全参加者を表示するテキストの設定
-        playerNumText.setTextSize(25);
+        playerNumText.setTextSize(23);
         modules.setView(relativeLayout,playerNumText,500,80,300,1200);
         timer.schedule(new TimerTask() {//1秒ごとに同じ処理をする
             @Override
@@ -141,7 +141,7 @@ public class Organizer extends Activity {
         Drawable button_color = ResourcesCompat.getDrawable(getResources(), R.drawable.button_state,null);
         back_button.setBackground(button_color);
         back_button.setTextColor(Color.parseColor("#FFFFFF"));
-        back_button.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
+        back_button.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
         back_button.setText("戻る");
         modules.setView(relativeLayout,back_button,250,100,50,1500);
         back_button.setOnClickListener(new View.OnClickListener() {
@@ -272,6 +272,7 @@ public class Organizer extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 organizerSocket.Connect("Message:"+writeMessage.getText(),null,null,null);//主催者からのメッセージを送信
+                                startFlag=false;
                                 finish();
                             }
                         })
